@@ -1,0 +1,63 @@
+﻿Bearing selection guide:
+Different types of bearings for different purposes
+
+
+Starting from household appliances to heavy-duty industrial machinery, bearings are found everywhere. No machines, big or small, can work without bearings. They help in avoiding contact between surfaces while moving and reduce friction as much as possible.
+
+
+There are bearings for different purposes found in different shapes and sizes. With the sole purpose of reducing friction, bearings restrict the free motion of a machine. For example, a door hinge allows movement only along a fixed axis. The door can not be fully rotated. So, although bearings support the load of the machine or equipment, they do not allow freedom of movement.
+
+
+Bearings are found in aeroplanes, cars, computers, refrigerators, ceiling fans, water pumps and the list goes on. But do not fret! Below is a guide for different types of bearings used for different purposes to get you a clear idea.
+
+
+Types of bearings and their purposes:
+
+
+
+
+1. Rolling element bearing
+
+
+This type of bearing is found between the dynamic and static objects, i.e., the moving and stationary parts. The main advantage of rolling bearings is that they ensure minimum friction as rolling friction is much lower than sliding friction. Also, they require lower maintenance than other types of bearings. All of these combined with higher precision and efficiency makes rolling element bearings widely used in various spheres of industries as well as houses. 
+
+
+Uses: They are used in a plethora of machines such as, cars, electric pumps, water pumps, mills, bicycles, to name a few.
+
+
+It has two types:
+
+
+1. Ball bearing
+
+
+It allows for rolling movement since it has a spherical shape. It reduces friction while rotating. Since there is little contact between the balls and the metal, these types of bearings are not capable of heavy load. Ball bearings enable high speed and are of four types, namely, deep groove, angular contact, self-aligning and thrust ball bearing.
+
+
+Uses: Ball bearings have a minimalistic design and are used in fans, washing machines, water pumps, bicycles, to name a few.
+
+
+2. Roller bearing
+
+
+These types of bearings carry the load by placing the rolling part between two bearing rings called races. They reduce rotational friction and support radial and axial weights. Roller bearings can be classified as, spherical, cylindrical, tapered, and needle roller bearing.
+
+
+Uses: They are mostly used in heavy-duty machinery like aerospace and power generation. 
+
+
+
+
+2. Plain bearing
+
+
+These types of bearings only generate sliding friction. The shaft rotates in a hole with oil in between to aid in sliding movement. With a lightweight build, plain bearings have longevity and give rise to negligible noise during its working. Therefore, they need constant surface lubrication to minimise friction and noise. They are ideal for reducing rotational friction by supporting radial and axial weights. They are cheaper as compared to other types of bearing and can carry heavy loads efficiently.
+
+
+Uses: They are most commonly used for construction purposes such as to support the structure of bridges. Any type of rotating, sliding or oscillatory movement is supported by plain bearings.
+
+
+Conclusion:
+
+
+There is not a single industry where bearings do not find a place. They are very crucial mechanical components that help in the efficient functioning of various machines. However, it is important to bear in mind certain factors such as friction, temperature and lubrication while choosing the bearing that suits your purpose. Apart from these, the design and build also matter. Hopefully, this guide will help you in selecting the proper bearings for your needs.
