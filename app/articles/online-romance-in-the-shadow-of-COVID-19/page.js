@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiCalendar } from 'react-icons/hi';
+import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiCalendar, HiSparkles, HiShare } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -167,6 +167,24 @@ export default function OnlineRomanceEditingSamplePage() {
     }
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Online Romance in the Shadow of COVID-19',
+          text: 'Research document examining online relationships during the COVID-19 pandemic',
+          url: window.location.href
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   const renderContent = () => {
     return parsedContent.map((item, index) => {
       if (item.type === 'heading') {
@@ -270,8 +288,8 @@ export default function OnlineRomanceEditingSamplePage() {
       `}</style>
 
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <motion.button
               onClick={() => router.back()}
@@ -284,14 +302,28 @@ export default function OnlineRomanceEditingSamplePage() {
             </motion.button>
 
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Document Editor Sample</h1>
-              <p className="text-gray-600 dark:text-gray-400">Content Editing Showcase</p>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg"
+              >
+                <HiSparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Content Writing
+                </span>
+              </motion.div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <HiDocumentText className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              <span className="text-sm text-gray-600 dark:text-gray-400">XML Source</span>
-            </div>
+            <motion.button
+              onClick={handleShare}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-colors duration-300"
+            >
+              <HiShare className="w-4 h-4" />
+              Share
+            </motion.button>
           </div>
         </div>
       </header>

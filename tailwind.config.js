@@ -8,6 +8,50 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
+    screens: {
+      // Mobile-first breakpoints
+      'xs': '320px',    // Extra small devices (small phones)
+      'sm': '640px',    // Small devices (large phones)
+      'md': '768px',    // Medium devices (tablets)
+      'lg': '1024px',   // Large devices (laptops)
+      'xl': '1280px',   // Extra large devices (desktops)
+      '2xl': '1536px',  // 2X large devices (large desktops)
+      
+      // Custom breakpoints for specific needs
+      'mobile': '480px',     // Custom mobile breakpoint
+      'tablet': '768px',     // Custom tablet breakpoint
+      'laptop': '1024px',    // Custom laptop breakpoint
+      'desktop': '1280px',   // Custom desktop breakpoint
+      'wide': '1440px',      // Wide screens
+      'ultrawide': '1920px', // Ultra wide screens
+      
+      // Max-width breakpoints (for when you need max-width media queries)
+      'max-xs': {'max': '319px'},
+      'max-sm': {'max': '639px'},
+      'max-md': {'max': '767px'},
+      'max-lg': {'max': '1023px'},
+      'max-xl': {'max': '1279px'},
+      'max-2xl': {'max': '1535px'},
+      
+      // Range breakpoints (for specific ranges)
+      'sm-md': {'min': '640px', 'max': '767px'},
+      'md-lg': {'min': '768px', 'max': '1023px'},
+      'lg-xl': {'min': '1024px', 'max': '1279px'},
+      
+      // Height-based breakpoints (useful for hero sections)
+      'h-sm': {'raw': '(min-height: 640px)'},
+      'h-md': {'raw': '(min-height: 768px)'},
+      'h-lg': {'raw': '(min-height: 1024px)'},
+      
+      // Orientation breakpoints
+      'portrait': {'raw': '(orientation: portrait)'},
+      'landscape': {'raw': '(orientation: landscape)'},
+      
+      // Device-specific breakpoints
+      'phone': {'raw': '(max-width: 767px)'},
+      'tablet-up': {'raw': '(min-width: 768px)'},
+      'desktop-up': {'raw': '(min-width: 1024px)'},
+    },
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],

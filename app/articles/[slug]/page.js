@@ -226,7 +226,7 @@ export default function ArticlePage({ params }) {
 
       {/* Header */}
       <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <motion.button
               onClick={() => router.back()}
@@ -243,18 +243,13 @@ export default function ArticlePage({ params }) {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg mb-2"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg"
               >
                 <HiSparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Content Writing
                 </span>
               </motion.div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 bg-clip-text text-transparent">
-                  Article
-                </span>
-              </h1>
             </div>
 
             <motion.button

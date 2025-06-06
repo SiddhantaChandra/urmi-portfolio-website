@@ -10,7 +10,7 @@ const contentWritingArticles = [
         tags: ["Education", "Interactive Learning", "History", "Teaching Methods", "Chat Interface", "Study Session"],
         publishedDate: "2023-09-05",
         readingTime: 8,
-        author: "Educational Content Developer",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Education" },
             { label: "Industry", value: "EdTech" }

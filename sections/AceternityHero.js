@@ -12,7 +12,7 @@ const AceternityHero = () => {
   // Animate article counter
   useEffect(() => {
     const timer = setTimeout(() => {
-      const duration = 2000; // 2 seconds
+      const duration = 2000;
       const startValue = 2250;
       const endValue = 2276;
       const startTime = Date.now();
@@ -60,7 +60,7 @@ const AceternityHero = () => {
   return (
     <section 
       id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 pt-20 sm:pt-24 lg:pt-28"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 pt-20 sm:pt-24 lg:pt-24 2xl:pt-2 xl:pb-32 2xl:pb-0"
     >
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
@@ -130,7 +130,7 @@ const AceternityHero = () => {
           >
             <div className="relative">
               {/* Profile Image with Border */}
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 mx-auto">
+              <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-52 lg:h-52 xl:w-64 xl:h-64 mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
                   <div className="w-full h-full bg-white dark:bg-gray-800 rounded-full p-2">
                     <Image
@@ -150,10 +150,10 @@ const AceternityHero = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 lg:-bottom-6 lg:-right-6"
+                className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 lg:-bottom-3 lg:-right-6"
               >
-                <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-4 py-2 sm:px-6 sm:py-3 rounded-full shadow-xl border-4 border-white dark:border-gray-800">
-                  <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-gray-900 whitespace-nowrap">
+                <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-4 py-2 sm:px-6 sm:py-3 lg:px-3 lg:py-1 rounded-full shadow-xl border-4 border-white dark:border-gray-800">
+                  <span className="text-sm sm:text-base lg:text-md font-bold text-gray-900 dark:text-gray-900 whitespace-nowrap">
                     {articleCount}+ Articles
                   </span>
                 </div>
@@ -181,7 +181,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-xl sm:text-2xl lg:text-3xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-sans"
+            className="text-xl sm:text-2xl lg:text-4xl text-gray-600 dark:text-gray-300 mx-auto max-w-6xl lg:max-w-7xl 2xl:max-w-6xl  leading-relaxed font-sans"
           >
             I am passionate about{' '}
             <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
@@ -195,7 +195,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-lg text-gray-500 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed font-sans"
+            className="text-lg text-gray-500 dark:text-gray-400 max-w-4xl lg:max-w-6xl 2xl:max-w-6xl mx-auto leading-relaxed font-sans"
           >
             From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work. My role at The Telegraph Online combines fast-paced reporting, content editing, and sharp communication, all driven by strong instincts for what resonates with readers.
           </motion.p>
@@ -205,50 +205,39 @@ const AceternityHero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
           >
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               onClick={handleDownloadResume}
               className={cn(
                 "group relative inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white",
-                "shadow-lg hover:shadow-xl transition-all duration-300 font-sans",
-                "before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-purple-600 before:to-pink-600 before:opacity-0 hover:before:opacity-20 before:blur before:transition-opacity"
+                "shadow-lg hover:shadow-xl transition-all duration-200 font-sans",
+                "transform-gpu"
               )}
             >
-              <HiDownload className="w-5 h-5 group-hover:animate-bounce" />
+              <HiDownload className="w-5 h-5 group-hover:animate-bounce transition-transform duration-200" />
               Download Resume
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               onClick={handleViewCaseStudies}
               className={cn(
                 "group inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border-2 border-purple-200 dark:border-purple-500/30",
                 "hover:bg-white dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
-                "shadow-lg hover:shadow-xl transition-all duration-300 font-sans"
+                "shadow-lg hover:shadow-xl transition-all duration-200 font-sans",
+                "transform-gpu"
               )}
             >
-              <HiEye className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              View Case Studies
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleContact}
-              className={cn(
-                "group inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
-                "bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-500 dark:to-cyan-500 text-white",
-                "shadow-lg hover:shadow-xl transition-all duration-300 font-sans"
-              )}
-            >
-              <HiMail className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-              Let's Connect
+              <HiEye className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+              View Portfolio
             </motion.button>
           </motion.div>
         </motion.div>

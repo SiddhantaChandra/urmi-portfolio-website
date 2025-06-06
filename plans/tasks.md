@@ -13,7 +13,7 @@
 
 ### 🏗️ Project Setup
 
-* [ ] Initialize project with Next.js (npm create cloudflare@latest -- my-next-app --framework=next)
+* [*] Initialize project with Next.js (npm create cloudflare@latest -- my-next-app --framework=next)
 * [ ] Install and configure Tailwind CSS
 * [ ] Install and configure Framer Motion
 * [ ] Install and set up Lenis for smooth scrolling
