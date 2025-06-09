@@ -253,7 +253,7 @@ const Articles = () => {
             )}
             {searchTerm && (
               <span className="ml-1">
-                for <span className="font-semibold text-purple-600 dark:text-purple-400">"{searchTerm}"</span>
+                for <span className="font-semibold text-purple-600 dark:text-purple-400">&quot;{searchTerm}&quot;</span>
               </span>
             )}
           </p>
