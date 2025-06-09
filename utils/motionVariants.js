@@ -75,7 +75,7 @@ export const buttonHover = {
   hover: { 
     scale: 1.05,
     transition: {
-      duration: 0.2,
+      duration: 0.15,
       ease: "easeInOut"
     }
   },
@@ -89,7 +89,7 @@ export const cardHover = {
     y: -8,
     boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
     transition: {
-      duration: 0.3,
+      duration: 0.2,
       ease: "easeOut"
     }
   }

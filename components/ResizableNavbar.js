@@ -84,7 +84,7 @@ export const NavItems = ({ items, className, onItemClick }) => {
         <a
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-4 py-2 text-gray-900 hover:text-black dark:text-gray-100 dark:hover:text-white transition-colors duration-200 font-medium"
+          className="relative px-4 py-2 text-gray-900 hover:text-black dark:text-gray-100 dark:hover:text-white transition-colors duration-150 font-medium"
           key={`link-${idx}`}
           href={item.link}
         >
@@ -110,7 +110,7 @@ export const MobileNav = ({ children, className, visible }) => {
         boxShadow: visible
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
-        y: visible ? 20 : 0,
+        y: 0,
       }}
       transition={{
         type: "spring",
@@ -118,7 +118,7 @@ export const MobileNav = ({ children, className, visible }) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-7xl flex-col items-center justify-between bg-transparent px-4 sm:px-6 lg:px-8 py-2 lg:hidden",
+        "relative z-50 mx-auto w-full max-w-7xl bg-transparent px-4 sm:px-6 lg:px-8 py-2 lg:hidden",
         visible && "bg-white/90 dark:bg-gray-900/90 border border-gray-200/20 dark:border-gray-700/20 shadow-lg dark:shadow-gray-900/20 rounded-lg",
         className,
       )}
@@ -148,15 +148,18 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white dark:bg-gray-900 px-4 py-8 shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] dark:shadow-gray-900/20 border border-gray-200/20 dark:border-gray-700/20",
+            "w-full mt-4 overflow-hidden",
             className,
           )}
         >
-          {children}
+          <div className="flex flex-col space-y-1 py-4 px-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
+            {children}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -174,16 +177,136 @@ export const MobileNavToggle = ({ isOpen, onClick }) => {
  
 // Navbar Logo
 export const NavbarLogo = () => {
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHasAnimated(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <a
+    <motion.a
       href="#"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-gray-900 dark:text-gray-100"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className="relative z-20 mr-4 flex items-center space-x-4 px-3 py-2 group cursor-pointer"
     >
-      <div className="h-8 w-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-sm">
-        <span className="text-white font-bold text-sm">UC</span>
+            {/* Gradient Typography Logo */}
+      <div className="relative flex items-center space-x-3">
+        {/* Background Glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-20 transition-all duration-500" />
+        
+        {/* UC Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ 
+            opacity: hasAnimated ? 1 : 0,
+            scale: hasAnimated ? 1 : 0.8
+          }}
+          transition={{ 
+            duration: 0.5,
+            ease: "easeOut"
+          }}
+          className="relative flex-shrink-0"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-400 rounded-lg flex items-center justify-center shadow-md">
+            <span className="text-white font-bold text-base">UC</span>
+          </div>
+        </motion.div>
+        
+        {/* Minimal Logo Text */}
+        <div className="relative flex items-baseline">
+          {/* Mobile: Just "Urmi" */}
+          <motion.div className="flex items-baseline md:hidden">
+            {['U', 'r', 'm', 'i'].map((letter, index) => (
+              <motion.span
+                key={`mobile-${index}`}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ 
+                  opacity: hasAnimated ? 1 : 0, 
+                  y: hasAnimated ? 0 : 15
+                }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.1,
+                  ease: "easeOut"
+                }}
+                className="font-bold text-lg bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
+                style={{
+                  fontFamily: "'Inter', system-ui, sans-serif"
+                }}
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          {/* Desktop: Full Name */}
+          <motion.div className="hidden md:flex items-baseline">
+            {/* First Name */}
+            <div className="flex items-baseline">
+              {['U', 'r', 'm', 'i'].map((letter, index) => (
+                <motion.span
+                  key={`desktop-first-${index}`}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ 
+                    opacity: hasAnimated ? 1 : 0, 
+                    y: hasAnimated ? 0 : 15
+                  }}
+                  transition={{ 
+                    duration: 0.5, 
+                    delay: index * 0.08,
+                    ease: "easeOut"
+                  }}
+                  className="font-bold text-xl bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
+                  style={{
+                    fontFamily: "'Inter', system-ui, sans-serif"
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </div>
+
+            {/* Space */}
+            <span className="mx-1"></span>
+
+            {/* Last Name */}
+            <div className="flex items-baseline">
+              {['C', 'h', 'a', 'k', 'r', 'a', 'b', 'o', 'r', 't', 'y'].map((letter, index) => (
+                <motion.span
+                  key={`desktop-last-${index}`}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ 
+                    opacity: hasAnimated ? 1 : 0, 
+                    y: hasAnimated ? 0 : 15
+                  }}
+                  transition={{ 
+                    duration: 0.5, 
+                    delay: 0.4 + (index * 0.04),
+                    ease: "easeOut"
+                  }}
+                  className="font-bold text-xl bg-gradient-to-r from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
+                  style={{
+                    fontFamily: "'Inter', system-ui, sans-serif"
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+
       </div>
-      <span className="font-medium text-gray-900 dark:text-white">Urmi Chakraborty</span>
-    </a>
+
+      {/* Hover Glow Effect */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        whileHover={{ scale: 1.05 }}
+      />
+    </motion.a>
   );
 };
  
@@ -197,24 +320,30 @@ export const NavbarButton = ({
   ...props
 }) => {
   const baseStyles =
-    "px-4 py-2 rounded-md bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
+    "px-4 py-2 rounded-lg text-sm font-bold relative cursor-pointer inline-block text-center transition-all duration-200";
  
   const variantStyles = {
     primary:
-      "shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] bg-white dark:bg-gray-800 text-black dark:text-white",
+      "shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] bg-white dark:bg-gray-800 text-black dark:text-white hover:-translate-y-0.5",
     secondary: "bg-transparent shadow-none text-gray-900 dark:text-gray-100",
-    dark: "bg-black dark:bg-white text-white dark:text-black shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
+    dark: "bg-black dark:bg-white text-white dark:text-black shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset] hover:-translate-y-0.5",
     gradient:
-      "bg-gradient-to-b from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
+      "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white shadow-lg hover:shadow-xl hover:from-purple-700 hover:to-pink-700 dark:hover:from-purple-600 dark:hover:to-pink-600 border border-purple-200/50 dark:border-purple-400/30 hover:-translate-y-0.5 hover:scale-105",
+    mobile:
+      "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white shadow-lg hover:shadow-xl hover:from-purple-700 hover:to-pink-700 dark:hover:from-purple-600 dark:hover:to-pink-600 border border-purple-200/50 dark:border-purple-400/30 font-semibold hover:scale-105",
   };
+
+  const MotionTag = motion(Tag);
  
   return (
-    <Tag
+    <MotionTag
       href={href || undefined}
+      whileHover={{ y: variant === 'mobile' ? 0 : -2, scale: variant === 'mobile' ? 1 : 1 }}
+      whileTap={{ scale: variant === 'mobile' ? 1 : 0.98 }}
       className={cn(baseStyles, variantStyles[variant], className)}
       {...props}
     >
       {children}
-    </Tag>
+    </MotionTag>
   );
 }; 

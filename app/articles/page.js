@@ -104,8 +104,8 @@ const Articles = () => {
       
       {/* Spotlight Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse animation-delay-2000" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-8 animate-pulse-slow" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-8 animate-pulse-slower" />
       </div>
 
       {/* Floating Orbs */}
@@ -115,18 +115,19 @@ const Articles = () => {
             key={i}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 0],
+              opacity: [0, 0.4, 0],
               scale: [0, 1, 0],
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
+              x: [0, Math.random() * 60 - 30],
+              y: [0, Math.random() * 60 - 30],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 15 + i * 3,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: i * 3,
+              ease: "easeInOut",
             }}
             className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-20 dark:opacity-10",
+              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
               i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
             )}
             style={{
@@ -278,9 +279,9 @@ const Articles = () => {
                     src={article.featuredImage || article.image}
                     alt={article.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover group-hover:scale-105 transition-transform duration-200"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   
                   {/* Type Badge */}
                   <div className="absolute top-4 left-4">

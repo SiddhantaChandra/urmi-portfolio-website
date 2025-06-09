@@ -24,7 +24,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-800 dark:to-gray-900/50 font-sans transition-colors duration-500">
+    <section id="about" className="pt-20 bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-800 dark:to-gray-900/50 font-sans transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -41,23 +41,20 @@ const AboutSection = () => {
             From Newsrooms to 
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"> Brand Stories</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-sans">
-            A journalist's precision meets content marketing strategy. I bring editorial excellence 
-            to brand storytelling, turning complex ideas into compelling narratives that convert.
-          </p>
+          
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start mb-20">
+        <div className="grid lg:grid-cols-2 gap-16 items-stretch mb-20">
           {/* Left Column - Skills */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-8 h-full"
           >
             {/* Skills */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Core Skills</h3>
               <div className="space-y-6">
                 {skills.map((skill, index) => {
@@ -100,10 +97,10 @@ const AboutSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-8 h-full"
           >
             {/* What Sets Me Apart */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">What Sets Me Apart</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">

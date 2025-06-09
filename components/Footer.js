@@ -1,11 +1,50 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { HiMail, HiLocationMarker, HiExternalLink, HiPhone, HiHeart } from 'react-icons/hi';
+import { HiMail, HiLocationMarker, HiExternalLink, HiPhone, HiHeart, HiDownload, HiArrowUp } from 'react-icons/hi';
 import { FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Show back to top button when user scrolls down
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  const downloadCV = () => {
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_CV.pdf';
+    link.download = 'Urmi_Chakraborty_CV.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadPortfolio = () => {
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
+    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const navigationLinks = [
     { name: 'Home', href: '#home' },
@@ -21,6 +60,13 @@ const Footer = () => {
     { name: 'SEO Content', href: '#work' },
     { name: 'Brand Storytelling', href: '#work' },
     { name: 'Editorial Services', href: '#experience' }
+  ];
+
+  const documents = [
+    { name: 'Download CV', onClick: downloadCV },
+    { name: 'Portfolio (PDF)', onClick: downloadPortfolio },
+    { name: 'View Experience', href: '#experience' },
+    { name: 'View Work Samples', href: '#work' }
   ];
 
   const socialLinks = [
@@ -62,7 +108,7 @@ const Footer = () => {
       <div className="relative z-10">
         {/* Main Footer Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-5 md:grid-cols-2 gap-8 lg:gap-12">
             {/* Brand & Description */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -71,9 +117,15 @@ const Footer = () => {
               viewport={{ once: true }}
               className="lg:col-span-2"
             >
-              <h3 className="text-2xl font-bold text-white mb-4 font-sans">
-                Urmi Chakraborty
-              </h3>
+              {/* Footer Logo */}
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-base">UC</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white font-sans">
+                  Urmi Chakraborty
+                </h3>
+              </div>
               <p className="text-gray-400 mb-6 text-lg leading-relaxed max-w-md font-sans">
                 Journalist turned content writer, bringing editorial excellence and SEO expertise to brand storytelling. 
                 From breaking news to compelling content strategies.
@@ -160,11 +212,48 @@ const Footer = () => {
               </ul>
             </motion.div>
 
-            {/* Services */}
+            {/* Documents & Downloads */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <h4 className="text-lg font-semibold text-white mb-6 font-sans">Documents</h4>
+              <ul className="space-y-3">
+                {documents.map((doc, index) => (
+                  <motion.li
+                    key={doc.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    {doc.onClick ? (
+                      <button
+                        onClick={doc.onClick}
+                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-left"
+                      >
+                        {doc.name}
+                      </button>
+                    ) : (
+                      <a
+                        href={doc.href}
+                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans"
+                      >
+                        {doc.name}
+                      </a>
+                    )}
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
               viewport={{ once: true }}
             >
               <h4 className="text-lg font-semibold text-white mb-6 font-sans">Services</h4>
@@ -233,6 +322,27 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Back to Top Button */}
+      <motion.button
+        onClick={scrollToTop}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ 
+          opacity: showBackToTop ? 1 : 0,
+          scale: showBackToTop ? 1 : 0.8,
+          y: showBackToTop ? 0 : 20
+        }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        style={{ 
+          pointerEvents: showBackToTop ? 'auto' : 'none',
+          transform: showBackToTop ? 'translateY(0)' : 'translateY(20px)'
+        }}
+      >
+        <HiArrowUp className="w-6 h-6" />
+      </motion.button>
     </footer>
   );
 };

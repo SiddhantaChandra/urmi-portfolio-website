@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt } from 'react-icons/hi';
+import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 
 const ContactSection = () => {
@@ -40,15 +40,13 @@ const ContactSection = () => {
       icon: HiMail,
       label: 'Email',
       value: 'urmi24112001@gmail.com',
-      href: 'mailto:urmi24112001@gmail.com',
-      description: 'Let\'s discuss your content needs'
+      href: 'mailto:urmi24112001@gmail.com'
     },
     {
       icon: HiLocationMarker,
       label: 'Location',
       value: 'Kolkata, India',
-      href: null,
-      description: 'Available for remote work globally'
+      href: null
     }
   ];
 
@@ -61,58 +59,166 @@ const ContactSection = () => {
     {
       name: 'Muckrack',
       href: 'https://muckrack.com/urmi-chakraborty-1',
-      description: 'Journalism portfolio & credentials'
+      description: 'My Muck Rack profile'
     }
   ];
 
+  const downloadPortfolioPDF = () => {
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
+    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadPortfolioDOCX = () => {
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.docx';
+    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.docx';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadCV = () => {
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_CV.pdf';
+    link.download = 'Urmi_Chakraborty_CV.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const quickActions = [
     {
-      title: 'Download Portfolio',
-      description: 'Get my complete work samples and case studies',
+      title: 'Download CV',
+      description: 'Get my complete resume and professional background',
       action: 'Download PDF',
-      onClick: () => console.log('Download portfolio')
+      icon: HiUser,
+      onClick: downloadCV
     },
     {
-      title: 'Schedule a Call',
-      description: 'Book a 30-minute consultation call',
-      action: 'Book Call',
-      onClick: () => console.log('Schedule call')
+      title: 'Download Portfolio (PDF)',
+      description: 'View my content writing samples and case studies',
+      action: 'Download PDF',
+      icon: HiExternalLink,
+      onClick: downloadPortfolioPDF
+    },
+    {
+      title: 'Download Portfolio (DOCX)',
+      description: 'Editable version of my writing samples',
+      action: 'Download DOCX',
+      icon: HiExternalLink,
+      onClick: downloadPortfolioDOCX
     }
   ];
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800/50 font-sans transition-colors duration-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+    <section id="contact" className="relative py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden">
+      {/* Enhanced Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-r from-purple-300/15 to-pink-300/15 dark:from-purple-500/8 dark:to-pink-500/8 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-gradient-to-r from-blue-300/15 to-cyan-300/15 dark:from-blue-500/8 dark:to-cyan-500/8 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-pulse-slower" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-pink-300/8 to-purple-300/8 dark:from-pink-500/4 dark:to-purple-500/4 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-2xl" />
+        
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{
+              opacity: [0, 0.4, 0],
+              scale: [0, 1, 0],
+              x: [0, Math.random() * 120 - 60],
+              y: [0, Math.random() * 120 - 60],
+            }}
+            transition={{
+              duration: 14 + i * 2,
+              repeat: Infinity,
+              delay: i * 4,
+              ease: "easeInOut",
+            }}
+            className="absolute w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 rounded-full opacity-15"
+            style={{
+              left: `${10 + (i * 15)}%`,
+              top: `${20 + (i * 10)}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header - Enhanced */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, type: "spring", bounce: 0.3 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
-          <span className="inline-block px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium mb-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium mb-6 border border-purple-200/50 dark:border-purple-700/50"
+          >
             Get In Touch
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">
+          </motion.div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-8 font-sans"
+          >
             Let's {' '}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">connect </span>
-            &
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"> create impactful </span>
-            content
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-sans">
-            From breaking news to in-depth features, I bring clarity, creativity and credibility to every story. Here's how you can reach out to me.
-          </p>
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 dark:from-purple-400 dark:via-pink-400 dark:to-purple-400 bg-clip-text text-transparent">
+                connect
+              </span>
+              <motion.div
+                className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                viewport={{ once: true }}
+              />
+            </span>
+            {' '}&{' '}
+            <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 dark:from-pink-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+              create impactful
+            </span>
+            <br />
+            <span className="text-gray-700 dark:text-gray-300">content</span>
+          </motion.h2>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="text-xl text-gray-600 dark:text-gray-300 max-w-5xl mx-auto leading-relaxed font-sans"
+          >
+            From breaking news to in-depth features, I bring clarity, creativity and credibility to every story. <br/>
+            <span className="font-semibold text-purple-600 dark:text-purple-400"> Let's collaborate and bring your vision to life.</span>
+          </motion.p>
+
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
+            className="lg:col-span-2"
           >
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Send me a message</h3>
@@ -221,155 +327,155 @@ const ContactSection = () => {
             </div>
           </motion.div>
 
-          {/* Contact Info & Quick Actions */}
+          {/* Contact Info & Links */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="h-full"
           >
-            {/* Contact Information */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Contact Information</h3>
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => {
-                  const IconComponent = info.icon;
-                  return (
-                    <motion.div
-                      key={info.label}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      className="flex items-start gap-4"
-                    >
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <IconComponent className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 font-sans">{info.label}</h4>
-                        {info.href ? (
-                          <a
-                            href={info.href}
-                            className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium font-sans transition-colors"
-                          >
-                            {info.value}
-                          </a>
-                        ) : (
-                          <p className="text-gray-600 dark:text-gray-300 font-medium font-sans">{info.value}</p>
-                        )}
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-sans">{info.description}</p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full flex flex-col">
+              {/* Top Section */}
+              <div className="flex-1">
+                {/* Professional Links - Enhanced */}
+                <div className="mb-8">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-sans">Connect With Me</h3>
+                    <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full"></div>
+                  </div>
+                  <div className="space-y-4">
+                    {socialLinks.map((link, index) => (
+                      <motion.a
+                        key={link.name}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: index * 0.2 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.05, y: -3 }}
+                        className="relative flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-800/30 dark:hover:to-pink-800/30 transition-all duration-150 group border border-purple-200/50 dark:border-purple-700/50 overflow-hidden"
+                      >
+                        {/* Animated background glow */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
+                        
+                        <div className="relative w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-150">
+                          <HiExternalLink className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-150" />
+                        </div>
+                        <div className="relative flex-1">
+                          <h4 className="font-bold text-gray-900 dark:text-gray-100 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-lg">
+                            {link.name}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 font-sans group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
+                            {link.description}
+                          </p>
+                        </div>
+                  
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Social Links */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Professional Links</h3>
-              <div className="space-y-4">
-                {socialLinks.map((link, index) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-all duration-300 group"
-                  >
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center">
-                      <HiExternalLink className="w-5 h-5 text-white" />
+                {/* Divider with decoration */}
+                <div className="relative my-8">
+                  <div className="border-t border-gray-200 dark:border-gray-600"></div>
+                  <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                      <HiMail className="w-4 h-4 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                        {link.name}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 font-sans">{link.description}</p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-            </div>
+                  </div>
+                </div>
 
-            {/* Quick Actions */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Quick Actions</h3>
-              <div className="space-y-4">
-                {quickActions.map((action, index) => (
-                  <motion.button
-                    key={action.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    onClick={action.onClick}
-                    className="w-full text-left p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-all duration-300 group"
-                  >
-                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                      {action.title}
-                    </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-sans">{action.description}</p>
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400 font-sans">
-                      {action.action}
-                      <HiExternalLink className="w-4 h-4" />
-                    </span>
-                  </motion.button>
-                ))}
+                <div className="space-y-2">
+                  {contactInfo.map((info, index) => {
+                    const IconComponent = info.icon;
+                    return (
+                      <motion.div
+                        key={info.label}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        className="flex justify-center items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-150"
+                      >
+                        <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 font-sans">{info.label}</h4>
+                          {info.href ? (
+                            <a
+                              href={info.href}
+                              className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium font-sans transition-colors"
+                            >
+                              {info.value}
+                            </a>
+                          ) : (
+                            <p className="text-gray-600 dark:text-gray-300 font-medium font-sans">{info.value}</p>
+                          )}
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-sans">{info.description}</p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
+
+
             </div>
           </motion.div>
         </div>
 
-        {/* Bottom CTA */}
+        {/* Documents Section - Horizontal */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
+          className="mt-12"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-2xl p-1 shadow-2xl">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 lg:p-12">
-              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4 font-sans">
-                Ready to transform your content strategy?
-              </h3>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-sans">
-                Let's combine journalistic precision with marketing impact to create content that truly converts.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 font-sans"
-                >
-                  <HiMail className="w-5 h-5" />
-                  Start a Project
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 font-sans"
-                >
-                  Download Portfolio
-                </motion.button>
-              </div>
-            </div>
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/50 dark:border-gray-700/50">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center font-sans">Documents & Downloads</h3>
+                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
+               {quickActions.map((action, index) => {
+                 const IconComponent = action.icon;
+                 return (
+                   <motion.div
+                     key={action.title}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                     viewport={{ once: true }}
+                     whileHover={{ scale: 1.05, y: -2 }}
+                     onClick={action.onClick}
+                     className="cursor-pointer bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-150 border border-gray-200 dark:border-gray-600 group max-w-xs"
+                   >
+                     <div className="flex flex-col items-center text-center space-y-4">
+                       <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+                         <IconComponent className="w-6 h-6 text-white" />
+                       </div>
+                       <div>
+                         <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                           {action.title}
+                         </h4>
+                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-sans">
+                           {action.description}
+                         </p>
+                         <div className="flex items-center justify-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400 font-sans">
+                           <span>{action.action}</span>
+                           <HiDownload className="w-4 h-4 group-hover:animate-bounce" />
+                         </div>
+                       </div>
+                     </div>
+                   </motion.div>
+                 );
+               })}
+             </div>
           </div>
         </motion.div>
-      </div>
-
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-64 h-64 bg-gradient-to-r from-purple-300/20 to-pink-300/20 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl" />
-        <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl" />
       </div>
     </section>
   );

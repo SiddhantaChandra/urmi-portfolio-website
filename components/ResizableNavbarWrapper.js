@@ -21,7 +21,6 @@ const ResizableNavbarWrapper = () => {
     { name: 'About', link: '#about' },
     { name: 'Experience', link: '#experience' },
     { name: 'Portfolio', link: '#work' },
-    { name: 'Testimonials', link: '#testimonials' },
     { name: 'Contact', link: '#contact' }
   ];
 
@@ -81,18 +80,20 @@ const ResizableNavbarWrapper = () => {
                 key={idx}
                 href={item.link}
                 onClick={handleNavItemClick}
-                className="text-gray-900 hover:text-black dark:text-gray-100 dark:hover:text-white transition-colors duration-200 font-medium"
+                className="block w-full py-6 px-4 text-gray-900 hover:text-purple-600 dark:text-gray-100 dark:hover:text-purple-400 transition-colors duration-200 font-medium text-center rounded-lg hover:bg-purple-50/50 dark:hover:bg-purple-900/20"
               >
                 {item.name}
               </a>
             ))}
-            <NavbarButton 
-              href="#contact"
-              variant="gradient"
-              className="mt-4 w-full text-center"
-            >
-              Let&apos;s Connect
-            </NavbarButton>
+            <div className="mt-8 px-2">
+              <NavbarButton 
+                href="#contact"
+                variant="mobile"
+                className="w-full text-center px-6 py-3 text-base font-semibold"
+              >
+                Let&apos;s Connect
+              </NavbarButton>
+            </div>
           </MobileNavMenu>
         </MobileNav>
       </Navbar>

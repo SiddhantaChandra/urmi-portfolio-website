@@ -133,7 +133,7 @@ const WorkSection = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    "flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-300",
+                    "flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-150",
                     activeTab === tab.id
                       ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
                       : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
@@ -199,7 +199,7 @@ const WorkSection = () => {
 
                   {/* Metrics */}
                   <div className="grid grid-cols-3 gap-3 mb-4">
-                    {project.metrics.map((metric, idx) => (
+                    {project.metrics.filter(metric => metric.label !== 'Category' && metric.label !== 'Industry' && metric.label !== 'Publication').map((metric, idx) => (
                       <div key={idx} className="text-center">
                         <div className={cn(
                           "text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent font-sans",
@@ -216,13 +216,7 @@ const WorkSection = () => {
                     ))}
                   </div>
 
-                  {/* Reading Time for Content Articles */}
-                  {project.category === 'content' && project.readingTime && (
-                    <div className="flex items-center gap-2 mb-4 text-gray-600 dark:text-gray-400">
-                      <HiClock className="w-4 h-4" />
-                      <span className="text-sm font-sans">{project.readingTime} min read</span>
-                    </div>
-                  )}
+
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-4">

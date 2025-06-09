@@ -40,7 +40,13 @@ const AceternityHero = () => {
   }, []);
 
   const handleDownloadResume = () => {
-    console.log('Downloading resume...');
+    const link = document.createElement('a');
+    link.href = '/Urmi_Chakraborty_CV.pdf';
+    link.download = 'Urmi_Chakraborty_CV.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleViewCaseStudies = () => {
@@ -60,15 +66,15 @@ const AceternityHero = () => {
   return (
     <section 
       id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 pt-20 sm:pt-24 lg:pt-24 2xl:pt-2 xl:pb-32 2xl:pb-0"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 pt-20 sm:pt-24 lg:pt-24 2xl:pt-8 xl:pb-32 2xl:pb-8 pb-32"
     >
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
       
       {/* Spotlight Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse animation-delay-2000" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slow" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slower" />
       </div>
 
       {/* Floating Orbs */}
@@ -78,18 +84,19 @@ const AceternityHero = () => {
             key={i}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 0],
+              opacity: [0, 0.6, 0],
               scale: [0, 1, 0],
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
+              x: [0, Math.random() * 80 - 40],
+              y: [0, Math.random() * 80 - 40],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 12 + i * 2,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: i * 2,
+              ease: "easeInOut",
             }}
             className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-20 dark:opacity-10",
+              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
               i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
             )}
             style={{
@@ -130,7 +137,7 @@ const AceternityHero = () => {
           >
             <div className="relative">
               {/* Profile Image with Border */}
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-52 lg:h-52 xl:w-64 xl:h-64 mx-auto">
+              <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-52 lg:h-52 xl:w-56 xl:h-56 mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
                   <div className="w-full h-full bg-white dark:bg-gray-800 rounded-full p-2">
                     <Image
@@ -166,7 +173,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight font-sans"
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl font-bold leading-tight font-sans"
           >
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent">
               Hi, I'm{' '}
@@ -176,12 +183,12 @@ const AceternityHero = () => {
             </span>
           </motion.h1>
 
-          {/* Subtitle with Typewriter Effect */}
+          {/* Subtitle*/}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-xl sm:text-2xl lg:text-4xl text-gray-600 dark:text-gray-300 mx-auto max-w-6xl lg:max-w-7xl 2xl:max-w-6xl  leading-relaxed font-sans"
+            className="text-xl sm:text-2xl lg:text-2xl text-gray-600 dark:text-gray-300 mx-auto max-w-6xl lg:max-w-7xl 2xl:max-w-6xl  leading-relaxed font-sans"
           >
             I am passionate about{' '}
             <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
@@ -205,39 +212,39 @@ const AceternityHero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+            className="flex sm:flex-row gap-4 justify-center items-center pt-4"
           >
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               onClick={handleDownloadResume}
               className={cn(
                 "group relative inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white",
-                "shadow-lg hover:shadow-xl transition-all duration-200 font-sans",
+                "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",
                 "transform-gpu"
               )}
             >
-              <HiDownload className="w-5 h-5 group-hover:animate-bounce transition-transform duration-200" />
-              Download Resume
+                                <HiDownload className="w-5 h-5 group-hover:animate-bounce transition-transform duration-150" />
+              <span className='hidden md:block'>Download</span> Resume
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               onClick={handleViewCaseStudies}
               className={cn(
                 "group inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border-2 border-purple-200 dark:border-purple-500/30",
                 "hover:bg-white dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
-                "shadow-lg hover:shadow-xl transition-all duration-200 font-sans",
+                "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",
                 "transform-gpu"
               )}
             >
-              <HiEye className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-              View Portfolio
+                                <HiEye className="w-5 h-5 group-hover:scale-110 transition-transform duration-150" />
+                                <span className='hidden md:block'>View</span> Portfolio
             </motion.button>
           </motion.div>
         </motion.div>
@@ -273,8 +280,10 @@ const AceternityHero = () => {
           background-size: 40px 40px;
         }
         
-        .animation-delay-2000 {
-          animation-delay: 2s;
+        .dark .bg-grid-slate-700\\/20 {
+          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
+          background-size: 40px 40px;
         }
       `}</style>
     </section>

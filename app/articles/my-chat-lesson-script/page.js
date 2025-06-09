@@ -115,8 +115,8 @@ export default function MyChatLessonPage() {
       
       {/* Spotlight Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 dark:opacity-20 animate-pulse animation-delay-2000" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-6 animate-pulse-slow" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-6 animate-pulse-slower" />
       </div>
 
       {/* Floating Orbs */}
@@ -126,18 +126,19 @@ export default function MyChatLessonPage() {
             key={i}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 0],
+              opacity: [0, 0.3, 0],
               scale: [0, 1, 0],
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
+              x: [0, Math.random() * 60 - 30],
+              y: [0, Math.random() * 60 - 30],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 16 + i * 3,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: i * 3.5,
+              ease: "easeInOut",
             }}
             className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-20 dark:opacity-10",
+              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-8 dark:opacity-4",
               i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
             )}
             style={{
@@ -392,8 +393,10 @@ export default function MyChatLessonPage() {
           background-size: 40px 40px;
         }
         
-        .animation-delay-2000 {
-          animation-delay: 2s;
+        .dark .bg-grid-slate-700\\/20 {
+          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
+          background-size: 40px 40px;
         }
       `}</style>
     </div>

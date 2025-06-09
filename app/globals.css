@@ -105,3 +105,26 @@ html, body {
     font-family: 'Inter var', var(--font-inter) !important;
   }
 }
+
+/* Optimized hover transitions */
+@layer utilities {
+  .hover-fast {
+    @apply transition-all duration-150 ease-out;
+  }
+  
+  .hover-scale {
+    @apply transform transition-transform duration-150 ease-out hover:scale-105;
+  }
+  
+  .hover-lift {
+    @apply transform transition-transform duration-150 ease-out hover:-translate-y-1;
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-150 ease-out hover:shadow-lg;
+  }
+  
+  .hover-color-fast {
+    @apply transition-colors duration-150 ease-out;
+  }
+}
