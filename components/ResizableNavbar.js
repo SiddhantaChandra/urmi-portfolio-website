@@ -196,7 +196,7 @@ export const NavbarLogo = () => {
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-20 transition-all duration-500" />
         
-        {/* UC Logo */}
+        {/* Logo Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
@@ -209,8 +209,11 @@ export const NavbarLogo = () => {
           }}
           className="relative flex-shrink-0"
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-500 dark:from-purple-400 dark:to-pink-400 rounded-lg flex items-center justify-center shadow-md">
-            <span className="text-white font-bold text-base">UC</span>
+          <div className="w-10 h-10 rounded-lg overflow-hidden shadow-md">
+            <img src="/logo.webp"
+              alt="Urmi Chakraborty Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
         </motion.div>
         

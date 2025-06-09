@@ -1,8 +1,11 @@
 import contentWritingArticles from '../../../components/ContentWritingData.js';
 
 // SEO Metadata function
-export async function generateMetadata() {
-  const article = contentWritingArticles.find(article => article.slug === 'my-chat-lesson-script');
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const article = contentWritingArticles.find(
+    article => article.id === parseInt(resolvedParams.id)
+  );
 
   if (!article) {
     return {
@@ -12,7 +15,7 @@ export async function generateMetadata() {
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoursite.com';
-  const articleUrl = `${siteUrl}/articles/my-chat-lesson-script`;
+  const articleUrl = `${siteUrl}/article/${article.id}`;
 
   return {
     title: `${article.title} | Your Site Name`,
@@ -96,7 +99,7 @@ function StructuredData({ article }) {
     "dateModified": article.publishedDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${siteUrl}/articles/my-chat-lesson-script`
+      "@id": `${siteUrl}/article/${article.id}`
     },
     "articleSection": article.category,
     "keywords": article.tags?.join(', '),
@@ -107,7 +110,7 @@ function StructuredData({ article }) {
       return count;
     }, 0) || 0,
     "timeRequired": `PT${article.readingTime}M`,
-    "url": `${siteUrl}/articles/my-chat-lesson-script`
+    "url": `${siteUrl}/article/${article.id}`
   };
 
   const breadcrumbStructuredData = {
@@ -136,7 +139,7 @@ function StructuredData({ article }) {
         "@type": "ListItem",
         "position": 4,
         "name": article.title,
-        "item": `${siteUrl}/articles/my-chat-lesson-script`
+        "item": `${siteUrl}/article/${article.id}`
       }
     ]
   };
@@ -177,20 +180,23 @@ function NotFoundPage() {
   );
 }
 
-export default async function MyChatLessonPage() {
-  const article = contentWritingArticles.find(article => article.slug === 'my-chat-lesson-script');
+export default async function ArticlePage({ params }) {
+  const resolvedParams = await params;
+  const article = contentWritingArticles.find(
+    article => article.id === parseInt(resolvedParams.id)
+  );
 
   if (!article) {
     return <NotFoundPage />;
   }
 
-  // Import the client component dynamically
-  const { default: MyChatLessonClient } = await import('./MyChatLessonClient');
+  // Import the client component dynamically from the slug route
+  const { default: ArticleClient } = await import('../../articles/[slug]/ArticleClient');
 
   return (
     <>
       <StructuredData article={article} />
-      <MyChatLessonClient article={article} />
+      <ArticleClient article={article} />
     </>
   );
 } 
