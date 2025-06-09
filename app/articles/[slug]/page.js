@@ -170,7 +170,7 @@ export default function ArticlePage({ params }) {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center font-sans">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Article Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">The article you're looking for doesn't exist.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">The article you&apos;re looking for doesn&apos;t exist.</p>
           <motion.button
             onClick={() => router.push('/')}
             whileHover={{ scale: 1.05 }}
