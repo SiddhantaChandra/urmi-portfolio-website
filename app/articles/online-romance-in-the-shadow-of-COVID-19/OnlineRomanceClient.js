@@ -221,26 +221,21 @@ export default function OnlineRomanceClient({ article }) {
       
       setParsedContent(content);
     } catch (error) {
-      console.error('Error parsing XML:', error);
       setError('Failed to parse document content');
     }
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: article?.title || 'Online Romance in the Shadow of COVID-19',
-          text: article?.excerpt || 'Research document examining online relationships during the COVID-19 pandemic',
-          url: window.location.href
-        });
-      } catch (error) {
-        console.log('Error sharing:', error);
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+    try {
+      await navigator.share({
+        title: article?.title,
+        text: article?.excerpt,
+        url: window.location.href,
+      });
+    } catch (error) {
+      // Fallback for older browsers
+      navigator.clipboard?.writeText(window.location.href);
+      alert('Article link copied to clipboard!');
     }
   };
 

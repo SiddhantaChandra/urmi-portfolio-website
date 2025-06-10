@@ -330,7 +330,7 @@ export default function NotFound() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 cursor-pointer group"
                   onClick={() => {
-                    const href = article.slug ? `/articles/${article.slug}` : `/article/${article.id}`;
+                    const href = `/articles/${article.slug}`;
                     router.push(href);
                   }}
                 >

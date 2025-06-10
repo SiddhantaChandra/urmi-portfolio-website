@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://urmichakraborty.com';
+  const siteUrl ='https://urmichakraborty.com';
   const articleUrl = `${siteUrl}/articles/${article.slug}`;
 
   return {

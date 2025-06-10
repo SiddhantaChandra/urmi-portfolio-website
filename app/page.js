@@ -23,7 +23,7 @@ export default function Home() {
             new Promise((resolve) => {
               const img = new Image();
               img.onload = resolve;
-              img.onerror = resolve; // Don't fail if image doesn't exist
+              img.onerror = resolve; 
               img.src = '/logo.webp';
             }),
             new Promise((resolve) => {
@@ -50,7 +50,6 @@ export default function Home() {
           }, 100);
           
         } catch (error) {
-          console.warn('Preload warning:', error);
           // Fallback: mark as preloaded anyway
           setResourcesPreloaded(true);
         }

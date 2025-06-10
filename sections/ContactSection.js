@@ -28,7 +28,6 @@ const ContactSection = ({ preloaded = false }) => {
     
     // Simulate form submission
     setTimeout(() => {
-      console.log('Form submitted:', formData);
       alert('Thank you for your message! I\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setIsSubmitting(false);

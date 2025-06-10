@@ -179,7 +179,9 @@ export default function ArticleClient({ article }) {
           url: window.location.href
         });
       } catch (error) {
-        console.log('Error sharing:', error);
+        // Fallback for older browsers
+        navigator.clipboard?.writeText(window.location.href);
+        alert('Article link copied to clipboard!');
       }
     } else {
       // Fallback: copy to clipboard
