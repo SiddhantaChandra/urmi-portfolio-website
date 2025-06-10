@@ -6,8 +6,9 @@ import { cn } from '../utils/cn';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-const AceternityHero = () => {
+const AceternityHero = ({ onLoaded }) => {
   const [articleCount, setArticleCount] = useState(2250);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Animate article counter
   useEffect(() => {
@@ -38,6 +39,18 @@ const AceternityHero = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Notify when hero section is loaded and ready
+  useEffect(() => {
+    const loadTimer = setTimeout(() => {
+      setIsLoaded(true);
+      if (onLoaded) {
+        onLoaded();
+      }
+    }, 1000); // Give hero a second to settle
+
+    return () => clearTimeout(loadTimer);
+  }, [onLoaded]);
 
   const handleDownloadResume = () => {
     const link = document.createElement('a');

@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 
-const ContactSection = () => {
+const ContactSection = ({ preloaded = false }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -117,8 +117,81 @@ const ContactSection = () => {
     }
   ];
 
+  // Optimized animation variants for better performance
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const formVariants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const sidebarVariants = {
+    hidden: { opacity: 0, x: 30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.6,
+        delay: 0.2,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  // Loading state component
+  if (!preloaded) {
+    return (
+      <section id="contact" className="relative py-16 md:py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden">
+        <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-pulse space-y-4">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mx-auto"></div>
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-64 mx-auto"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section id="contact" className="relative py-16 md:py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden">
+    <motion.section 
+      id="contact" 
+      className="relative py-16 md:py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden motion-safe"
+      variants={containerVariants}
+      initial="hidden"
+      animate={preloaded ? "visible" : "hidden"}
+      viewport={{ once: true, margin: "-100px" }}
+    >
       {/* Enhanced Background Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-r from-purple-300/15 to-pink-300/15 dark:from-purple-500/8 dark:to-pink-500/8 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-pulse-slow" />
@@ -154,27 +227,18 @@ const ContactSection = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header - Enhanced */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, type: "spring", bounce: 0.3 }}
-          viewport={{ once: true }}
+          variants={itemVariants}
           className="text-center mb-6 md:mb-8"
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 text-purple-700 dark:text-purple-300 rounded-full text-xs md:text-sm font-medium mb-4 md:mb-6 border border-purple-200/50 dark:border-purple-700/50"
           >
             Get In Touch
           </motion.div>
           
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6 md:mb-8 font-sans leading-tight"
           >
             Let's {' '}
@@ -199,25 +263,18 @@ const ContactSection = () => {
           </motion.h2>
           
           <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="text-base md:text-xl text-gray-600 dark:text-gray-300 max-w-5xl mx-auto leading-relaxed font-sans"
           >
             From breaking news to in-depth features, I bring clarity, creativity and credibility to every story. <br className="hidden md:block"/>
             <span className="font-semibold text-purple-600 dark:text-purple-400"> Let's collaborate and bring your vision to life.</span>
           </motion.p>
-
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
+            variants={formVariants}
             className="lg:col-span-3"
           >
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 md:p-6 lg:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
@@ -329,10 +386,7 @@ const ContactSection = () => {
 
           {/* Contact Info & Links */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
+            variants={sidebarVariants}
             className="lg:col-span-2"
           >
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 md:p-6 lg:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
@@ -350,10 +404,7 @@ const ContactSection = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
+                    variants={itemVariants}
                     whileHover={{ scale: 1.02, y: -2 }}
                     className="relative flex items-center gap-2.5 md:gap-3 p-2.5 md:p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-800/30 dark:hover:to-pink-800/30 transition-all duration-150 group border border-purple-200/50 dark:border-purple-700/50"
                   >
@@ -389,10 +440,7 @@ const ContactSection = () => {
                   return (
                     <motion.div
                       key={info.label}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
+                      variants={itemVariants}
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-150"
                     >
                       <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
@@ -421,53 +469,48 @@ const ContactSection = () => {
 
         {/* Documents Section - Horizontal */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
+          variants={itemVariants}
           className="mt-12"
         >
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/50 dark:border-gray-700/50">
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center font-sans">Documents & Downloads</h3>
-                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
-               {quickActions.map((action, index) => {
-                 const IconComponent = action.icon;
-                 return (
-                   <motion.div
-                     key={action.title}
-                     initial={{ opacity: 0, y: 20 }}
-                     whileInView={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                     viewport={{ once: true }}
-                     whileHover={{ scale: 1.05, y: -2 }}
-                     onClick={action.onClick}
-                     className="cursor-pointer bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-150 border border-gray-200 dark:border-gray-600 group max-w-xs"
-                   >
-                     <div className="flex flex-col items-center text-center space-y-4">
-                       <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-                         <IconComponent className="w-6 h-6 text-white" />
-                       </div>
-                       <div>
-                         <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                           {action.title}
-                         </h4>
-                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-sans">
-                           {action.description}
-                         </p>
-                         <div className="flex items-center justify-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400 font-sans">
-                           <span>{action.action}</span>
-                           <HiDownload className="w-4 h-4 group-hover:animate-bounce" />
-                         </div>
-                       </div>
-                     </div>
-                   </motion.div>
-                 );
-               })}
-             </div>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              {quickActions.map((action, index) => {
+                const IconComponent = action.icon;
+                return (
+                  <motion.div
+                    key={action.title}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    onClick={action.onClick}
+                    className="cursor-pointer bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-150 border border-gray-200 dark:border-gray-600 group max-w-xs"
+                  >
+                    <div className="flex flex-col items-center text-center space-y-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+                        <IconComponent className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                          {action.title}
+                        </h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-sans">
+                          {action.description}
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400 font-sans">
+                          <span>{action.action}</span>
+                          <HiDownload className="w-4 h-4 group-hover:animate-bounce" />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
