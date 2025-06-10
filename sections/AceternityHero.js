@@ -227,7 +227,7 @@ const AceternityHero = () => {
               )}
             >
               <HiDownload className="w-5 h-5 group-hover:animate-bounce transition-transform duration-150" />
-              <span className='hidden sm:inline'>Download</span> Resume
+              <span><span className='hidden sm:inline'>Download</span>{" "}Resume</span>
             </motion.button>
 
             <motion.button
@@ -236,7 +236,7 @@ const AceternityHero = () => {
               transition={{ duration: 0.15 }}
               onClick={handleViewCaseStudies}
               className={cn(
-                "group inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold w-full sm:w-auto",
+                "group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold w-full sm:w-auto",
                 "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border-2 border-purple-200 dark:border-purple-500/30",
                 "hover:bg-white dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
                 "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",
@@ -244,7 +244,7 @@ const AceternityHero = () => {
               )}
             >
               <HiEye className="w-5 h-5 group-hover:scale-110 transition-transform duration-150" />
-              <span className='hidden sm:inline'>View</span> Portfolio
+              <span><span className='hidden sm:inline'>View</span>{" "}Portfolio</span>
             </motion.button>
           </motion.div>
         </motion.div>

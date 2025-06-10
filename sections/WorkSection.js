@@ -151,14 +151,17 @@ const WorkSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
             {getDisplayProjects().map((project, index) => (
-              <motion.div
+              <motion.a
                 key={project.id}
+                href={project.link}
+                target={project.category === 'journalism' ? "_blank" : "_self"}
+                rel={project.category === 'journalism' ? "noopener noreferrer" : undefined}
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.9 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group cursor-pointer block"
               >
                 {/* Project Image */}
                 <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 overflow-hidden">
@@ -235,32 +238,8 @@ const WorkSection = () => {
                     )}
                   </div>
 
-                  {/* Action */}
-                  {project.category === 'journalism' ? (
-                    <motion.a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 w-full justify-center bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50"
-                    >
-                      <HiExternalLink className="w-4 h-4" />
-                      Read Article
-                    </motion.a>
-                  ) : (
-                    <motion.a
-                      href={project.link}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 w-full justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                    >
-                      <HiEye className="w-4 h-4" />
-                      Read Full Article
-                    </motion.a>
-                  )}
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
           </AnimatePresence>
         </div>
