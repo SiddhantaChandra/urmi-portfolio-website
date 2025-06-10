@@ -32,9 +32,23 @@ const ResizableNavbarWrapper = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleNavItemClick = () => {
+  const handleNavItemClick = (e, href) => {
     // Close mobile menu when nav item is clicked
     setIsMobileMenuOpen(false);
+    
+    // Handle smooth scrolling for hash links
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
   };
 
   return (
@@ -52,6 +66,7 @@ const ResizableNavbarWrapper = () => {
             <NavbarButton 
               href="#contact"
               variant="dark"
+              onClick={(e) => handleNavItemClick(e, '#contact')}
             >
               Let&apos;s Connect
             </NavbarButton>
@@ -79,7 +94,7 @@ const ResizableNavbarWrapper = () => {
               <a
                 key={idx}
                 href={item.link}
-                onClick={handleNavItemClick}
+                onClick={(e) => handleNavItemClick(e, item.link)}
                 className="block w-full py-6 px-4 text-gray-900 hover:text-purple-600 dark:text-gray-100 dark:hover:text-purple-400 transition-colors duration-200 font-medium text-center rounded-lg hover:bg-purple-50/50 dark:hover:bg-purple-900/20"
               >
                 {item.name}
@@ -90,6 +105,7 @@ const ResizableNavbarWrapper = () => {
                 href="#contact"
                 variant="mobile"
                 className="w-full text-center px-6 py-3 text-base font-semibold"
+                onClick={(e) => handleNavItemClick(e, '#contact')}
               >
                 Let&apos;s Connect
               </NavbarButton>
