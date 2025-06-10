@@ -19,13 +19,10 @@ const WorkSection = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    // Set initial value
     handleResize();
-    
-    // Add event listener
+  
     window.addEventListener('resize', handleResize);
     
-    // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -55,7 +52,7 @@ const WorkSection = () => {
     type: article.articleType
   }));
 
-  // Create alternating pattern for all articles
+
   const createAlternatingProjects = () => {
     const alternating = [];
     const maxLength = Math.max(contentProjects.length, journalismProjects.length);
@@ -86,7 +83,6 @@ const WorkSection = () => {
       ? contentProjects 
       : journalismProjects;
 
-  // Limit articles based on screen size
   const getDisplayProjects = () => {
     const limit = isMobile ? 6 : 9;
     return filteredProjects.slice(0, limit);
@@ -150,7 +146,7 @@ const WorkSection = () => {
           </div>
         </motion.div>
 
-        {/* Projects Display - Responsive Layout */}
+        
         {/* Desktop/Tablet: Card Grid Layout */}
         <div className="hidden md:block">
           <AnimatePresence mode="wait">
@@ -266,7 +262,7 @@ const WorkSection = () => {
               className="space-y-4 px-2"
             >
             {getDisplayProjects().map((project, index) => {
-              // First item gets detailed card treatment
+             
               if (index === 0) {
                 return (
                   <motion.a
@@ -328,7 +324,7 @@ const WorkSection = () => {
                 );
               }
 
-              // Rest of the items get simplified treatment
+              
               return (
                 <motion.a
                   key={`mobile-simple-${project.id}`}

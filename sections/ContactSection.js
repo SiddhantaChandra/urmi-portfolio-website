@@ -156,16 +156,11 @@ const ContactSection = ({ preloaded = false }) => {
       animate={preloaded ? "visible" : "hidden"}
       viewport={{ once: true, margin: "-100px" }}
     >
-      {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
-      
-      {/* Spotlight Effects - Matching hero section */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slow" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slower" />
       </div>
-
-      {/* Floating Orbs - Matching hero section */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -316,21 +311,22 @@ const ContactSection = ({ preloaded = false }) => {
               <div className="mt-8 pt-6 border-t border-gray-200/50 dark:border-gray-700/50">
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span>Open to freelance opportunities</span>
+                  <span>Open to full-time opportunities</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-2">
                   <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <span>Available for content strategy consulting</span>
+                  <span>Ready to relocate</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-2">
                   <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
                   <span>Experienced in entertainment journalism</span>
                 </div>
+            
               </div>
             </div>
           </motion.div>
 
-          {/* Right Column - Resources & Social */}
+   
           <motion.div 
             className="space-y-8 flex flex-col h-full"
             variants={itemVariants}

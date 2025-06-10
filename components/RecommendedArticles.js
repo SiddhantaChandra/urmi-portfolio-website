@@ -16,17 +16,17 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const sectionRef = useRef(null);
   
-  // Responsive items per view - Updated counts
+ 
   const [itemsPerView, setItemsPerView] = useState(4);
   
   useEffect(() => {
     const updateItemsPerView = () => {
       if (window.innerWidth < 640) {
-        setItemsPerView(2); // Mobile: 2 cards
+        setItemsPerView(2); 
       } else if (window.innerWidth < 1024) {
-        setItemsPerView(3); // Tablet: 3 cards
+        setItemsPerView(3); 
       } else {
-        setItemsPerView(4); // Desktop: 4 cards
+        setItemsPerView(4); 
       }
     };
     
@@ -35,7 +35,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     return () => window.removeEventListener('resize', updateItemsPerView);
   }, []);
 
-  // Intersection Observer for lazy loading
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,7 +45,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
       },
       {
         threshold: 0.1,
-        rootMargin: '200px 0px', // Start loading 200px before the section comes into view
+        rootMargin: '200px 0px', 
       }
     );
 
@@ -60,26 +60,25 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     };
   }, [isInView]);
 
-  // Client-side shuffle to avoid hydration mismatch - only when in view
+  
   useEffect(() => {
     if (!isInView) return;
     
     setIsLoading(true);
     
-    // Simulate loading delay for better UX
+   
     const timer = setTimeout(() => {
-      // Get all articles and filter out current article
+    
       const allArticles = [...contentWritingArticles, ...journalArticles];
       
-      // Create a Set to track unique articles and avoid duplicates
+     
       const seenTitles = new Set();
       const uniqueArticles = allArticles.filter(article => {
-        // Skip current article
+       
         if (article.slug === currentArticleSlug || article.id === currentArticleId) {
           return false;
         }
         
-        // Skip duplicates based on title
         if (seenTitles.has(article.title)) {
           return false;
         }
@@ -88,7 +87,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
         return true;
       });
       
-      // Shuffle and prepare articles for display
+  
       const shuffled = uniqueArticles
         .sort(() => Math.random() - 0.5)
         .slice(0, 8)
@@ -117,10 +116,10 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     const maxIndex = shuffledArticles.length - itemsPerView;
     setCurrentIndex(prev => {
       if (prev === 0) {
-        // If at the beginning, go to the last complete set
+     
         return Math.floor(maxIndex / itemsPerView) * itemsPerView;
       } else {
-        // Otherwise, go back by itemsPerView
+        
         const prevIndex = Math.max(0, prev - itemsPerView);
         return prevIndex;
       }
@@ -128,20 +127,19 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   }, [shuffledArticles.length, itemsPerView]);
   
   const handleArticleClick = useCallback((article) => {
-    // Handle different article types properly
+   
     if (article.slug) {
-      // Content writing articles with slugs
+    
       router.push(`/articles/${article.slug}`);
     } else if (article.link) {
-      // Journalism articles with external links
+ 
       window.open(article.link, '_blank');
     } else if (article.id) {
-      // Legacy articles with IDs
+    
       router.push(`/articles/${article.id}`);
     }
   }, [router]);
 
-  // Touch handling for mobile swipe
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -171,7 +169,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     }
   };
   
-  // Don't render until in view
+
   if (!isInView) {
     return (
       <div 
@@ -190,7 +188,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     );
   }
   
-  // Loading state after intersection
+  
   if (isLoading || shuffledArticles.length === 0) {
     return (
       <motion.section
@@ -230,7 +228,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   const maxIndex = shuffledArticles.length - itemsPerView;
   const canNavigate = shuffledArticles.length > itemsPerView;
   
-  // Calculate pagination dots based on itemsPerView (responsive)
+  // Calculate pagination
   const totalPages = Math.ceil(shuffledArticles.length / itemsPerView);
   const currentPage = Math.floor(currentIndex / itemsPerView);
   
@@ -274,7 +272,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
         
         {/* Carousel Container */}
         <div className="relative">
-          {/* Navigation Arrows - Hidden on mobile, visible on larger screens */}
+          
           {canNavigate && (
             <>
               <motion.button

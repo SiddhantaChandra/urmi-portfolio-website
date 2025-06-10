@@ -209,7 +209,7 @@ export const NavbarLogo = () => {
       whileTap={{ scale: 0.98 }}
       className="relative z-20 flex items-center space-x-3 py-2 group cursor-pointer"
     >
-      {/* Gradient Typography Logo */}
+      
       <div className="relative flex items-center space-x-3">
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-20 transition-all duration-500" />
@@ -239,7 +239,7 @@ export const NavbarLogo = () => {
         
         {/* Minimal Logo Text */}
         <div className="relative flex items-baseline">
-          {/* Mobile: Just "Urmi" */}
+          {/* Mobile */}
           <motion.div className="flex items-baseline md:hidden">
             {['U', 'r', 'm', 'i'].map((letter, index) => (
               <motion.span
@@ -264,7 +264,7 @@ export const NavbarLogo = () => {
             ))}
           </motion.div>
 
-          {/* Desktop: Full Name */}
+          {/* Desktop */}
           <motion.div className="hidden md:flex items-baseline">
             {/* First Name */}
             <div className="flex items-baseline">

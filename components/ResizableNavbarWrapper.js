@@ -64,20 +64,20 @@ const ResizableNavbarWrapper = () => {
       // Close mobile menu first
       setIsMobileMenuOpen(false);
       
-      // For mobile, use a small delay then let browser handle navigation
+      
       if (href && href.startsWith('#')) {
         setTimeout(() => {
           const targetId = href.substring(1);
           const targetElement = document.getElementById(targetId);
           
           if (targetElement) {
-            // Use a more mobile-friendly scroll approach
+           
             window.scrollTo({
-              top: targetElement.offsetTop - 80, // Account for navbar height
+              top: targetElement.offsetTop - 80, 
               behavior: 'smooth'
             });
           }
-        }, 300); // Small delay to let menu close animation complete
+        }, 250); 
       }
     } else {
       // Desktop behavior with preventDefault

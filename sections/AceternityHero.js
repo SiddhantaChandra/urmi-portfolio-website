@@ -35,19 +35,19 @@ const AceternityHero = ({ onLoaded }) => {
       };
       
       animateCount();
-    }, 800); // Start after 800ms delay
+    }, 900); 
     
     return () => clearTimeout(timer);
   }, []);
 
-  // Notify when hero section is loaded and ready
+  
   useEffect(() => {
     const loadTimer = setTimeout(() => {
       setIsLoaded(true);
       if (onLoaded) {
         onLoaded();
       }
-    }, 1000); // Give hero a second to settle
+    }, 1000); 
 
     return () => clearTimeout(loadTimer);
   }, [onLoaded]);

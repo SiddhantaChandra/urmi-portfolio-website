@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { HiPencilAlt, HiGlobe, HiTrendingUp, HiUsers, HiStar, HiBookOpen } from 'react-icons/hi';
-import { cn } from '../utils/cn';
 import Image from 'next/image';
 
 const AboutSection = () => {
@@ -156,7 +155,7 @@ const AboutSection = () => {
         </div>
       </div>
 
-      {/* Integrated Brands Section - Full Width with Subtle Background */}
+    
       <div className="relative -mx-3 sm:-mx-6 lg:-mx-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-blue-100/30 dark:from-gray-700/30 dark:to-gray-800/30"></div>
         <div className="relative py-12 md:py-16 px-3 sm:px-6 lg:px-8">
@@ -226,7 +225,7 @@ const AboutSection = () => {
               ))}
             </div>
             
-            {/* 5th brand centered below */}
+            {/* 5th brand centered */}
             {brands[4] && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
