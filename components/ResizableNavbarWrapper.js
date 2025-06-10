@@ -32,21 +32,66 @@ const ResizableNavbarWrapper = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleNavItemClick = (e, href) => {
-    // Close mobile menu when nav item is clicked
+  const handleMobileNavClick = (e, href) => {
+    // Close mobile menu immediately
     setIsMobileMenuOpen(false);
     
-    // Handle smooth scrolling for hash links
+    // Don't prevent default for mobile - let browser handle navigation
+    // Just add a small delay for smooth UX
     if (href && href.startsWith('#')) {
-      e.preventDefault();
-      const targetId = href.substring(1);
-      const targetElement = document.getElementById(targetId);
+      setTimeout(() => {
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          const navbar = document.querySelector('nav');
+          const navbarHeight = navbar ? navbar.offsetHeight : 80;
+          
+          window.scrollTo({
+            top: targetElement.offsetTop - navbarHeight,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handleNavItemClick = (e, href) => {
+    // For mobile browsers, let the default navigation work
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // Close mobile menu first
+      setIsMobileMenuOpen(false);
       
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+      // For mobile, use a small delay then let browser handle navigation
+      if (href && href.startsWith('#')) {
+        setTimeout(() => {
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            // Use a more mobile-friendly scroll approach
+            window.scrollTo({
+              top: targetElement.offsetTop - 80, // Account for navbar height
+              behavior: 'smooth'
+            });
+          }
+        }, 300); // Small delay to let menu close animation complete
+      }
+    } else {
+      // Desktop behavior with preventDefault
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       }
     }
   };
@@ -90,11 +135,11 @@ const ResizableNavbarWrapper = () => {
             isOpen={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
           >
-            {navItems.map((item, idx) => (
+            {navItems.filter(item => item.name !== 'Contact').map((item, idx) => (
               <a
                 key={idx}
                 href={item.link}
-                onClick={(e) => handleNavItemClick(e, item.link)}
+                onClick={(e) => handleMobileNavClick(e, item.link)}
                 className="block w-full py-6 px-4 text-gray-900 hover:text-purple-600 dark:text-gray-100 dark:hover:text-purple-400 transition-colors duration-200 font-medium text-center rounded-lg hover:bg-purple-50/50 dark:hover:bg-purple-900/20"
               >
                 {item.name}
@@ -105,7 +150,7 @@ const ResizableNavbarWrapper = () => {
                 href="#contact"
                 variant="mobile"
                 className="w-full text-center px-6 py-3 text-base font-semibold"
-                onClick={(e) => handleNavItemClick(e, '#contact')}
+                onClick={(e) => handleMobileNavClick(e, '#contact')}
               >
                 Let&apos;s Connect
               </NavbarButton>
