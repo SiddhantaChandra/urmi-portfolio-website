@@ -338,7 +338,7 @@ export const NavbarButton = ({
       "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white shadow-lg hover:shadow-xl hover:from-purple-700 hover:to-pink-700 dark:hover:from-purple-600 dark:hover:to-pink-600 border border-purple-200/50 dark:border-purple-400/30 font-semibold hover:scale-105",
   };
 
-  const MotionTag = motion(Tag);
+  const MotionTag = motion.create(Tag);
  
   return (
     <MotionTag
