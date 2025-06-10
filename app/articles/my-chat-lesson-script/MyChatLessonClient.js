@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { HiArrowLeft, HiSparkles, HiClock, HiEye, HiUser, HiShare, HiHome, HiChevronRight } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../utils/cn';
+import RecommendedArticles from '../../../components/RecommendedArticles';
 
 // Function to decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -411,6 +412,12 @@ export default function MyChatLessonClient({ article }) {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Recommended Articles */}
+      <RecommendedArticles 
+        currentArticleSlug={article?.slug} 
+        currentArticleId={article?.id} 
+      />
 
       {/* CSS for grid background */}
       <style jsx>{`

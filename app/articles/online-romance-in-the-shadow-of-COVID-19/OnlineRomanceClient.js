@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiSparkles, HiShare, HiHome, HiChevronRight } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import RecommendedArticles from '../../../components/RecommendedArticles';
 
 // Breadcrumb Component
 const Breadcrumb = ({ article }) => {
@@ -526,6 +527,12 @@ export default function OnlineRomanceClient({ article }) {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Recommended Articles */}
+      <RecommendedArticles 
+        currentArticleSlug={article?.slug} 
+        currentArticleId={article?.id} 
+      />
 
       {/* CSS for grid background and editing styles */}
       <style jsx>{`

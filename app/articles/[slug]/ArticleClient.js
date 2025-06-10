@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { HiClock, HiUser, HiArrowLeft, HiShare, HiSparkles, HiEye, HiHome, HiChevronRight } from 'react-icons/hi';
+import { HiClock, HiUser, HiArrowLeft, HiShare, HiSparkles, HiEye, HiHome, HiChevronRight, HiDocumentText } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../utils/cn';
 import Image from 'next/image';
+import RecommendedArticles from '../../../components/RecommendedArticles';
 
 // Breadcrumb Component
 const Breadcrumb = ({ article }) => {
@@ -434,6 +435,12 @@ export default function ArticleClient({ article }) {
           </motion.button>
         </motion.div>
       </article>
+
+      {/* Recommended Articles */}
+      <RecommendedArticles 
+        currentArticleSlug={article?.slug} 
+        currentArticleId={article?.id} 
+      />
 
       {/* CSS for grid background */}
       <style jsx>{`
