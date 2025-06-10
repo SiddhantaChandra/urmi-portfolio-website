@@ -38,9 +38,9 @@ const ExperienceSection = () => {
         "Cover exclusive celebrity news, film releases and conduct interviews with industry figures",
         "Provide comprehensive event coverage including Kolkata Comic Con",
         "Build and maintain a strong network of industry contacts and sources",
-        "Edited and proofed copies ensuring clarity, error-free and accurate content",
-        "Handled The Telegraph Online's social media presence, ensuring timely coverage of trending and viral topics",
-        "Boosted page views and user engagement by strategically leveraging push notifications for impactful stories"
+        "Edit and proof copies ensuring clarity, error-free and accurate content",
+        "Handle The Telegraph Online's social media presence, ensuring timely coverage of trending and viral topics",
+        "Boost page views and user engagement by strategically leveraging push notifications for impactful stories"
       ],
       skills: ["Entertainment Journalism", "SEO Writing", "Breaking News", "Celebrity Interviews", "Event Coverage"],
       color: "from-green-500 to-emerald-500",

@@ -130,10 +130,6 @@ const Footer = () => {
                   Urmi Chakraborty
                 </h3>
               </div>
-              <p className="text-gray-400 mb-6 text-lg leading-relaxed max-w-md font-sans">
-                Journalist turned content writer, bringing editorial excellence and SEO expertise to brand storytelling. 
-                From breaking news to compelling content strategies.
-              </p>
               
               {/* Contact Info */}
               <div className="space-y-3 mb-6">
