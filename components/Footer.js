@@ -319,7 +319,7 @@ const Footer = () => {
               {/* Professional Note */}
               <div className="text-sm text-gray-500 font-sans text-center md:text-right">
                 <p>Available for remote work globally</p>
-                <p className="text-xs mt-1">Journalist • Content Writer • Storyteller</p>
+                <p className="text-xs mt-1">Journalist • Content Writer • Storyteller • V1.0</p>
               </div>
             </motion.div>
           </div>
