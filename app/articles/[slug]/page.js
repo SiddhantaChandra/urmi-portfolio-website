@@ -70,7 +70,7 @@ export async function generateMetadata({ params }) {
 
 // Structured Data Component
 function StructuredData({ article }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://urmichakraborty.com';
+  const siteUrl =  'https://urmichakraborty.com';
   
   const structuredData = {
     "@context": "https://schema.org",
@@ -89,7 +89,7 @@ function StructuredData({ article }) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Your Site Name",
+      "name": "Urmi Chakraborty",
       "logo": {
         "@type": "ImageObject",
         "url": `https://urmichakraborty.com/_next/image?url=%2Flogo.webp&w=48&q=75`

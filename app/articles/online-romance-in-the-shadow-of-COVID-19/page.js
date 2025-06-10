@@ -7,7 +7,7 @@ export async function generateMetadata() {
 
   if (!article) {
     return {
-      title: 'Article Not Found | Your Site Name',
+      title: 'Article Not Found | Urmi Chakraborty',
       description: 'The article you are looking for could not be found.',
     };
   }
