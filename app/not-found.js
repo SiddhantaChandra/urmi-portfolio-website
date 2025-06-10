@@ -268,7 +268,7 @@ export default function NotFound() {
                 Oops! Page Not Found
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                This page went on a vacation! 🏖️ But hey, let's find you some amazing content instead.
+                This page went on a vacation! 🏖️ But hey, let&apos;s find you some amazing content instead.
               </p>
             </motion.div>
 
@@ -303,7 +303,7 @@ export default function NotFound() {
           <motion.div variants={itemVariants} className="mb-12 sm:mb-16">
             <div className="text-center mb-6 sm:mb-8 px-4">
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                Maybe You're Looking For These?
+                Maybe You&apos;re Looking For These?
               </h3>
               
               {/* Search Bar */}
@@ -387,7 +387,7 @@ export default function NotFound() {
                 className="text-center py-8 sm:py-12 px-4"
               >
                 <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-                  No articles found matching "<span className="font-semibold">{searchQuery}</span>". Try a different search term!
+                  No articles found matching &ldquo;<span className="font-semibold">{searchQuery}</span>&rdquo;. Try a different search term!
                 </p>
               </motion.div>
             )}
