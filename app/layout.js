@@ -10,10 +10,36 @@ const inter = Inter({
 });
 
 export const metadata = {
+  metadataBase: new URL('https://urmichakraborty.com'),
   title: "Urmi Chakraborty - Journalist & Content Writer",
   description: "From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work.",
   keywords: "content writer, journalist, SEO content, brand storytelling, editorial, content strategy, SEO writing, editing, proofreading, Urmi Chakraborty, entertainment journalism, anime, Hollywood, Bollywood, Urmi, Urmi Telegraph, Urmi The Telegraph, Urmi The Telegraph Online, Urmi MyKolkata",
   author: "Urmi Chakraborty",
+  openGraph: {
+    title: "Urmi Chakraborty - Journalist & Content Writer",
+    description: "From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work.",
+    url: '/',
+    siteName: 'Urmi Chakraborty',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Urmi Chakraborty - Journalist & Content Writer",
+    description: "From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work.",
+    creator: '@urmic660',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }) {

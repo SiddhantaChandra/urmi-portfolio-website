@@ -92,7 +92,7 @@ function StructuredData({ article }) {
       "name": "Your Site Name",
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/logo.png`
+        "url": `https://urmichakraborty.com/_next/image?url=%2Flogo.webp&w=48&q=75`
       }
     },
     "mainEntityOfPage": {

@@ -12,16 +12,16 @@ export async function generateMetadata() {
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoursite.com';
+  const siteUrl = 'https://urmichakraborty.com/';
   const articleUrl = `${siteUrl}/articles/${article.slug}`;
 
   return {
-    title: `${article.title} | Your Site Name`,
+    title: `${article.title} | Urmi Chakraborty`,
     description: article.excerpt.length > 160 ? article.excerpt.substring(0, 157) + '...' : article.excerpt,
     keywords: article.tags?.join(', '),
     authors: [{ name: article.author }],
     creator: article.author,
-    publisher: 'Your Site Name',
+    publisher: 'Urmi Chakraborty',
     alternates: {
       canonical: articleUrl,
     },
@@ -29,7 +29,7 @@ export async function generateMetadata() {
       title: article.title,
       description: article.excerpt,
       url: articleUrl,
-      siteName: 'Your Site Name',
+      siteName: 'Urmi Chakraborty',
       images: [
         {
           url: article.featuredImage,
@@ -49,7 +49,7 @@ export async function generateMetadata() {
       title: article.title,
       description: article.excerpt,
       images: [article.featuredImage],
-      creator: '@yourhandle', // Replace with actual Twitter handle
+      creator: '@urmic660', // Replace with actual Twitter handle
     },
     robots: {
       index: true,
@@ -67,7 +67,7 @@ export async function generateMetadata() {
 
 // Structured Data Component
 function StructuredData({ article }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoursite.com';
+  const siteUrl = 'https://urmichakraborty.com/';
   
   const structuredData = {
     "@context": "https://schema.org",
@@ -86,10 +86,10 @@ function StructuredData({ article }) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Your Site Name",
+      "name": "Urmi Chakraborty",
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/logo.png` // Add your logo URL
+        "url": `https://urmichakraborty.com/_next/image?url=%2Flogo.webp&w=48&q=75`
       }
     },
     "mainEntityOfPage": {
