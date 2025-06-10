@@ -211,19 +211,19 @@ const ContactSection = () => {
 
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="lg:col-span-2"
+            className="lg:col-span-3"
           >
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Send me a message</h3>
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">Send me a message</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-sans">
@@ -333,98 +333,88 @@ const ContactSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="h-full"
+            className="lg:col-span-2"
           >
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full flex flex-col">
-              {/* Top Section */}
-              <div className="flex-1">
-                {/* Professional Links - Enhanced */}
-                <div className="mb-8">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-sans">Connect With Me</h3>
-                    <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full"></div>
-                  </div>
-                  <div className="space-y-4">
-                    {socialLinks.map((link, index) => (
-                      <motion.a
-                        key={link.name}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: index * 0.2 }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.05, y: -3 }}
-                        className="relative flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-800/30 dark:hover:to-pink-800/30 transition-all duration-150 group border border-purple-200/50 dark:border-purple-700/50 overflow-hidden"
-                      >
-                        {/* Animated background glow */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
-                        
-                        <div className="relative w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-150">
-                          <HiExternalLink className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-150" />
-                        </div>
-                        <div className="relative flex-1">
-                          <h4 className="font-bold text-gray-900 dark:text-gray-100 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-lg">
-                            {link.name}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 font-sans group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
-                            {link.description}
-                          </p>
-                        </div>
-                  
-                      </motion.a>
-                    ))}
-                  </div>
-                </div>
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
+              {/* Header */}
+              <div className="text-center mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 font-sans">Connect With Me</h3>
+                <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full"></div>
+              </div>
 
-                {/* Divider with decoration */}
-                <div className="relative my-8">
-                  <div className="border-t border-gray-200 dark:border-gray-600"></div>
-                  <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                      <HiMail className="w-4 h-4 text-white" />
+              {/* Professional Links */}
+              <div className="space-y-3 mb-6">
+                {socialLinks.map((link, index) => (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="relative flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-800/30 dark:hover:to-pink-800/30 transition-all duration-150 group border border-purple-200/50 dark:border-purple-700/50"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
+                      <HiExternalLink className="w-5 h-5 text-white" />
                     </div>
-                  </div>
-                </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-gray-900 dark:text-gray-100 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-base">
+                        {link.name}
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 font-sans truncate">
+                        {link.description}
+                      </p>
+                    </div>
+                  </motion.a>
+                ))}
+              </div>
 
-                <div className="space-y-2">
-                  {contactInfo.map((info, index) => {
-                    const IconComponent = info.icon;
-                    return (
-                      <motion.div
-                        key={info.label}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.02, x: 5 }}
-                        className="flex justify-center items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-150"
-                      >
-                        <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
-                          <IconComponent className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 font-sans">{info.label}</h4>
-                          {info.href ? (
-                            <a
-                              href={info.href}
-                              className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium font-sans transition-colors"
-                            >
-                              {info.value}
-                            </a>
-                          ) : (
-                            <p className="text-gray-600 dark:text-gray-300 font-medium font-sans">{info.value}</p>
-                          )}
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-sans">{info.description}</p>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="border-t border-gray-200 dark:border-gray-600"></div>
+                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <HiMail className="w-3 h-3 text-white" />
+                  </div>
                 </div>
               </div>
 
-
+              {/* Contact Info */}
+              <div className="space-y-3">
+                {contactInfo.map((info, index) => {
+                  const IconComponent = info.icon;
+                  return (
+                    <motion.div
+                      key={info.label}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-150"
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        <IconComponent className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 font-sans text-sm">{info.label}</h4>
+                        {info.href ? (
+                          <a
+                            href={info.href}
+                            className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium font-sans transition-colors text-sm truncate block"
+                          >
+                            {info.value}
+                          </a>
+                        ) : (
+                          <p className="text-gray-600 dark:text-gray-300 font-medium font-sans text-sm">{info.value}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         </div>

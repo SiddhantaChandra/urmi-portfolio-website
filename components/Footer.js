@@ -58,8 +58,8 @@ const Footer = () => {
   const services = [
     { name: 'Content Writing', href: '#work' },
     { name: 'Journalism', href: '#experience' },
-    { name: 'SEO Content', href: '#work' },
-    { name: 'Brand Storytelling', href: '#work' },
+    { name: 'SEO Writing', href: '#work' },
+    { name: 'Editing & Proofreading', href: '#work' },
     { name: 'Editorial Services', href: '#experience' }
   ];
 

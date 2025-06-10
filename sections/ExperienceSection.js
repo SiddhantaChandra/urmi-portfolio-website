@@ -67,7 +67,7 @@ const ExperienceSection = () => {
     {
       period: "Nov 2022 - Aug 2023", 
       role: "Freelance reporter for The Telegraph Online and MyKolkata",
-      company: "The Telegraph Online & MyKolkata",
+      company: "ALLCAP Communications",
       location: "ALLCAP Communications - Kolkata",
       type: "Freelance",
       icon: HiLightBulb,
