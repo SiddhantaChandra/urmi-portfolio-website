@@ -6,7 +6,7 @@ import {
   AnimatePresence,
   useScroll,
 } from "framer-motion";
- 
+import Image from 'next/image';
 import React, { useRef, useState, useEffect } from "react";
  
  
@@ -210,9 +210,11 @@ export const NavbarLogo = () => {
           className="relative flex-shrink-0"
         >
           <div className="w-10 h-10 rounded-lg overflow-hidden shadow-md">
-            <img src="/logo.webp"
+            <Image src="/logo.webp"
               alt="Urmi Chakraborty Logo" 
               className="w-full h-full object-cover"
+              width={40}
+              height={40}
             />
           </div>
         </motion.div>

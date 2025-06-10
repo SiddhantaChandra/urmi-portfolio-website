@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { HiMail, HiLocationMarker, HiExternalLink, HiPhone, HiHeart, HiDownload, HiArrowUp } from 'react-icons/hi';
 import { FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -120,10 +121,12 @@ const Footer = () => {
               {/* Footer Logo */}
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 rounded-lg overflow-hidden shadow-md">
-                  <img 
+                  <Image 
                     src="/logo.webp" 
                     alt="Urmi Chakraborty Logo" 
                     className="w-full h-full object-cover"
+                    width={40}
+                    height={40}
                   />
                 </div>
                 <h3 className="text-2xl font-bold text-white font-sans">

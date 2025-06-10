@@ -1,4 +1,5 @@
 import contentWritingArticles from '../../../components/ContentWritingData.js';
+import Link from 'next/link';
 
 // SEO Metadata function
 export async function generateMetadata({ params }) {
@@ -169,12 +170,12 @@ function NotFoundPage() {
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Article Not Found</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">The article you&apos;re looking for doesn&apos;t exist.</p>
-        <a
+        <Link
           href="/"
           className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg transition-colors duration-300 inline-block"
         >
           Back to Home
-        </a>
+        </Link>
       </div>
     </div>
   );
