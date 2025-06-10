@@ -2,38 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload } from 'react-icons/hi';
+import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload, HiChat, HiSparkles } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 
 const ContactSection = ({ preloaded = false }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      alert('Thank you for your message! I\'ll get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setIsSubmitting(false);
-    }, 1000);
-  };
-
   const contactInfo = [
     {
       icon: HiMail,
@@ -53,12 +25,14 @@ const ContactSection = ({ preloaded = false }) => {
     {
       name: 'LinkedIn',
       href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183/',
-      description: 'Professional network & updates'
+      description: 'Professional network & updates',
+      icon: '👔'
     },
     {
       name: 'Muckrack',
       href: 'https://muckrack.com/urmi-chakraborty-1',
-      description: 'My Muck Rack profile'
+      description: 'My Muck Rack profile',
+      icon: '📰'
     }
   ];
 
@@ -98,23 +72,39 @@ const ContactSection = ({ preloaded = false }) => {
       description: 'Get my complete resume and professional background',
       action: 'Download PDF',
       icon: HiUser,
-      onClick: downloadCV
+      onClick: downloadCV,
+      gradient: 'from-blue-500 to-purple-600'
     },
     {
       title: 'Download Portfolio (PDF)',
       description: 'View my content writing samples and case studies',
       action: 'Download PDF',
-      icon: HiExternalLink,
-      onClick: downloadPortfolioPDF
+      icon: HiDownload,
+      onClick: downloadPortfolioPDF,
+      gradient: 'from-purple-500 to-pink-500'
     },
     {
       title: 'Download Portfolio (DOCX)',
       description: 'Editable version of my writing samples',
       action: 'Download DOCX',
-      icon: HiExternalLink,
-      onClick: downloadPortfolioDOCX
+      icon: HiDownload,
+      onClick: downloadPortfolioDOCX,
+      gradient: 'from-pink-500 to-blue-500'
     }
   ];
+
+  // Email action functions
+  const sendEmail = () => {
+    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Hello Urmi&body=Hi Urmi,%0D%0A%0D%0AI would like to discuss...';
+  };
+
+  const sendEmailWithProject = () => {
+    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Project Inquiry&body=Hi Urmi,%0D%0A%0D%0AI have a project opportunity and would like to discuss:%0D%0A%0D%0AProject Type:%0D%0ABudget:%0D%0ATimeline:%0D%0ADescription:%0D%0A%0D%0ABest regards';
+  };
+
+  const sendEmailWithCollaboration = () => {
+    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Collaboration Opportunity&body=Hi Urmi,%0D%0A%0D%0AI would like to explore a collaboration opportunity:%0D%0A%0D%0AType of collaboration:%0D%0AYour expertise needed:%0D%0AProject details:%0D%0A%0D%0ALooking forward to hearing from you!';
+  };
 
   // Optimized animation variants for better performance
   const containerVariants = {
@@ -140,36 +130,11 @@ const ContactSection = ({ preloaded = false }) => {
     }
   };
 
-  const formVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const sidebarVariants = {
-    hidden: { opacity: 0, x: 30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.6,
-        delay: 0.2,
-        ease: "easeOut"
-      }
-    }
-  };
-
   // Loading state component
   if (!preloaded) {
     return (
-      <section id="contact" className="relative py-16 md:py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden">
-        <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <section id="contact" className="relative py-16 md:py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 overflow-hidden">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-pulse space-y-4">
               <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mx-auto"></div>
@@ -185,36 +150,43 @@ const ContactSection = ({ preloaded = false }) => {
   return (
     <motion.section 
       id="contact" 
-      className="relative py-16 md:py-20 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50 font-sans transition-colors duration-500 overflow-hidden motion-safe"
+      className="relative py-16 md:py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       animate={preloaded ? "visible" : "hidden"}
       viewport={{ once: true, margin: "-100px" }}
     >
-      {/* Enhanced Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-r from-purple-300/15 to-pink-300/15 dark:from-purple-500/8 dark:to-pink-500/8 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-gradient-to-r from-blue-300/15 to-cyan-300/15 dark:from-blue-500/8 dark:to-cyan-500/8 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-pulse-slower" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-pink-300/8 to-purple-300/8 dark:from-pink-500/4 dark:to-purple-500/4 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-2xl" />
-        
-        {/* Floating particles */}
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
+      
+      {/* Spotlight Effects - Matching hero section */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slow" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slower" />
+      </div>
+
+      {/* Floating Orbs - Matching hero section */}
+      <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 0.4, 0],
+              opacity: [0, 0.6, 0],
               scale: [0, 1, 0],
-              x: [0, Math.random() * 120 - 60],
-              y: [0, Math.random() * 120 - 60],
+              x: [0, Math.random() * 80 - 40],
+              y: [0, Math.random() * 80 - 40],
             }}
             transition={{
-              duration: 14 + i * 2,
+              duration: 12 + i * 2,
               repeat: Infinity,
-              delay: i * 4,
+              delay: i * 2,
               ease: "easeInOut",
             }}
-            className="absolute w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 rounded-full opacity-15"
+            className={cn(
+              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
+              i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
+            )}
             style={{
               left: `${10 + (i * 15)}%`,
               top: `${20 + (i * 10)}%`,
@@ -223,26 +195,29 @@ const ContactSection = ({ preloaded = false }) => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        {/* Section Header - Enhanced */}
-        <motion.div
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div 
+          className="text-center mb-8 sm:mb-12 md:mb-16"
           variants={itemVariants}
-          className="text-center mb-6 md:mb-8"
         >
+          {/* Badge */}
           <motion.div
-            variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 text-purple-700 dark:text-purple-300 rounded-full text-xs md:text-sm font-medium mb-4 md:mb-6 border border-purple-200/50 dark:border-purple-700/50"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-gradient-to-r from-purple-600/90 to-pink-600/90 dark:from-purple-500/90 dark:to-pink-500/90 text-white shadow-lg mb-4 sm:mb-6"
           >
-            Get In Touch
+            <HiSparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm font-medium font-sans">
+              Get In Touch
+            </span>
           </motion.div>
           
-          <motion.h2 
-            variants={itemVariants}
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6 md:mb-8 font-sans leading-tight"
-          >
-            Let's {' '}
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6 leading-tight font-sans px-4">
+            Let&apos;s{' '}
             <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 dark:from-purple-400 dark:via-pink-400 dark:to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 bg-clip-text text-transparent">
                 connect
               </span>
               <motion.div
@@ -254,261 +229,213 @@ const ContactSection = ({ preloaded = false }) => {
               />
             </span>
             {' '}&{' '}
-            <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 dark:from-pink-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
               create impactful
             </span>
-            <br />
-            <span className="text-gray-700 dark:text-gray-300">content</span>
-          </motion.h2>
+            <br className="hidden sm:block" />
+            <span className="block sm:inline"> content</span>
+          </h2>
           
-          <motion.p 
-            variants={itemVariants}
-            className="text-base md:text-xl text-gray-600 dark:text-gray-300 max-w-5xl mx-auto leading-relaxed font-sans"
-          >
-            From breaking news to in-depth features, I bring clarity, creativity and credibility to every story. <br className="hidden md:block"/>
-            <span className="font-semibold text-purple-600 dark:text-purple-400"> Let's collaborate and bring your vision to life.</span>
-          </motion.p>
+          <div className="max-w-5xl mx-auto px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-2 sm:mb-4">
+              From breaking news to in-depth features, I bring clarity, creativity and credibility to every story.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed">
+              <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+                Let&apos;s collaborate and bring your vision to life.
+              </span>
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
-          {/* Contact Form */}
-          <motion.div
-            variants={formVariants}
-            className="lg:col-span-3"
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 lg:items-start">
+          
+          {/* Left Column - Email Actions */}
+          <motion.div 
+            className="lg:col-span-2 space-y-8 flex flex-col h-full"
+            variants={itemVariants}
           >
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 md:p-6 lg:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
-              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans">Send me a message</h3>
+            {/* Primary Email CTA */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans mb-2 lg:mb-0">
+                  Ready to start a conversation?
+                </h3>
+                <div className="hidden lg:flex items-center gap-2 text-green-600 dark:text-green-400">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">Usually respond in 24 hours</span>
+                </div>
+              </div>
               
-              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
-                <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 md:mb-2 font-sans">
-                      Your Name
-                    </label>
-                    <div className="relative">
-                      <HiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full pl-9 md:pl-10 pr-3 md:pr-4 py-2.5 md:py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 font-sans transition-colors text-sm md:text-base"
-                        placeholder="Enter your name"
-                      />
+              <motion.button
+                onClick={sendEmail}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full group relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white p-4 sm:p-6 rounded-xl shadow-lg transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative text-center">
+                  <div className="font-bold text-lg sm:text-xl">Send Email</div>
+                  <div className="text-white/90 text-xs sm:text-sm">Start a conversation about your project</div>
+                </div>
+              </motion.button>
+            </div>
+
+
+
+            {/* Contact Information */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50 flex-grow">
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Contact Information</h4>
+              <div className="space-y-6">
+                {contactInfo.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex items-center gap-4"
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-r from-slate-100 to-blue-100 dark:from-slate-800 dark:to-blue-900/50 rounded-xl flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
                     </div>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 md:mb-2 font-sans">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <HiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full pl-9 md:pl-10 pr-3 md:pr-4 py-2.5 md:py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 font-sans transition-colors text-sm md:text-base"
-                        placeholder="Enter your email"
-                      />
+                    <div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{item.label}</p>
+                      {item.href ? (
+                        <a href={item.href} className="font-bold text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+                          {item.value}
+                        </a>
+                      ) : (
+                        <p className="font-bold text-gray-900 dark:text-gray-100">{item.value}</p>
+                      )}
                     </div>
-                  </div>
+                  </motion.div>
+                ))}
+              </div>
+              
+              {/* Additional Info to Balance Height */}
+              <div className="mt-8 pt-6 border-t border-gray-200/50 dark:border-gray-700/50">
+                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span>Open to freelance opportunities</span>
                 </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-sans">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 font-sans transition-colors"
-                    placeholder="What's this about?"
-                  />
+                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span>Available for content strategy consulting</span>
                 </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-sans">
-                    Message
-                  </label>
-                  <div className="relative">
-                    <HiChatAlt className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      rows={5}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-gray-100 font-sans transition-colors resize-none"
-                      placeholder="Tell me about your project, goals, and how I can help..."
-                    />
-                  </div>
+                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-2">
+                  <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                  <span>Experienced in entertainment journalism</span>
                 </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    "w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-lg text-lg font-semibold",
-                    "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white",
-                    "shadow-lg hover:shadow-xl transition-all duration-300 font-sans",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <HiPaperAirplane className="w-5 h-5" />
-                      Send Message
-                    </>
-                  )}
-                </motion.button>
-              </form>
+              </div>
             </div>
           </motion.div>
 
-          {/* Contact Info & Links */}
-          <motion.div
-            variants={sidebarVariants}
-            className="lg:col-span-2"
+          {/* Right Column - Resources & Social */}
+          <motion.div 
+            className="space-y-8 flex flex-col h-full"
+            variants={itemVariants}
           >
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 md:p-6 lg:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
-              {/* Header */}
-              <div className="text-center mb-4 md:mb-6">
-                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 md:mb-3 font-sans">Connect With Me</h3>
-                <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full"></div>
+            {/* Downloads */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50">
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Resources</h4>
+              <div className="space-y-4">
+                {quickActions.map((action, index) => (
+                  <motion.button
+                    key={index}
+                    onClick={action.onClick}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full group bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-800 dark:to-blue-900/30 hover:shadow-md transition-all duration-300 p-4 rounded-lg text-left border border-slate-200/50 dark:border-slate-700/50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 bg-gradient-to-r ${action.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          <action.icon className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h5 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-sm">
+                            {action.title}
+                          </h5>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            {action.description}
+                          </p>
+                        </div>
+                      </div>
+                      <HiDownload className="w-4 h-4 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
+                    </div>
+                  </motion.button>
+                ))}
               </div>
+            </div>
 
-              {/* Professional Links */}
-              <div className="space-y-2.5 md:space-y-3 mb-4 md:mb-6">
+            {/* Social Links */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50">
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Connect</h4>
+              <div className="space-y-4">
                 {socialLinks.map((link, index) => (
                   <motion.a
-                    key={link.name}
+                    key={index}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    className="relative flex items-center gap-2.5 md:gap-3 p-2.5 md:p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-800/30 dark:hover:to-pink-800/30 transition-all duration-150 group border border-purple-200/50 dark:border-purple-700/50"
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-3 group p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200"
                   >
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
-                      <HiExternalLink className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg flex items-center justify-center">
+                      <span className="text-lg">{link.icon}</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-gray-900 dark:text-gray-100 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-sm md:text-base">
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-sm">
                         {link.name}
-                      </h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 font-sans truncate">
+                      </p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {link.description}
                       </p>
                     </div>
+                    <HiExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                   </motion.a>
                 ))}
               </div>
-
-              {/* Divider */}
-              <div className="relative my-6">
-                <div className="border-t border-gray-200 dark:border-gray-600"></div>
-                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                    <HiMail className="w-3 h-3 text-white" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div className="space-y-3">
-                {contactInfo.map((info, index) => {
-                  const IconComponent = info.icon;
-                  return (
-                    <motion.div
-                      key={info.label}
-                      variants={itemVariants}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-150"
-                    >
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 font-sans text-sm">{info.label}</h4>
-                        {info.href ? (
-                          <a
-                            href={info.href}
-                            className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium font-sans transition-colors text-sm truncate block"
-                          >
-                            {info.value}
-                          </a>
-                        ) : (
-                          <p className="text-gray-600 dark:text-gray-300 font-medium font-sans text-sm">{info.value}</p>
-                        )}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
             </div>
+
+
           </motion.div>
         </div>
-
-        {/* Documents Section - Horizontal */}
-        <motion.div
-          variants={itemVariants}
-          className="mt-12"
-        >
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/50 dark:border-gray-700/50">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center font-sans">Documents & Downloads</h3>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              {quickActions.map((action, index) => {
-                const IconComponent = action.icon;
-                return (
-                  <motion.div
-                    key={action.title}
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    onClick={action.onClick}
-                    className="cursor-pointer bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-150 border border-gray-200 dark:border-gray-600 group max-w-xs"
-                  >
-                    <div className="flex flex-col items-center text-center space-y-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <IconComponent className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 font-sans group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                          {action.title}
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-sans">
-                          {action.description}
-                        </p>
-                        <div className="flex items-center justify-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400 font-sans">
-                          <span>{action.action}</span>
-                          <HiDownload className="w-4 h-4 group-hover:animate-bounce" />
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
       </div>
+
+      {/* Custom Styles */}
+      <style jsx>{`
+        .bg-grid-slate-100\\/50 {
+          background-image: linear-gradient(rgba(148, 163, 184, 0.5) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(148, 163, 184, 0.5) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+        
+        .dark .bg-grid-slate-700\\/20 {
+          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.4; }
+        }
+        
+        @keyframes pulse-slower {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 0.3; }
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 8s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slower {
+          animation: pulse-slower 12s ease-in-out infinite;
+        }
+      `}</style>
     </motion.section>
   );
 };
