@@ -186,7 +186,7 @@ const ExperienceSection = () => {
           </div>
 
           {/* Experience Items */}
-          <div className="space-y-12 lg:space-y-16">
+          <div className="space-y-16 sm:space-y-20 lg:space-y-16">
             {experiences.map((exp, index) => {
               const IconComponent = exp.icon;
               const isActive = index <= activeIndex;
@@ -219,7 +219,7 @@ const ExperienceSection = () => {
                   <div className="lg:ml-24 w-full">
                     <motion.div
                       className={cn(
-                        "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border transition-all duration-300",
+                        "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 sm:p-8 shadow-lg border transition-all duration-300",
                         isActive 
                           ? "border-indigo-200 dark:border-indigo-500/30 shadow-xl transform scale-105" 
                           : "border-white/50 dark:border-gray-700/50 hover:border-indigo-100 dark:hover:border-indigo-500/20"
@@ -228,18 +228,18 @@ const ExperienceSection = () => {
                     >
                       {/* Header */}
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-                        <div className="flex items-center gap-4 mb-4 sm:mb-0">
+                        <div className="flex items-start gap-4 mb-4 sm:mb-0">
                           <div className={cn(
-                            "w-12 h-12 rounded-lg flex items-center justify-center lg:hidden",
+                            "w-14 h-14 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center lg:hidden flex-shrink-0 shadow-md",
                             `bg-gradient-to-r ${exp.color} ${exp.darkColor}`
                           )}>
-                            <IconComponent className="w-6 h-6 text-white" />
+                            <IconComponent className="w-7 h-7 sm:w-6 sm:h-6 text-white" />
                           </div>
-                          <div>
-                            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans">{exp.role}</h3>
-                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                              <HiOfficeBuilding className="w-4 h-4" />
-                              <span className="font-sans">{exp.company}</span>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans leading-tight">{exp.role}</h3>
+                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mt-1">
+                              <HiOfficeBuilding className="w-4 h-4 flex-shrink-0" />
+                              <span className="font-sans text-sm sm:text-base">{exp.company}</span>
                             </div>
                           </div>
                         </div>
