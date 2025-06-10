@@ -120,7 +120,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg"
+            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg mt-8"
           >
             <HiSparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
             <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 font-sans">
