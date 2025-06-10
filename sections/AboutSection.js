@@ -10,7 +10,6 @@ const AboutSection = () => {
     { name: 'SEO Writing', icon: HiGlobe, level: 98 },
     { name: 'Editing & Proofreading', icon: HiPencilAlt, level: 98 },
     { name: 'Interviewing Techniques', icon: HiTrendingUp, level: 95 },
-    { name: 'Brand Storytelling', icon: HiUsers, level: 92 },
     { name: 'WordPress/CMS', icon: HiBookOpen, level: 91 },
     { name: 'Social Media Content', icon: HiStar, level: 88 }
   ];
@@ -39,7 +38,7 @@ const AboutSection = () => {
           </span>
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">
             From Newsrooms to 
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent"> Brand Stories</span>
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">{" "}Compelling Content</span>
           </h2>
           
         </motion.div>
