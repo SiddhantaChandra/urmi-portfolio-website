@@ -121,7 +121,7 @@ const WorkSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-8 sm:mb-12"
         >
           <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 inline-flex">
             {tabs.map((tab) => {
@@ -133,7 +133,7 @@ const WorkSection = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    "flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-150",
+                    "flex items-center gap-2 px-3 py-3 rounded-md text-xs sm:text-sm font-medium transition-all duration-150",
                     activeTab === tab.id
                       ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
                       : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"

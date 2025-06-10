@@ -46,7 +46,7 @@ const Breadcrumb = ({ article }) => {
         </li>
         <li>
           <span className="text-gray-500 dark:text-gray-400 truncate max-w-xs">
-            {article.title}
+          Online Romance in the Shadow of COVID-19
           </span>
         </li>
       </ol>
@@ -99,54 +99,72 @@ export default function OnlineRomanceClient({ article }) {
           for (let j = 0; j < nodes.length; j++) {
             const node = nodes[j];
             
+            // Handle text runs
             if (node.tagName === 'w:r') {
               const textNodes = node.getElementsByTagName('w:t');
               for (let k = 0; k < textNodes.length; k++) {
                 result += textNodes[k].textContent || '';
               }
-            } else if (node.tagName === 'w:del') {
+            } 
+            // Handle deletions
+            else if (node.tagName === 'w:del') {
               const author = node.getAttribute('w:author') || 'Unknown';
               const date = node.getAttribute('w:date') || '';
               
-              // Extract text from w:delText nodes within the deletion
-              const delTextNodes = node.getElementsByTagName('w:delText');
+              // Get all text from deletion - check both w:delText and w:t nodes
               let deletedText = '';
+              
+              // Method 1: Look for w:delText elements
+              const delTextNodes = node.getElementsByTagName('w:delText');
               for (let k = 0; k < delTextNodes.length; k++) {
-                deletedText += delTextNodes[k].textContent || '';
+                const textContent = delTextNodes[k].textContent || '';
+                if (textContent) {
+                  deletedText += textContent;
+                }
               }
               
-              // Also check for w:t nodes within w:r nodes in deletions
-              if (!deletedText) {
+              // Method 2: Look for w:r > w:t elements within deletion
+              if (!deletedText.trim()) {
                 const delRuns = node.getElementsByTagName('w:r');
                 for (let k = 0; k < delRuns.length; k++) {
-                  const delTNodes = delRuns[k].getElementsByTagName('w:delText');
-                  for (let l = 0; l < delTNodes.length; l++) {
-                    deletedText += delTNodes[l].textContent || '';
+                  const textNodes = delRuns[k].getElementsByTagName('w:t');
+                  for (let l = 0; l < textNodes.length; l++) {
+                    const textContent = textNodes[l].textContent || '';
+                    if (textContent) {
+                      deletedText += textContent;
+                    }
                   }
                 }
               }
               
               if (deletedText.trim()) {
-                result += `<span class="deletion" data-author="${author}" data-date="${date}" title="Deleted by ${author}">${deletedText}</span>`;
+                result += `<span class="deletion" data-author="${author}" data-date="${date}" title="Deleted by ${author} on ${date}">${deletedText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
               }
-            } else if (node.tagName === 'w:ins') {
+            } 
+            // Handle insertions
+            else if (node.tagName === 'w:ins') {
               const author = node.getAttribute('w:author') || 'Unknown';
               const date = node.getAttribute('w:date') || '';
               
-              // Extract text from w:t nodes within the insertion
-              const insRuns = node.getElementsByTagName('w:r');
+              // Get all text from insertion
               let insertedText = '';
+              const insRuns = node.getElementsByTagName('w:r');
               for (let k = 0; k < insRuns.length; k++) {
-                const insTextNodes = insRuns[k].getElementsByTagName('w:t');
-                for (let l = 0; l < insTextNodes.length; l++) {
-                  insertedText += insTextNodes[l].textContent || '';
+                const textNodes = insRuns[k].getElementsByTagName('w:t');
+                for (let l = 0; l < textNodes.length; l++) {
+                  const textContent = textNodes[l].textContent || '';
+                  if (textContent) {
+                    insertedText += textContent;
+                  }
                 }
               }
               
               if (insertedText.trim()) {
-                result += `<span class="insertion" data-author="${author}" data-date="${date}" title="Inserted by ${author}">${insertedText}</span>`;
+                result += `<span class="insertion" data-author="${author}" data-date="${date}" title="Inserted by ${author} on ${date}">${insertedText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
               }
-            } else if (node.tagName === 'w:hyperlink') {
+            } 
+            // Handle hyperlinks
+            else if (node.tagName === 'w:hyperlink') {
               const runs = node.getElementsByTagName('w:r');
               for (let k = 0; k < runs.length; k++) {
                 const textNodes = runs[k].getElementsByTagName('w:t');
@@ -154,8 +172,9 @@ export default function OnlineRomanceClient({ article }) {
                   result += textNodes[l].textContent || '';
                 }
               }
-            } else if (node.childNodes && node.childNodes.length > 0) {
-              // Recursively process child nodes
+            } 
+            // Handle any other nodes with children recursively
+            else if (node.childNodes && node.childNodes.length > 0) {
               result += processNodes(node.childNodes);
             }
           }
@@ -187,31 +206,23 @@ export default function OnlineRomanceClient({ article }) {
           for (let j = 0; j < runs.length; j++) {
             const rPr = runs[j].getElementsByTagName('w:rPr')[0];
             if (rPr && rPr.getElementsByTagName('w:b')[0]) {
-              if (paragraphHTML.length < 200) {
-                isHeading = true;
-              }
+              isHeading = true;
+              break;
             }
           }
           
-          if (isHeading) {
-            content.push({
-              type: 'heading',
-              level: level,
-              content: paragraphHTML
-            });
-          } else {
-            content.push({
-              type: 'paragraph',
-              content: paragraphHTML
-            });
-          }
+          content.push({
+            type: isHeading ? 'heading' : 'paragraph',
+            level: level,
+            content: paragraphHTML
+          });
         }
       }
       
       setParsedContent(content);
-    } catch (err) {
-      setError('Failed to parse XML content: ' + err.message);
-      console.error('XML parsing error:', err);
+    } catch (error) {
+      console.error('Error parsing XML:', error);
+      setError('Failed to parse document content');
     }
   };
 
@@ -503,31 +514,33 @@ export default function OnlineRomanceClient({ article }) {
           background-size: 40px 40px;
         }
 
-        .deletion {
-          background-color: #fee2e2;
-          color: #dc2626;
-          text-decoration: line-through;
-          padding: 2px 4px;
-          border-radius: 4px;
-          font-weight: 500;
+        :global(.deletion) {
+          background-color: #fee2e2 !important;
+          color: #dc2626 !important;
+          text-decoration: line-through !important;
+          padding: 2px 4px !important;
+          border-radius: 4px !important;
+          font-weight: 500 !important;
+          display: inline !important;
         }
 
-        .insertion {
-          background-color: #dcfce7;
-          color: #16a34a;
-          padding: 2px 4px;
-          border-radius: 4px;
-          font-weight: 500;
+        :global(.insertion) {
+          background-color: #dcfce7 !important;
+          color: #16a34a !important;
+          padding: 2px 4px !important;
+          border-radius: 4px !important;
+          font-weight: 500 !important;
+          display: inline !important;
         }
 
-        .dark .deletion {
-          background-color: #7f1d1d;
-          color: #fca5a5;
+        :global(.dark .deletion) {
+          background-color: #7f1d1d !important;
+          color: #fca5a5 !important;
         }
 
-        .dark .insertion {
-          background-color: #14532d;
-          color: #86efac;
+        :global(.dark .insertion) {
+          background-color: #14532d !important;
+          color: #86efac !important;
         }
       `}</style>
     </div>

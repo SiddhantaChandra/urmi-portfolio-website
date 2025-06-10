@@ -295,23 +295,32 @@ export default function MyChatLessonClient({ article }) {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-purple-200/50 dark:border-purple-500/30 shadow-xl p-6 mb-8"
         >
-          <div className="space-y-4 max-h-96 overflow-y-auto">
+          <div className="space-y-6 max-h-96 overflow-y-auto">
             {messages.map((message, index) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className={`flex ${message.sender.toLowerCase().includes('student') ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.sender === 'K' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
-                  message.sender.toLowerCase().includes('student') 
-                    ? 'bg-purple-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                }`}>
-                  <div className="text-xs opacity-75 mb-1">{message.sender}</div>
-                  <div className="text-sm">{message.message}</div>
-                  <div className="text-xs opacity-50 mt-1">{message.timestamp}</div>
+                <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                  message.sender === 'K'
+                    ? 'text-white rounded-br-md' 
+                    : 'text-white rounded-bl-md'
+                }`} style={{
+                  backgroundColor: message.sender === 'K' ? '#005c4b' : '#353535'
+                }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white`}
+                         style={{
+                           backgroundColor: message.sender === 'K' ? '#003d32' : '#1a1a1a'
+                         }}>
+                      {message.sender}
+                    </div>
+                    <div className="text-xs opacity-75">{message.timestamp}</div>
+                  </div>
+                  <div className="text-sm leading-relaxed">{message.message}</div>
                 </div>
               </motion.div>
             ))}

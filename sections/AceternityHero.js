@@ -188,7 +188,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-xl sm:text-2xl lg:text-2xl text-gray-600 dark:text-gray-300 mx-auto max-w-6xl lg:max-w-7xl 2xl:max-w-6xl  leading-relaxed font-sans"
+            className="text-xl sm:text-2xl lg:text-2xl text-gray-600 dark:text-gray-300 mx-auto max-w-5xl lg:max-w-4xl 2xl:max-w-6xl  leading-relaxed font-sans"
           >
             I am passionate about{' '}
             <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
@@ -202,7 +202,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-lg text-gray-500 dark:text-gray-400 max-w-4xl lg:max-w-6xl 2xl:max-w-6xl mx-auto leading-relaxed font-sans"
+            className="text-lg text-gray-500 dark:text-gray-400 max-w-4xl lg:max-w-4xl 2xl:max-w-6xl mx-auto leading-relaxed font-sans px-4 sm:px-0"
           >
             From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work. My role at The Telegraph Online combines fast-paced reporting, content editing, and sharp communication, all driven by strong instincts for what resonates with readers.
           </motion.p>
@@ -220,7 +220,7 @@ const AceternityHero = () => {
               transition={{ duration: 0.15 }}
               onClick={handleDownloadResume}
               className={cn(
-                "group relative inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
+                "group relative inline-flex items-center gap-3 px-6 sm:px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white",
                 "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",
                 "transform-gpu"
@@ -236,7 +236,7 @@ const AceternityHero = () => {
               transition={{ duration: 0.15 }}
               onClick={handleViewCaseStudies}
               className={cn(
-                "group inline-flex items-center gap-3 px-8 py-4 rounded-lg text-lg font-semibold",
+                "group inline-flex items-center gap-3 px-6 sm:px-8 py-4 rounded-lg text-lg font-semibold",
                 "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border-2 border-purple-200 dark:border-purple-500/30",
                 "hover:bg-white dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
                 "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",

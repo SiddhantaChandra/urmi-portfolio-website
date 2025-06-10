@@ -12,7 +12,7 @@ export async function generateMetadata() {
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoursite.com';
-  const articleUrl = `${siteUrl}/articles/online-romance-in-the-shadow-of-COVID-19`;
+  const articleUrl = `${siteUrl}/articles/${article.slug}`;
 
   return {
     title: `${article.title} | Your Site Name`,
@@ -96,7 +96,7 @@ function StructuredData({ article }) {
     "dateModified": article.publishedDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${siteUrl}/articles/online-romance-in-the-shadow-of-COVID-19`
+      "@id": `${siteUrl}/articles/${article.slug}`
     },
     "articleSection": article.category,
     "keywords": article.tags?.join(', '),
@@ -107,7 +107,7 @@ function StructuredData({ article }) {
       return count;
     }, 0) || 0,
     "timeRequired": `PT${article.readingTime}M`,
-    "url": `${siteUrl}/articles/online-romance-in-the-shadow-of-COVID-19`
+    "url": `${siteUrl}/articles/${article.slug}`
   };
 
   const breadcrumbStructuredData = {
@@ -136,7 +136,7 @@ function StructuredData({ article }) {
         "@type": "ListItem",
         "position": 4,
         "name": article.title,
-        "item": `${siteUrl}/articles/online-romance-in-the-shadow-of-COVID-19`
+        "item": `${siteUrl}/articles/${article.slug}`
       }
     ]
   };
