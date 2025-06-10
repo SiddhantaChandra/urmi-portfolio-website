@@ -108,19 +108,19 @@ const Footer = () => {
 
       <div className="relative z-10">
         {/* Main Footer Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid lg:grid-cols-5 md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-12 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8 lg:gap-12">
             {/* Brand & Description */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="lg:col-span-2"
+              className="col-span-1 md:col-span-2 lg:col-span-2"
             >
               {/* Footer Logo */}
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 rounded-lg overflow-hidden shadow-md">
+              <div className="flex items-center space-x-2.5 md:space-x-3 mb-3 md:mb-4">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden shadow-md">
                   <Image 
                     src="/logo.webp" 
                     alt="Urmi Chakraborty Logo" 
@@ -129,13 +129,13 @@ const Footer = () => {
                     height={40}
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-white font-sans">
+                <h3 className="text-xl md:text-2xl font-bold text-white font-sans">
                   Urmi Chakraborty
                 </h3>
               </div>
               
               {/* Contact Info */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-2.5 md:space-y-3 mb-4 md:mb-6">
                 {contactInfo.map((contact, index) => {
                   const IconComponent = contact.icon;
                   return (
@@ -145,18 +145,18 @@ const Footer = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-2.5 md:gap-3"
                     >
-                      <IconComponent className="w-5 h-5 text-purple-400" />
+                      <IconComponent className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
                       {contact.href ? (
                         <a 
                           href={contact.href}
-                          className="text-gray-300 hover:text-white transition-colors duration-300 font-sans"
+                          className="text-gray-300 hover:text-white transition-colors duration-300 font-sans text-sm md:text-base"
                         >
                           {contact.text}
                         </a>
                       ) : (
-                        <span className="text-gray-300 font-sans">{contact.text}</span>
+                        <span className="text-gray-300 font-sans text-sm md:text-base">{contact.text}</span>
                       )}
                     </motion.div>
                   );
@@ -164,7 +164,7 @@ const Footer = () => {
               </div>
 
               {/* Social Links */}
-              <div className="flex gap-4">
+              <div className="flex gap-3 md:gap-4">
                 {socialLinks.map((social, index) => {
                   const IconComponent = social.icon;
                   return (
@@ -178,24 +178,25 @@ const Footer = () => {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       viewport={{ once: true }}
                       whileHover={{ scale: 1.1, y: -2 }}
-                      className={`w-12 h-12 bg-gray-800 dark:bg-gray-900 rounded-lg flex items-center justify-center text-gray-400 ${social.color} transition-all duration-300`}
+                      className={`w-10 h-10 md:w-12 md:h-12 bg-gray-800 dark:bg-gray-900 rounded-lg flex items-center justify-center text-gray-400 ${social.color} transition-all duration-300`}
                     >
-                      <IconComponent className="w-6 h-6" />
+                      <IconComponent className="w-5 h-5 md:w-6 md:h-6" />
                     </motion.a>
                   );
                 })}
               </div>
             </motion.div>
 
-            {/* Navigation Links */}
+            {/* Navigation Links - Hidden on Mobile */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
+              className="hidden md:block"
             >
-              <h4 className="text-lg font-semibold text-white mb-6 font-sans">Navigation</h4>
-              <ul className="space-y-3">
+              <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6 font-sans">Navigation</h4>
+                              <ul className="space-y-2.5 md:space-y-3">
                 {navigationLinks.map((link, index) => (
                   <motion.li
                     key={link.name}
@@ -206,7 +207,7 @@ const Footer = () => {
                   >
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-white transition-colors duration-300 font-sans"
+                      className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-sm md:text-base"
                     >
                       {link.name}
                     </a>
@@ -222,8 +223,8 @@ const Footer = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <h4 className="text-lg font-semibold text-white mb-6 font-sans">Documents</h4>
-              <ul className="space-y-3">
+              <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6 font-sans">Documents</h4>
+              <ul className="space-y-2.5 md:space-y-3">
                 {documents.map((doc, index) => (
                   <motion.li
                     key={doc.name}
@@ -235,14 +236,14 @@ const Footer = () => {
                     {doc.onClick ? (
                       <button
                         onClick={doc.onClick}
-                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-left"
+                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-left text-sm md:text-base"
                       >
                         {doc.name}
                       </button>
                     ) : (
                       <a
                         href={doc.href}
-                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans"
+                        className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-sm md:text-base"
                       >
                         {doc.name}
                       </a>
@@ -259,8 +260,8 @@ const Footer = () => {
               transition={{ duration: 0.6, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <h4 className="text-lg font-semibold text-white mb-6 font-sans">Services</h4>
-              <ul className="space-y-3">
+              <h4 className="text-base md:text-lg font-semibold text-white mb-4 md:mb-6 font-sans">Services</h4>
+              <ul className="space-y-2.5 md:space-y-3">
                 {services.map((service, index) => (
                   <motion.li
                     key={service.name}
@@ -271,7 +272,7 @@ const Footer = () => {
                   >
                     <a
                       href={service.href}
-                      className="text-gray-400 hover:text-white transition-colors duration-300 font-sans"
+                      className="text-gray-400 hover:text-white transition-colors duration-300 font-sans text-sm md:text-base"
                     >
                       {service.name}
                     </a>
@@ -284,21 +285,21 @@ const Footer = () => {
 
         {/* Divider */}
         <div className="border-t border-gray-800 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="py-8 flex flex-col md:flex-row justify-between items-center gap-4"
+              className="py-6 md:py-8 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4"
             >
               {/* Copyright */}
-              <div className="flex items-center gap-2 text-gray-400 font-sans">
+              <div className="flex items-center gap-2 text-gray-400 font-sans text-sm md:text-base">
                 <span>© {currentYear} Urmi Chakraborty. All rights reserved.</span>
               </div>
 
               {/* Made with love */}
-              <div className="flex items-center gap-2 text-gray-400 font-sans">
+              <div className="flex items-center gap-2 text-gray-400 font-sans text-sm md:text-base">
                 <span>Made with</span>
                 <motion.div
                   animate={{ 
@@ -311,13 +312,13 @@ const Footer = () => {
                     repeatType: "reverse" 
                   }}
                 >
-                  <HiHeart className="w-5 h-5 text-red-500" />
+                  <HiHeart className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
                 </motion.div>
                 <span>in Kolkata</span>
               </div>
 
               {/* Professional Note */}
-              <div className="text-sm text-gray-500 font-sans text-center md:text-right">
+              <div className="text-xs md:text-sm text-gray-500 font-sans text-center md:text-right">
                 <p>Available for remote work globally</p>
                 <p className="text-xs mt-1">Journalist • Content Writer • Storyteller • V1.0</p>
               </div>
@@ -338,13 +339,13 @@ const Footer = () => {
         transition={{ duration: 0.3 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
         style={{ 
           pointerEvents: showBackToTop ? 'auto' : 'none',
           transform: showBackToTop ? 'translateY(0)' : 'translateY(20px)'
         }}
       >
-        <HiArrowUp className="w-6 h-6" />
+        <HiArrowUp className="w-5 h-5 md:w-6 md:h-6" />
       </motion.button>
     </footer>
   );

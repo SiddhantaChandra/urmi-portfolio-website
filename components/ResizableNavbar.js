@@ -58,7 +58,7 @@ export const NavBody = ({ children, className, visible }) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 sm:px-6 lg:px-8 py-2 lg:flex",
+        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-6 py-2 lg:flex",
         visible && "bg-white/90 dark:bg-gray-900/90 border border-gray-200/20 dark:border-gray-700/20 shadow-lg dark:shadow-gray-900/20",
         className,
       )}
@@ -81,21 +81,39 @@ export const NavItems = ({ items, className, onItemClick }) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <motion.a
           onMouseEnter={() => setHovered(idx)}
           onClick={(e) => onItemClick && onItemClick(e, item.link)}
-          className="relative px-4 py-2 text-gray-900 hover:text-black dark:text-gray-100 dark:hover:text-white transition-colors duration-150 font-medium"
+          whileHover={{ 
+            scale: 1.05,
+            y: -2
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="relative px-4 py-2 text-gray-900 hover:text-black dark:text-gray-100 dark:hover:text-white transition-colors duration-300 font-medium cursor-pointer"
           key={`link-${idx}`}
           href={item.link}
         >
           {hovered === idx && (
             <motion.div
               layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-gray-800"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="absolute inset-0 h-full w-full rounded-full bg-gradient-to-r from-purple-100/80 via-pink-50/80 to-purple-100/80 dark:from-purple-800/50 dark:via-purple-700/50 dark:to-purple-800/50 shadow-lg"
+              transition={{ duration: 0.2 }}
+            />
+          )}
+          {hovered === idx && (
+            <motion.div
+              className="absolute inset-0 h-full w-full rounded-full bg-gradient-to-r from-purple-200/30 via-pink-200/30 to-purple-200/30 dark:from-purple-600/20 dark:via-pink-600/20 dark:to-purple-600/20 blur-sm"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1.2, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ duration: 0.3 }}
             />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </motion.a>
       ))}
     </motion.div>
   );
@@ -118,8 +136,8 @@ export const MobileNav = ({ children, className, visible }) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto w-full max-w-7xl bg-transparent px-4 sm:px-6 lg:px-8 py-2 lg:hidden",
-        visible && "bg-white/90 dark:bg-gray-900/90 border border-gray-200/20 dark:border-gray-700/20 shadow-lg dark:shadow-gray-900/20 rounded-lg",
+        "relative z-50 mx-auto w-full max-w-7xl bg-transparent px-4 py-2 lg:hidden",
+        visible && "bg-white/90 dark:bg-gray-900/90 shadow-lg dark:shadow-gray-900/20 border-b border-gray-200/50 dark:border-gray-700/50",
         className,
       )}
     >
@@ -133,7 +151,7 @@ export const MobileNavHeader = ({ children, className }) => {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center justify-between",
+        "flex w-full flex-row items-center justify-between py-2",
         className,
       )}
     >
@@ -157,7 +175,7 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }) => {
             className,
           )}
         >
-          <div className="flex flex-col space-y-1 py-4 px-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
+          <div className="flex flex-col space-y-1 py-4 px-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg shadow-lg">
             {children}
           </div>
         </motion.div>
@@ -189,9 +207,9 @@ export const NavbarLogo = () => {
       href="#"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className="relative z-20 mr-4 flex items-center space-x-4 px-3 py-2 group cursor-pointer"
+      className="relative z-20 flex items-center space-x-3 py-2 group cursor-pointer"
     >
-            {/* Gradient Typography Logo */}
+      {/* Gradient Typography Logo */}
       <div className="relative flex items-center space-x-3">
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-20 transition-all duration-500" />
@@ -302,8 +320,6 @@ export const NavbarLogo = () => {
             </div>
           </motion.div>
         </div>
-
-
       </div>
 
       {/* Hover Glow Effect */}

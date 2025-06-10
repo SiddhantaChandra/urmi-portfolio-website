@@ -40,7 +40,7 @@ export async function generateMetadata() {
       ],
       locale: 'en_US',
       type: 'article',
-      publishedTime: article.publishedDate,
+  
       authors: [article.author],
       section: article.category,
       tags: article.tags,
@@ -93,8 +93,6 @@ function StructuredData({ article }) {
         "url": `${siteUrl}/logo.png` // Add your logo URL
       }
     },
-    "datePublished": article.publishedDate,
-    "dateModified": article.publishedDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${siteUrl}/articles/my-chat-lesson-script`

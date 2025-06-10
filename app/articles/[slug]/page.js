@@ -43,7 +43,6 @@ export async function generateMetadata({ params }) {
       ],
       locale: 'en_US',
       type: 'article',
-      publishedTime: article.publishedDate,
       authors: [article.author],
       section: article.category,
       tags: article.tags,
@@ -96,8 +95,6 @@ function StructuredData({ article }) {
         "url": `${siteUrl}/logo.png`
       }
     },
-    "datePublished": article.publishedDate,
-    "dateModified": article.publishedDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${siteUrl}/articles/${article.slug}`

@@ -8,7 +8,6 @@ const contentWritingArticles = [
         featuredImage: "/articles/contentWriting/MyChatLesson.webp",
         category: "Educational Content",
         tags: ["Education", "Interactive Learning", "History", "Teaching Methods", "Chat Interface", "Study Session"],
-        publishedDate: "2023-09-05",
         readingTime: 8,
         author: "Urmi Chakraborty",
         metrics: [
@@ -22,7 +21,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "K: Hey, what's up?"
+                content: "K: Hey, what&apos;s up?"
             },
             {
                 type: "paragraph",
@@ -34,7 +33,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: That's because I'm done with all our syllabus."
+                content: "L: That&apos;s because I&apos;m done with all our syllabus."
             },
             {
                 type: "paragraph",
@@ -42,7 +41,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Hahaha, don't be so surprised bro."
+                content: "L: Hahaha, don&apos;t be so surprised bro."
             },
             {
                 type: "paragraph",
@@ -50,7 +49,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Hey, hey, don't worry. I'll help you study."
+                content: "L: Hey, hey, don&apos;t worry. I&apos;ll help you study."
             },
             {
                 type: "paragraph",
@@ -66,7 +65,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Alrighty, we'll start with the first chapter then."
+                content: "L: Alrighty, we&apos;ll start with the first chapter then."
             },
             {
                 type: "paragraph",
@@ -78,11 +77,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "K: Let's go."
+                content: "K: Let&apos;s go."
             },
             {
                 type: "paragraph",
-                content: "L: Okie. So, in this chapter, we'll study about the sources required to study history, the different types of sources of history, the importance of archaeological sources and Halmidi inscriptions and the oral sources that support the study of history."
+                content: "L: Okie. So, in this chapter, we&apos;ll study about the sources required to study history, the different types of sources of history, the importance of archaeological sources and Halmidi inscriptions and the oral sources that support the study of history."
             },
             {
                 type: "paragraph",
@@ -186,7 +185,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Vishakadatta's 'Mudrarakshasa', Kalhana's 'Rajatarangini', Ashwagosha's 'Buddha Charita', Kautilya's 'Arthashastra', the 'Tripitikas' of Buddhist literature, Srivijaya's 'Kavirajamarga' are some of the literary productions worth mentioning."
+                content: "L: Vishakadatta&apos;s &apos;Mudrarakshasa&apos;, Kalhana&apos;s &apos;Rajatarangini&apos;, Ashwagosha&apos;s &apos;Buddha Charita&apos;, Kautilya&apos;s &apos;Arthashastra&apos;, the &apos;Tripitikas&apos; of Buddhist literature, Srivijaya&apos;s &apos;Kavirajamarga&apos; are some of the literary productions worth mentioning."
             },
             {
                 type: "paragraph",
@@ -202,11 +201,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Megasthenes' Indica, HuienTsang's 'Si-yu-ki', Fa-hien's 'Gho-kho-ki', Ceylon's 'Deepavamsha' and 'Mahavamsa', the writings of Furneo Nuniz and the writings of Barbosa and Nicolo Conti who visited the Vijayanagar Empire are some examples of this kind of source."
+                content: "L: Megasthenes&apos; Indica, HuienTsang&apos;s &apos;Si-yu-ki&apos;, Fa-hien&apos;s &apos;Gho-kho-ki&apos;, Ceylon&apos;s &apos;Deepavamsha&apos; and &apos;Mahavamsa&apos;, the writings of Furneo Nuniz and the writings of Barbosa and Nicolo Conti who visited the Vijayanagar Empire are some examples of this kind of source."
             },
             {
                 type: "paragraph",
-                content: "K: I'll make a note of these."
+                content: "K: I&apos;ll make a note of these."
             },
             {
                 type: "paragraph",
@@ -274,7 +273,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: Ashoka's inscriptions have been found in Maski and Bramhagiri in Karnataka."
+                content: "L: Ashoka&apos;s inscriptions have been found in Maski and Bramhagiri in Karnataka."
             },
             {
                 type: "paragraph",
@@ -314,7 +313,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: That's great. Other than coins, various monuments such as stupas, basadis, temples, palaces and forts give us information about the time periods they belong to."
+                content: "L: That&apos;s great. Other than coins, various monuments such as stupas, basadis, temples, palaces and forts give us information about the time periods they belong to."
             },
             {
                 type: "paragraph",
@@ -322,7 +321,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: They help us understand civilization, technology and society so that we can situate them in today's modern context."
+                content: "L: They help us understand civilization, technology and society so that we can situate them in today&apos;s modern context."
             },
             {
                 type: "paragraph",
@@ -370,7 +369,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "L: You'll get more in the next chapters. Just wait and watch. You'll beg me to stop once we begin them haha."
+                content: "L: You&apos;ll get more in the next chapters. Just wait and watch. You&apos;ll beg me to stop once we begin them haha."
             },
             {
                 type: "paragraph",
@@ -399,9 +398,8 @@ const contentWritingArticles = [
         featuredImage: "/articles/contentWriting/Bearing.webp",
         category: "Technical Writing",
         tags: ["Engineering", "Bearings", "Industrial", "Machinery"],
-        publishedDate: "2023-07-10",
         readingTime: 8,
-        author: "Technical Content Specialist",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Technical" },
             { label: "Industry", value: "Engineering" }
@@ -505,9 +503,8 @@ const contentWritingArticles = [
         featuredImage: "/articles/contentWriting/Springtwist.webp",
         category: "Beauty & Hair Care",
         tags: ["Hair Care", "Protective Styles", "Spring Twists", "Beauty"],
-        publishedDate: "2023-06-15",
         readingTime: 15,
-        author: "Beauty Content Expert",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Beauty" },
             { label: "Industry", value: "Hair Care" }
@@ -529,24 +526,24 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "We have seen spring twists and passion twists go hand in hand, but they're very different. Spring twist hair is shorter, mostly shoulder-length which makes them a lot more lightweight than passion twists and you can pull them off easily during summertime. While they might be different in appearances and comfort-giving, spring twists and passion twists are both made with curly braiding hair, making them look curly and springy."
+                content: "We have seen spring twists and passion twists go hand in hand, but they&apos;re very different. Spring twist hair is shorter, mostly shoulder-length which makes them a lot more lightweight than passion twists and you can pull them off easily during summertime. While they might be different in appearances and comfort-giving, spring twists and passion twists are both made with curly braiding hair, making them look curly and springy."
             },
             {
                 type: "paragraph",
-                content: "We know how difficult it is to care for our hair in our day-to-day lives. But with spring twists, you don't even have to think about maintaining your hair; yes, your twists will take over your hair and protect them while you're occupied with office work or household chores. Like box braids and other protective styles, these usually last between four to six weeks and you can keep them intact if you have a healthy lifestyle and take good care of them."
+                content: "We know how difficult it is to care for our hair in our day-to-day lives. But with spring twists, you don&apos;t even have to think about maintaining your hair; yes, your twists will take over your hair and protect them while you&apos;re occupied with office work or household chores. Like box braids and other protective styles, these usually last between four to six weeks and you can keep them intact if you have a healthy lifestyle and take good care of them."
             },
             {
                 type: "paragraph",
-                content: "So, get spring twists this summer and you'll have your hands out of your hair for a few weeks!"
+                content: "So, get spring twists this summer and you&apos;ll have your hands out of your hair for a few weeks!"
             },
             {
                 type: "heading",
                 level: 2,
-                content: "Why should you have spring twist hair (and why you'd love them)?"
+                content: "Why should you have spring twist hair (and why you&apos;d love them)?"
             },
             {
                 type: "paragraph",
-                content: "Whether you keep them untied or in a bun, spring twist hair will protect your hair with the least maintenance. Don't we all want to have hair that is beautiful and damage-resistant at the same time? Unleash your beauty queen spirit and style your spring twist hair any way you want because, at the end of the day, it will protect you while giving you the reward of a low-maintenance inspiration."
+                content: "Whether you keep them untied or in a bun, spring twist hair will protect your hair with the least maintenance. Don&apos;t we all want to have hair that is beautiful and damage-resistant at the same time? Unleash your beauty queen spirit and style your spring twist hair any way you want because, at the end of the day, it will protect you while giving you the reward of a low-maintenance inspiration."
             },
             {
                 type: "paragraph",
@@ -556,11 +553,11 @@ const contentWritingArticles = [
                 type: "list",
                 listType: "numbered",
                 items: [
-                    "They are lightweight: ever felt like your hair is burdensome? Well, with spring twists, you'll get a breezy feeling. They are extremely lightweight and will never make you feel like something is yanking on your scalp.",
-                    "Gives a natural look: after all, who doesn't want to look natural, right?",
-                    "Low maintenance: while it might take a long time to get the twists, it is a piece of cake to maintain afterward. So, you don't have to maintain them, they'll maintain you!",
+                    "They are lightweight: ever felt like your hair is burdensome? Well, with spring twists, you&apos;ll get a breezy feeling. They are extremely lightweight and will never make you feel like something is yanking on your scalp.",
+                    "Gives a natural look: after all, who doesn&apos;t want to look natural, right?",
+                    "Low maintenance: while it might take a long time to get the twists, it is a piece of cake to maintain afterward. So, you don&apos;t have to maintain them, they&apos;ll maintain you!",
                     "They last long: the longevity of spring twist hair depends on your lifestyle but normally, they last for a maximum of six weeks.",
-                    "Easy styling, elegant look: you can style your spring twist hair in a lot of ways. Whether it's a simple bun, a half-up half-down, or a chic updo, your spring twists will always make you look appealing!"
+                    "Easy styling, elegant look: you can style your spring twist hair in a lot of ways. Whether it&apos;s a simple bun, a half-up half-down, or a chic updo, your spring twists will always make you look appealing!"
                 ]
             },
             {
@@ -569,7 +566,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Here's why you can never get enough of the spring twist hair trend:"
+                content: "Here&apos;s why you can never get enough of the spring twist hair trend:"
             },
             {
                 type: "heading",
@@ -578,11 +575,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Summer is a very dangerous time for our hair and that's why we need protective styles, and spring twist hair is one of them. Want to go on a summer vacation with a carefree Bohemian look? Try out the spring twist hair! It's the perfect choice for you if you want a laid-back attitude, with its curly and coiled appearance."
+                content: "Summer is a very dangerous time for our hair and that&apos;s why we need protective styles, and spring twist hair is one of them. Want to go on a summer vacation with a carefree Bohemian look? Try out the spring twist hair! It&apos;s the perfect choice for you if you want a laid-back attitude, with its curly and coiled appearance."
             },
             {
                 type: "paragraph",
-                content: "While no one is sure whether we'll get to enjoy the outside world as before, it's no harm in styling your hair for its protection, right? Even if you stay inside your house, your hair will be protected from the hot sultry weather and from any other damage you unintentionally cause by daily styling."
+                content: "While no one is sure whether we&apos;ll get to enjoy the outside world as before, it&apos;s no harm in styling your hair for its protection, right? Even if you stay inside your house, your hair will be protected from the hot sultry weather and from any other damage you unintentionally cause by daily styling."
             },
             {
                 type: "heading",
@@ -591,11 +588,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Have we talked about how convenient and easy maintenance spring twist hair is? No worries, we'll say it over a thousand times! Although the setting up might take four to five hours, the after scene of getting spring twist hair is an effortless breathing space from everyday care."
+                content: "Have we talked about how convenient and easy maintenance spring twist hair is? No worries, we&apos;ll say it over a thousand times! Although the setting up might take four to five hours, the after scene of getting spring twist hair is an effortless breathing space from everyday care."
             },
             {
                 type: "paragraph",
-                content: "But it doesn't mean it requires no care at all! It's just that it doesn't need a hard uptime as compared to other hairstyles. Once you get your spring twist hair, remember to always keep your scalp moisturized by some light essential oils."
+                content: "But it doesn&apos;t mean it requires no care at all! It&apos;s just that it doesn&apos;t need a hard uptime as compared to other hairstyles. Once you get your spring twist hair, remember to always keep your scalp moisturized by some light essential oils."
             },
             {
                 type: "heading",
@@ -608,7 +605,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "You can go for either a crochet installment or simple braiding, and you'll keep your hair away from all kinds of ailments— artificial and environmental. Give your hair some rest from daily styling by safely twisting and cloistering it away. This will make your hair fuller, livelier and stronger— so, it will restore its true potential if you suffer from low hair growth and development."
+                content: "You can go for either a crochet installment or simple braiding, and you&apos;ll keep your hair away from all kinds of ailments— artificial and environmental. Give your hair some rest from daily styling by safely twisting and cloistering it away. This will make your hair fuller, livelier and stronger— so, it will restore its true potential if you suffer from low hair growth and development."
             },
             {
                 type: "heading",
@@ -617,7 +614,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Amongst all other protective hairstyles, spring twists are the most flexible and versatile ones. You'll find them in a pack of different lengths and shades with which you can style your hair in some infamous fashion like buns, ponytails, half up half down, etc. The spring twist hair is a real stunner. Check out some ideas online and get twisting!"
+                content: "Amongst all other protective hairstyles, spring twists are the most flexible and versatile ones. You&apos;ll find them in a pack of different lengths and shades with which you can style your hair in some infamous fashion like buns, ponytails, half up half down, etc. The spring twist hair is a real stunner. Check out some ideas online and get twisting!"
             },
             {
                 type: "heading",
@@ -626,7 +623,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "In this lockdown, have you wanted to try out a DIY protective hairdo? If you have, then think no further and go for the spring twist hair. You'll get the extensions in pre-twisted and springy curled up form (that's where it gets its name from!), fashioning the wiry, flexible nature of hair. All you need to do is, pair up your hair with the extensions, start braiding for about an inch and then twist altogether till the end. Don't worry, you'll get loads of easy, fun tutorials on YouTube."
+                content: "In this lockdown, have you wanted to try out a DIY protective hairdo? If you have, then think no further and go for the spring twist hair. You&apos;ll get the extensions in pre-twisted and springy curled up form (that&apos;s where it gets its name from!), fashioning the wiry, flexible nature of hair. All you need to do is, pair up your hair with the extensions, start braiding for about an inch and then twist altogether till the end. Don&apos;t worry, you&apos;ll get loads of easy, fun tutorials on YouTube."
             },
             {
                 type: "heading",
@@ -635,11 +632,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Since the spring twists have a natural texture and an unkempt appearance, they look more natural as time passes. Other protective styles need to be matched with your natural aesthetic and if they don't, you won't get more of a 'lived in' look. That's where spring twist hair comes to the rescue. It will still look natural and immaculate if you leave them for a long time. It gets better with time!"
+                content: "Since the spring twists have a natural texture and an unkempt appearance, they look more natural as time passes. Other protective styles need to be matched with your natural aesthetic and if they don&apos;t, you won&apos;t get more of a &apos;lived in&apos; look. That&apos;s where spring twist hair comes to the rescue. It will still look natural and immaculate if you leave them for a long time. It gets better with time!"
             },
             {
                 type: "paragraph",
-                content: "Just remember to maintain your scalp regularly by moisturizing it or you'll create the risk of dirt accumulating in the roots and twists. If you neglect your scalp while the twists are in place, you won't achieve your dream hair goals."
+                content: "Just remember to maintain your scalp regularly by moisturizing it or you&apos;ll create the risk of dirt accumulating in the roots and twists. If you neglect your scalp while the twists are in place, you won&apos;t achieve your dream hair goals."
             },
             {
                 type: "heading",
@@ -648,7 +645,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Who doesn't want a hairstyle that doesn't need much styling to cast a spell upon people? We all do. And with these twisted miracles, you have your dream coming true! All you need to do is nourish your scalp daily and you'll have these little glitzes for a long time."
+                content: "Who doesn&apos;t want a hairstyle that doesn&apos;t need much styling to cast a spell upon people? We all do. And with these twisted miracles, you have your dream coming true! All you need to do is nourish your scalp daily and you&apos;ll have these little glitzes for a long time."
             },
             {
                 type: "paragraph",
@@ -661,7 +658,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Beware, ladies, your mambo twist braid is ought to give your lady friends a reason to envy! It's an irresistible and fiery look. It makes your hair thick and extends the length. Don't forget to spice it up by adding red shades."
+                content: "Beware, ladies, your mambo twist braid is ought to give your lady friends a reason to envy! It&apos;s an irresistible and fiery look. It makes your hair thick and extends the length. Don&apos;t forget to spice it up by adding red shades."
             },
             {
                 type: "heading",
@@ -679,7 +676,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Give your spring twist hair a vibrant and vivid look by mixing it with a brown shade. It's an incredible and bold look. Also, silver cuffs on the twists catch the eye. Extending till the collar bone, these spring twists give you a wholesome look."
+                content: "Give your spring twist hair a vibrant and vivid look by mixing it with a brown shade. It&apos;s an incredible and bold look. Also, silver cuffs on the twists catch the eye. Extending till the collar bone, these spring twists give you a wholesome look."
             },
             {
                 type: "heading",
@@ -706,7 +703,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Get the right tools and line up some YouTube tutorials if you haven't done twists before. Be patient, take it slow and the rule is, don't give up if you mess up! Slow and steady wins the race, right? The more you practice, the better you get at twisting! Remember, you can't get frustrated (even if it's your stylist giving you the twists and not yourself). Make sure you have a leave-in conditioner, pomade, and of course, lots of combs and clips."
+                content: "Get the right tools and line up some YouTube tutorials if you haven&apos;t done twists before. Be patient, take it slow and the rule is, don&apos;t give up if you mess up! Slow and steady wins the race, right? The more you practice, the better you get at twisting! Remember, you can&apos;t get frustrated (even if it&apos;s your stylist giving you the twists and not yourself). Make sure you have a leave-in conditioner, pomade, and of course, lots of combs and clips."
             },
             {
                 type: "heading",
@@ -715,11 +712,11 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "For effective results, make sure your hair is fresh, deep conditioned, and dry. You'll need a comb, clips, pomade, and your readymade extensions. There are a lot of spring twist hairstyles to choose from and after deciding on one, take your hair, moisturize it and section it into four to six parts before twisting it."
+                content: "For effective results, make sure your hair is fresh, deep conditioned, and dry. You&apos;ll need a comb, clips, pomade, and your readymade extensions. There are a lot of spring twist hairstyles to choose from and after deciding on one, take your hair, moisturize it and section it into four to six parts before twisting it."
             },
             {
                 type: "paragraph",
-                content: "Once it is moisturized and sectioned, make sure you use a hydrating product on the twists. Give them a pomade finishing to make the hair stay in place. Then it's time for pairing it with the extensions!"
+                content: "Once it is moisturized and sectioned, make sure you use a hydrating product on the twists. Give them a pomade finishing to make the hair stay in place. Then it&apos;s time for pairing it with the extensions!"
             },
             {
                 type: "heading",
@@ -737,18 +734,18 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Spring twists are a fun and innovative way to braid your hair. If you have naturally curly hair, then twisting it into this style will be great. This is a very affordable hairstyle and is popular among women and children. With spring twist hair, you can't have any bad hair day. All you have to do is get up and brush your hair without combing it."
+                content: "Spring twists are a fun and innovative way to braid your hair. If you have naturally curly hair, then twisting it into this style will be great. This is a very affordable hairstyle and is popular among women and children. With spring twist hair, you can&apos;t have any bad hair day. All you have to do is get up and brush your hair without combing it."
             },
             {
                 type: "paragraph",
-                content: "You won't believe how attractive it will look on you. But if you want to keep this hairstyle for a long time, you need to follow the right maintenance for your hair."
+                content: "You won&apos;t believe how attractive it will look on you. But if you want to keep this hairstyle for a long time, you need to follow the right maintenance for your hair."
             },
             {
                 type: "list",
                 listType: "numbered",
                 items: [
                     "Wash and Condition: Wash your spring twists from time to time, depending on the environmental conditions where you live, the amount of product used, and the condition of the skin on your scalp. Be especially careful when cleaning the spring twists. Tighten the twists to prevent loosening during cleaning. Consider conditioning the spring twists to make them look smooth and shiny.",
-                    "Keep Your Scalp Moisturized: Your work doesn't end after oiling your scalp once. You have to oil it regularly because no matter what protective style, the more your scalp is exposed to the air, the more it loses moisture. Choose the oil of your choice for the exposed area. You can do this once or twice a week or whenever your hair feels dry.",
+                    "Keep Your Scalp Moisturized: Your work doesn&apos;t end after oiling your scalp once. You have to oil it regularly because no matter what protective style, the more your scalp is exposed to the air, the more it loses moisture. Choose the oil of your choice for the exposed area. You can do this once or twice a week or whenever your hair feels dry.",
                     "Protect Your Hair overnight: Wrap your hair with silk or satin and keep it overnight. This reduces friction and wrinkles between the hair and the cushion and cover."
                 ]
             }
@@ -762,8 +759,7 @@ const contentWritingArticles = [
         excerpt: "Edited a research paper examining how online romantic relationships functioned differently for committed and non-committed couples during COVID-19 pandemic. Applied academic editing standards including clarity improvements, structural reorganisation and language refinement while preserving the research integrity.",
         featuredImage: "/articles/contentWriting/Onlineromance.webp",
         category: "Academic Research",
-        tags: ["COVID-19", "Online Dating", "Relationships", "Research", "Academic Writing", "Tracked Changes"],
-        publishedDate: "2022-02-26",
+        tags: ["COVID-19", "Online Dating", "Relationships", "Research", "Academic Writing", "Tracked Changes"],      
         readingTime: 25,
         author: "Urmi Chakraborty",
         metrics: [
@@ -780,9 +776,8 @@ const contentWritingArticles = [
         featuredImage: "/articles/contentWriting/Tattoo.webp",
         category: "Art & Design",
         tags: ["Tattoo", "Color Theory", "Skin Tones", "Body Art"],
-        publishedDate: "2023-08-10",
         readingTime: 9,
-        author: "Tattoo Art Specialist",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Art" },
             { label: "Industry", value: "Body Art" }
@@ -790,7 +785,7 @@ const contentWritingArticles = [
         content: [
             {
                 type: "paragraph",
-                content: "Tattoos are artwork. An aesthetic on a more beautiful artwork like your body, an aesthetic to be proud of - a part of you committed to the excuse of survival as it leaves a permanent mark on your skin. While a majority of people can wear a tattoo on a fickle mind, other people and tattoo artists suggest that it's a decision that is to be taken whole-heartedly and carefully."
+                content: "Tattoos are artwork. An aesthetic on a more beautiful artwork like your body, an aesthetic to be proud of - a part of you committed to the excuse of survival as it leaves a permanent mark on your skin. While a majority of people can wear a tattoo on a fickle mind, other people and tattoo artists suggest that it&apos;s a decision that is to be taken whole-heartedly and carefully."
             },
             {
                 type: "heading",
@@ -808,7 +803,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Here's a simple rule to understand it: Choose shades which are either a bit lighter than your skin or a bit darker than it. Moreover, bear in mind that some colors unfold better on specific pigments better than others."
+                content: "Here&apos;s a simple rule to understand it: Choose shades which are either a bit lighter than your skin or a bit darker than it. Moreover, bear in mind that some colors unfold better on specific pigments better than others."
             },
             {
                 type: "heading",
@@ -874,15 +869,14 @@ const contentWritingArticles = [
     {
         id: "morni-hills-travel-guide",
         type: "content-writing",
-        title: "Morni Hills: A Perfect Travel Guide to Haryana's Hidden Gem",
+        title: "Morni Hills: A Perfect Travel Guide to Haryana&apos;s Hidden Gem",
         slug: "morni-hills-travel-guide",
-        excerpt: "Worked on a travel guide for Haryana's only hill station, covering tourist attractions, activities, accommodation options and tips for visitors seeking an escape from city life near Delhi-Chandigarh region.",
+        excerpt: "Worked on a travel guide for Haryana&apos;s only hill station, covering tourist attractions, activities, accommodation options and tips for visitors seeking an escape from city life near Delhi-Chandigarh region.",
         featuredImage: "/articles/contentWriting/Morni.webp",
         category: "Travel Writing",
         tags: ["Travel", "Haryana", "Hill Station", "Adventure"],
-        publishedDate: "2023-07-25",
         readingTime: 11,
-        author: "Travel Content Writer",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Travel" },
             { label: "Industry", value: "Tourism" }
@@ -894,7 +888,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Enriched with evergreen trees like pines, rhododendron, and rosewood, you will find peace in these hills saturated with magic and beauty. Since it's the only hill station in Haryana, most people move on to seek refuge in other places that are famous for their soothing and escapist nature. So kindle your wanderlust and explore the unexplored!"
+                content: "Enriched with evergreen trees like pines, rhododendron, and rosewood, you will find peace in these hills saturated with magic and beauty. Since it&apos;s the only hill station in Haryana, most people move on to seek refuge in other places that are famous for their soothing and escapist nature. So kindle your wanderlust and explore the unexplored!"
             },
             {
                 type: "heading",
@@ -908,7 +902,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Seven kilometers from the sleepy hills of Morni, Tikkar Taal has two artificial lakes. The hill separates them into Chhota Tal and Bada Tal. Tikkar Taal is located in the middle of the hill and offers great views. It's perfect for budget travelers and nature lovers seeking tranquility."
+                content: "Seven kilometers from the sleepy hills of Morni, Tikkar Taal has two artificial lakes. The hill separates them into Chhota Tal and Bada Tal. Tikkar Taal is located in the middle of the hill and offers great views. It&apos;s perfect for budget travelers and nature lovers seeking tranquility."
             },
             {
                 type: "heading",
@@ -948,7 +942,7 @@ const contentWritingArticles = [
                 items: [
                     "Sight-seeing: Explore attractions like Tikkar Taal and Morni Fort",
                     "Boat rides: Enjoy boating with family or friends in the pristine lakes",
-                    "Adventure activities: Visit the horror house and kids' amusement park",
+                    "Adventure activities: Visit the horror house and kids&apos; amusement park",
                     "Rope climbing: Fulfill your daring heart with rope climbing activities",
                     "Lakeside dining: Have food at the lakeside cafe while enjoying lake views",
                     "Museum visit: Explore the well-maintained learning center 6km from Tikkar Taal"
@@ -964,10 +958,10 @@ const contentWritingArticles = [
                 listType: "numbered",
                 items: [
                     "Pack warm clothes for early mornings and nights as they can be very cold",
-                    "Bring food for a picnic as there aren't many eating options",
+                    "Bring food for a picnic as there aren&apos;t many eating options",
                     "Wear proper clothes to avoid discomfort during the 1200-meter trek",
-                    "Don't travel in the dark as the Morni hills are steep",
-                    "Follow the map properly as the area isn't filled with many people",
+                    "Don&apos;t travel in the dark as the Morni hills are steep",
+                    "Follow the map properly as the area isn&apos;t filled with many people",
                     "Avoid driving in stark winter due to foggy weather that may obstruct vision"
                 ]
             },
@@ -1007,9 +1001,8 @@ const contentWritingArticles = [
         featuredImage: "/articles/contentWriting/Giardia.webp",
         category: "Veterinary Health",
         tags: ["Veterinary", "Cat Health", "Parasites", "Pet Care"],
-        publishedDate: "2023-09-15",
         readingTime: 13,
-        author: "Veterinary Health Specialist",
+        author: "Urmi Chakraborty",
         metrics: [
             { label: "Category", value: "Health" },
             { label: "Industry", value: "Veterinary" }
@@ -1021,7 +1014,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "A disorder of the small intestine caused by single-celled organisms gives rise to giardia in cats. Giardiasis is a disease caused by the micro-parasite Giardia duodenalis (also known as G. intestinalis or G. lamblia). Giardia is a simple unicellular parasite - it is not a 'worm', a virus, or a bacteria."
+                content: "A disorder of the small intestine caused by single-celled organisms gives rise to giardia in cats. Giardiasis is a disease caused by the micro-parasite Giardia duodenalis (also known as G. intestinalis or G. lamblia). Giardia is a simple unicellular parasite - it is not a &apos;worm&apos;, a virus, or a bacteria."
             },
             {
                 type: "heading",
@@ -1030,7 +1023,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "Giardia in cats arises after ingesting the cystic stage of the parasite. After entering the cat's intestine, the cyst forms a 'trophic form' and attaches itself to the intestinal wall. With sufficient presence, clinical signs of intestinal wall damage appear."
+                content: "Giardia in cats arises after ingesting the cystic stage of the parasite. After entering the cat&apos;s intestine, the cyst forms a &apos;trophic form&apos; and attaches itself to the intestinal wall. With sufficient presence, clinical signs of intestinal wall damage appear."
             },
             {
                 type: "paragraph",
@@ -1113,7 +1106,7 @@ const contentWritingArticles = [
             },
             {
                 type: "paragraph",
-                content: "While there are specific genotypes that can affect both humans and cats, human-to-human transmission is more significant than pet-to-human transmission. However, people with compromised immune systems should exercise extra caution when handling infected cats' waste or administering medications."
+                content: "While there are specific genotypes that can affect both humans and cats, human-to-human transmission is more significant than pet-to-human transmission. However, people with compromised immune systems should exercise extra caution when handling infected cats&apos; waste or administering medications."
             }
         ]
     }

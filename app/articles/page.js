@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiSearch, HiEye, HiClock, HiCalendar, HiTag, HiArrowLeft, HiExternalLink, HiNewspaper, HiPencil, HiSparkles } from 'react-icons/hi';
+import { HiSearch, HiEye, HiClock, HiTag, HiArrowLeft, HiExternalLink, HiNewspaper, HiPencil, HiSparkles } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../utils/cn';
 import Image from 'next/image';
@@ -35,7 +35,7 @@ const Articles = () => {
       type: 'journalism',
       excerpt: article.subHeading,
       featuredImage: article.image,
-      publishedDate: '2023-01-01', // Default date for journalism articles
+      
       readingTime: 5, // Default reading time
       author: 'Urmi Chakraborty',
       isExternal: true
@@ -140,8 +140,49 @@ const Articles = () => {
 
       {/* Header */}
       <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-6">
+          {/* Mobile Layout */}
+          <div className="md:hidden">
+            {/* Mobile Top Row */}
+            <div className="flex items-center justify-between mb-3">
+              <motion.button
+                onClick={() => router.push('/')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 p-2 -ml-2"
+              >
+                <HiArrowLeft className="w-4 h-4" />
+                <span className="text-sm font-medium">Back to Home</span>
+              </motion.button>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
+              >
+                <HiSparkles className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Portfolio & Articles
+                </span>
+              </motion.div>
+            </div>
+
+            {/* Mobile Title Section */}
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 bg-clip-text text-transparent">
+                  My Work & Impact
+                </span>
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                From entertainment journalism to strategic content writing
+              </p>
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden md:flex items-center justify-between">
             <motion.button
               onClick={() => router.push('/')}
               whileHover={{ scale: 1.05 }}
@@ -179,29 +220,29 @@ const Articles = () => {
         </div>
       </header>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Search and Tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-8 md:mb-12"
         >
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+          <div className="flex flex-col gap-4 md:gap-6 lg:flex-row lg:items-center lg:justify-between">
             {/* Search Bar */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 w-full lg:max-w-md">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="relative"
               >
-                <HiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <HiSearch className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                 <input
                   type="text"
                   placeholder="Search articles..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={cn(
-                    "w-full pl-12 pr-4 py-3 rounded-lg text-gray-900 dark:text-gray-100",
+                    "w-full pl-10 md:pl-12 pr-3 md:pr-4 py-2.5 md:py-3 rounded-lg text-gray-900 dark:text-gray-100 text-sm md:text-base",
                     "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm",
                     "border border-purple-200/50 dark:border-purple-500/30",
                     "focus:ring-2 focus:ring-purple-500 focus:border-transparent",
@@ -212,7 +253,7 @@ const Articles = () => {
             </div>
 
             {/* Tab Switcher */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-1 border border-purple-200/50 dark:border-purple-500/30 shadow-lg flex w-full max-w-xl">
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-1 border border-purple-200/50 dark:border-purple-500/30 shadow-lg flex w-full lg:max-w-xl">
               {tabs.map((tab) => {
                 const IconComponent = tab.icon;
                 return (
@@ -222,13 +263,13 @@ const Articles = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className={cn(
-                      "flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 flex-1",
+                      "flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-2 md:py-3 rounded-md text-xs md:text-sm font-medium transition-all duration-300 flex-1",
                       selectedType === tab.id
                         ? "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white shadow-lg"
                         : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white/50 dark:hover:bg-gray-700/50"
                     )}
                   >
-                    <IconComponent className="w-4 h-4" />
+                    <IconComponent className="w-3 h-3 md:w-4 md:h-4" />
                     <span className="hidden sm:inline">{tab.label}</span>
                   </motion.button>
                 );
@@ -244,7 +285,7 @@ const Articles = () => {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mb-8"
         >
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-lg">
             Showing <span className="font-semibold text-purple-600 dark:text-purple-400">{filteredArticles.length}</span> of <span className="font-semibold">{allArticles.length}</span> articles
             {selectedType !== 'all' && (
               <span className="ml-1">
@@ -327,18 +368,12 @@ const Articles = () => {
                   </p>
 
                   {/* Article Meta */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-4">
-                    <div className="flex items-center gap-1">
-                      <HiCalendar className="w-4 h-4" />
-                      <span>{new Date(article.publishedDate).toLocaleDateString()}</span>
+                  {article.readingTime && (
+                    <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+                      <HiClock className="w-4 h-4" />
+                      <span>{article.readingTime} min read</span>
                     </div>
-                    {article.readingTime && (
-                      <div className="flex items-center gap-1">
-                        <HiClock className="w-4 h-4" />
-                        <span>{article.readingTime} min read</span>
-                      </div>
-                    )}
-                  </div>
+                  )}
 
                   {/* Tags */}
                   {article.tags && article.tags.length > 0 && (
@@ -359,29 +394,7 @@ const Articles = () => {
                     </div>
                   )}
 
-                  {/* Action Button */}
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 w-full justify-center",
-                      article.type === 'journalism'
-                        ? "bg-purple-50/80 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-100/80 dark:hover:bg-purple-900/50"
-                        : "bg-blue-50/80 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100/80 dark:hover:bg-blue-900/50"
-                    )}
-                  >
-                    {article.isExternal ? (
-                      <>
-                        <HiExternalLink className="w-4 h-4" />
-                        Read Article
-                      </>
-                    ) : (
-                      <>
-                        <HiEye className="w-4 h-4" />
-                        Read Full Article
-                      </>
-                    )}
-                  </motion.div>
+
                 </div>
               </motion.div>
             ))}

@@ -153,24 +153,24 @@ const ExperienceSection = () => {
   }, [scrollYProgress, experiences.length]);
 
   return (
-    <section id="experience" className="py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900/50 font-sans overflow-hidden transition-colors duration-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="experience" className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900/50 font-sans overflow-hidden transition-colors duration-500">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <span className="inline-block px-4 py-2 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium mb-4">
+          <span className="inline-block px-3 py-1.5 md:px-4 md:py-2 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg text-xs md:text-sm font-medium mb-3 md:mb-4">
             Professional Journey
           </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 font-sans">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans leading-tight">
             My Career
             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent"> Timeline</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-sans">
+          <p className="text-base md:text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-sans">
           From creating content for various industries to reporting on daily news and exclusive stories, here's how I've evolved from a content writer to a dedicated journalist.
           </p>
         </motion.div>
@@ -186,7 +186,7 @@ const ExperienceSection = () => {
           </div>
 
           {/* Experience Items */}
-          <div className="space-y-16 sm:space-y-20 lg:space-y-16">
+          <div className="space-y-12 md:space-y-16 lg:space-y-16">
             {experiences.map((exp, index) => {
               const IconComponent = exp.icon;
               const isActive = index <= activeIndex;
@@ -198,20 +198,20 @@ const ExperienceSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="relative flex flex-col lg:flex-row gap-8 items-start"
+                  className="relative flex flex-col lg:flex-row gap-6 md:gap-8 items-start"
                 >
                   {/* Timeline Node */}
-                  <div className="hidden lg:flex absolute left-0 top-8 -translate-x-1/2">
+                  <div className="hidden lg:flex absolute left-0 top-6 md:top-8 -translate-x-1/2">
                     <motion.div
                       className={cn(
-                        "w-16 h-16 rounded-full border-4 border-white dark:border-gray-800 shadow-lg flex items-center justify-center",
+                        "w-12 h-12 md:w-16 md:h-16 rounded-full border-4 border-white dark:border-gray-800 shadow-lg flex items-center justify-center",
                         `bg-gradient-to-r ${exp.color} ${exp.darkColor}`,
                         isActive ? "scale-110" : "scale-100"
                       )}
                       animate={{ scale: isActive ? 1.1 : 1 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <IconComponent className="w-8 h-8 text-white" />
+                      <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
                     </motion.div>
                   </div>
 
@@ -219,7 +219,7 @@ const ExperienceSection = () => {
                   <div className="lg:ml-24 w-full">
                     <motion.div
                       className={cn(
-                        "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 sm:p-8 shadow-lg border transition-all duration-300",
+                        "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 md:p-6 lg:p-8 shadow-lg border transition-all duration-300",
                         isActive 
                           ? "border-indigo-200 dark:border-indigo-500/30 shadow-xl transform scale-105" 
                           : "border-white/50 dark:border-gray-700/50 hover:border-indigo-100 dark:hover:border-indigo-500/20"
@@ -227,30 +227,30 @@ const ExperienceSection = () => {
                       whileHover={{ y: -5 }}
                     >
                       {/* Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-                        <div className="flex items-start gap-4 mb-4 sm:mb-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6">
+                        <div className="flex items-start gap-3 md:gap-4 mb-3 md:mb-4 sm:mb-0">
                           <div className={cn(
-                            "w-14 h-14 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center lg:hidden flex-shrink-0 shadow-md",
+                            "w-12 h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center lg:hidden flex-shrink-0 shadow-md",
                             `bg-gradient-to-r ${exp.color} ${exp.darkColor}`
                           )}>
-                            <IconComponent className="w-7 h-7 sm:w-6 sm:h-6 text-white" />
+                            <IconComponent className="w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 text-white" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans leading-tight">{exp.role}</h3>
+                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans leading-tight">{exp.role}</h3>
                             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mt-1">
-                              <HiOfficeBuilding className="w-4 h-4 flex-shrink-0" />
-                              <span className="font-sans text-sm sm:text-base">{exp.company}</span>
+                              <HiOfficeBuilding className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                              <span className="font-sans text-xs md:text-sm lg:text-base">{exp.company}</span>
                             </div>
                           </div>
                         </div>
                         
-                        <div className="flex flex-col items-start sm:items-end gap-2">
-                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                            <HiCalendar className="w-4 h-4" />
-                            <span className="text-sm font-medium font-sans">{exp.period}</span>
+                        <div className="flex flex-col items-start sm:items-end gap-1.5 md:gap-2">
+                          <div className="flex items-center gap-1.5 md:gap-2 text-gray-500 dark:text-gray-400">
+                            <HiCalendar className="w-3 h-3 md:w-4 md:h-4" />
+                            <span className="text-xs md:text-sm font-medium font-sans">{exp.period}</span>
                           </div>
                           <span className={cn(
-                            "px-3 py-1 rounded-full text-xs font-medium",
+                            "px-2.5 py-0.5 md:px-3 md:py-1 rounded-full text-xs font-medium",
                             `bg-gradient-to-r ${exp.color} ${exp.darkColor} text-white`
                           )}>
                             {exp.type}
@@ -259,23 +259,23 @@ const ExperienceSection = () => {
                       </div>
 
                       {/* Description */}
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 font-sans">
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed mb-4 md:mb-6 font-sans">
                         {exp.description}
                       </p>
 
                       {/* Achievements */}
-                      <div className="mb-6">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 font-sans">Key Achievements</h4>
-                        <ul className="space-y-2">
+                      <div className="mb-4 md:mb-6">
+                        <h4 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 md:mb-3 font-sans">Key Achievements</h4>
+                        <ul className="space-y-1.5 md:space-y-2">
                           {exp.achievements.map((achievement, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
+                            <li key={idx} className="flex items-start gap-2 md:gap-3">
                               <div className={cn(
-                                "w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5",
+                                "w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5",
                                 `bg-gradient-to-r ${exp.color} ${exp.darkColor}`
                               )}>
                                 <span className="text-white text-xs font-bold">✓</span>
                               </div>
-                              <span className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed font-sans">
+                              <span className="text-gray-600 dark:text-gray-300 text-xs md:text-sm leading-relaxed font-sans">
                                 {achievement}
                               </span>
                             </li>
@@ -285,12 +285,12 @@ const ExperienceSection = () => {
 
                       {/* Skills */}
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 font-sans">Skills Developed</h4>
-                        <div className="flex flex-wrap gap-2">
+                        <h4 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 md:mb-3 font-sans">Skills Developed</h4>
+                        <div className="flex flex-wrap gap-1.5 md:gap-2">
                           {exp.skills.map((skill, idx) => (
                             <span
                               key={idx}
-                              className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full font-medium font-sans"
+                              className="px-2.5 py-0.5 md:px-3 md:py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs md:text-sm rounded-full font-medium font-sans"
                             >
                               {skill}
                             </span>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiCalendar, HiSparkles, HiShare, HiHome, HiChevronRight } from 'react-icons/hi';
+import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiSparkles, HiShare, HiHome, HiChevronRight } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -11,21 +11,21 @@ const Breadcrumb = ({ article }) => {
   const router = useRouter();
   
   return (
-    <nav aria-label="Breadcrumb" className="mb-6">
-      <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <li>
+    <nav aria-label="Breadcrumb" className="mb-4 md:mb-6">
+      <ol className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-gray-600 dark:text-gray-400 overflow-x-auto">
+        <li className="flex-shrink-0">
           <button
             onClick={() => router.push('/')}
             className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200 flex items-center"
           >
-            <HiHome className="w-4 h-4 mr-1" />
-            Home
+            <HiHome className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+            <span className="hidden sm:inline">Home</span>
           </button>
         </li>
-        <li>
-          <HiChevronRight className="w-4 h-4" />
+        <li className="flex-shrink-0">
+          <HiChevronRight className="w-3 h-3 md:w-4 md:h-4" />
         </li>
-        <li>
+        <li className="flex-shrink-0">
           <button
             onClick={() => router.push('/articles')}
             className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200"
@@ -33,20 +33,20 @@ const Breadcrumb = ({ article }) => {
             Articles
           </button>
         </li>
-        <li>
-          <HiChevronRight className="w-4 h-4" />
+        <li className="flex-shrink-0">
+          <HiChevronRight className="w-3 h-3 md:w-4 md:h-4" />
         </li>
-        <li>
+        <li className="flex-shrink-0">
           <span className="text-gray-900 dark:text-gray-100 font-medium">
             {article.category}
           </span>
         </li>
-        <li>
+        <li className="flex-shrink-0 hidden md:block">
           <HiChevronRight className="w-4 h-4" />
         </li>
-        <li>
-          <span className="text-gray-500 dark:text-gray-400 truncate max-w-xs">
-          Online Romance in the Shadow of COVID-19
+        <li className="min-w-0 hidden md:block">
+          <span className="text-gray-500 dark:text-gray-400 truncate">
+            Online Romance in the Shadow of COVID-19
           </span>
         </li>
       </ol>
@@ -257,8 +257,8 @@ export default function OnlineRomanceClient({ article }) {
             viewport={{ once: true, margin: "-100px" }}
           >
             <HeadingTag 
-              className={`font-bold text-gray-900 dark:text-gray-100 mb-4 font-sans ${
-                item.level === 1 ? 'text-2xl' : 'text-xl'
+              className={`font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 font-sans ${
+                item.level === 1 ? 'text-lg md:text-2xl' : 'text-base md:text-xl'
               }`}
               dangerouslySetInnerHTML={{ __html: item.content }}
             />
@@ -272,7 +272,7 @@ export default function OnlineRomanceClient({ article }) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15, delay: index * 0.02 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4 text-base font-sans"
+            className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 md:mb-4 text-sm md:text-base font-sans"
             dangerouslySetInnerHTML={{ __html: item.content }}
           />
         );
@@ -350,8 +350,47 @@ export default function OnlineRomanceClient({ article }) {
 
       {/* Header */}
       <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-2 md:py-3">
+          {/* Mobile Layout */}
+          <div className="flex items-center justify-between md:hidden">
+            <motion.button
+              onClick={() => router.back()}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 p-2 -ml-2"
+            >
+              <HiArrowLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Back</span>
+            </motion.button>
+
+            <motion.button
+              onClick={handleShare}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-1 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg text-sm font-medium transition-colors duration-300"
+            >
+              <HiShare className="w-3 h-3" />
+              Share
+            </motion.button>
+          </div>
+
+          {/* Mobile Category Badge */}
+          <div className="flex justify-center mt-2 md:hidden">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.2 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
+            >
+              <HiSparkles className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                {article?.category}
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden md:flex items-center justify-between">
             <motion.button
               onClick={() => router.back()}
               whileHover={{ scale: 1.05 }}
@@ -371,7 +410,7 @@ export default function OnlineRomanceClient({ article }) {
               >
                 <HiSparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Content Writing
+                  {article?.category}
                 </span>
               </motion.div>
             </div>
@@ -390,7 +429,7 @@ export default function OnlineRomanceClient({ article }) {
       </header>
 
       {/* Document Container */}
-      <div className="relative z-10 max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="relative z-10 max-w-4xl mx-auto px-3 py-6 sm:px-6 md:py-12 lg:px-8">
         {/* Breadcrumb Navigation */}
         <Breadcrumb article={article} />
         
@@ -399,7 +438,7 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15, delay: 0.05 }}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight font-sans"
+          className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 leading-tight font-sans"
         >
           {article?.title}
         </motion.h1>
@@ -409,26 +448,19 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15, delay: 0.1 }}
-          className="flex flex-wrap items-center gap-6 mb-8 pb-8 border-b border-purple-200/50 dark:border-purple-500/30"
+          className="flex flex-wrap items-center gap-3 md:gap-6 mb-6 md:mb-8 pb-6 md:pb-8 border-b border-purple-200/50 dark:border-purple-500/30 text-sm md:text-base"
         >
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <HiDocumentText className="w-4 h-4" />
+            <HiDocumentText className="w-3 h-3 md:w-4 md:h-4" />
             <span className="font-medium">{article?.author}</span>
           </div>
+
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <HiCalendar className="w-4 h-4" />
-            <span>{new Date(article?.publishedDate).toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <HiClock className="w-4 h-4" />
+            <HiClock className="w-3 h-3 md:w-4 md:h-4" />
             <span>{article?.readingTime} min read</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <HiEye className="w-4 h-4" />
+            <HiEye className="w-3 h-3 md:w-4 md:h-4" />
             <span>{article?.category}</span>
           </div>
         </motion.div>
@@ -438,10 +470,10 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15, delay: 0.15 }}
-          className="mb-12"
+          className="mb-8 md:mb-12"
         >
-          <div className="bg-purple-50/50 dark:bg-purple-900/20 backdrop-blur-sm rounded-lg p-6 border-l-4 border-purple-600 dark:border-purple-400">
-            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-light italic">
+          <div className="bg-purple-50/50 dark:bg-purple-900/20 backdrop-blur-sm rounded-lg p-4 md:p-6 border-l-4 border-purple-600 dark:border-purple-400">
+            <p className="text-base md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-light italic">
               {article?.excerpt}
             </p>
           </div>
@@ -452,7 +484,7 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-purple-200/50 dark:border-purple-500/30 shadow-xl p-8 mb-8"
+          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-purple-200/50 dark:border-purple-500/30 shadow-xl p-4 md:p-8 mb-6 md:mb-8"
         >
           <div className="prose prose-lg max-w-none">
             {renderContent()}
@@ -464,9 +496,9 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15, delay: 0.25 }}
-          className="mt-12 pt-8 border-t border-purple-200/50 dark:border-purple-500/30"
+          className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-purple-200/50 dark:border-purple-500/30"
         >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 font-sans">Tags</h3>
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 font-sans">Tags</h3>
           <div className="flex flex-wrap gap-2">
             {article?.tags?.map((tag, index) => (
               <motion.span
@@ -487,7 +519,7 @@ export default function OnlineRomanceClient({ article }) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2, delay: 0.3 }}
-          className="mt-12 text-center"
+          className="mt-8 md:mt-12 text-center"
         >
           <motion.button
             onClick={() => router.push('/articles')}
