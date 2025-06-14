@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload, HiChat, HiSparkles } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 
-const ContactSection = ({ preloaded = false }) => {
+const ContactSection = () => {
   const contactInfo = [
     {
       icon: HiMail,
@@ -106,7 +106,6 @@ const ContactSection = ({ preloaded = false }) => {
     window.location.href = 'mailto:urmi24112001@gmail.com?subject=Collaboration Opportunity&body=Hi Urmi,%0D%0A%0D%0AI would like to explore a collaboration opportunity:%0D%0A%0D%0AType of collaboration:%0D%0AYour expertise needed:%0D%0AProject details:%0D%0A%0D%0ALooking forward to hearing from you!';
   };
 
-  // Optimized animation variants for better performance
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -130,30 +129,13 @@ const ContactSection = ({ preloaded = false }) => {
     }
   };
 
-  // Loading state component
-  if (!preloaded) {
-    return (
-      <section id="contact" className="relative py-16 md:py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 overflow-hidden">
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="animate-pulse space-y-4">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mx-auto"></div>
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-64 mx-auto"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48 mx-auto"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <motion.section 
       id="contact" 
       className="relative py-16 md:py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
-      animate={preloaded ? "visible" : "hidden"}
+      animate="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
       <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />

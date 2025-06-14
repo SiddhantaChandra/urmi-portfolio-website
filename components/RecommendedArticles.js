@@ -13,10 +13,8 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [shuffledArticles, setShuffledArticles] = useState([]);
   const [isInView, setIsInView] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const sectionRef = useRef(null);
   
- 
   const [itemsPerView, setItemsPerView] = useState(4);
   
   useEffect(() => {
@@ -34,7 +32,6 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     window.addEventListener('resize', updateItemsPerView);
     return () => window.removeEventListener('resize', updateItemsPerView);
   }, []);
-
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -60,50 +57,37 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     };
   }, [isInView]);
 
-  
   useEffect(() => {
     if (!isInView) return;
     
-    setIsLoading(true);
+    const allArticles = [...contentWritingArticles, ...journalArticles];
     
-   
-    const timer = setTimeout(() => {
+    const seenTitles = new Set();
+    const uniqueArticles = allArticles.filter(article => {
+      if (article.slug === currentArticleSlug || article.id === currentArticleId) {
+        return false;
+      }
+      
+      if (seenTitles.has(article.title)) {
+        return false;
+      }
+      
+      seenTitles.add(article.title);
+      return true;
+    });
     
-      const allArticles = [...contentWritingArticles, ...journalArticles];
-      
-     
-      const seenTitles = new Set();
-      const uniqueArticles = allArticles.filter(article => {
-       
-        if (article.slug === currentArticleSlug || article.id === currentArticleId) {
-          return false;
-        }
-        
-        if (seenTitles.has(article.title)) {
-          return false;
-        }
-        
-        seenTitles.add(article.title);
-        return true;
-      });
-      
-  
-      const shuffled = uniqueArticles
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 8)
-        .map((article, index) => ({
-          ...article,
-          uniqueKey: `${article.slug || article.id || article.title.replace(/\s+/g, '-').toLowerCase()}-${index}`,
-          displayImage: article.featuredImage || article.image,
-        }));
-      
-      setShuffledArticles(shuffled);
-      setIsLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
+    const shuffled = uniqueArticles
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 8)
+      .map((article, index) => ({
+        ...article,
+        uniqueKey: `${article.slug || article.id || article.title.replace(/\s+/g, '-').toLowerCase()}-${index}`,
+        displayImage: article.featuredImage || article.image,
+      }));
+    
+    setShuffledArticles(shuffled);
   }, [isInView, currentArticleSlug, currentArticleId]);
-  
+
   const goToNext = useCallback(() => {
     const maxIndex = shuffledArticles.length - itemsPerView;
     setCurrentIndex(prev => {
@@ -116,10 +100,8 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
     const maxIndex = shuffledArticles.length - itemsPerView;
     setCurrentIndex(prev => {
       if (prev === 0) {
-     
         return Math.floor(maxIndex / itemsPerView) * itemsPerView;
       } else {
-        
         const prevIndex = Math.max(0, prev - itemsPerView);
         return prevIndex;
       }
@@ -127,15 +109,11 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   }, [shuffledArticles.length, itemsPerView]);
   
   const handleArticleClick = useCallback((article) => {
-   
     if (article.slug) {
-    
       router.push(`/articles/${article.slug}`);
     } else if (article.link) {
- 
       window.open(article.link, '_blank');
     } else if (article.id) {
-    
       router.push(`/articles/${article.id}`);
     }
   }, [router]);
@@ -168,7 +146,6 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
       goToPrev();
     }
   };
-  
 
   if (!isInView) {
     return (
@@ -176,53 +153,12 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
         ref={sectionRef}
         className="py-16 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-6 sm:h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-48 sm:w-64 mx-auto mb-4"></div>
-              <div className="h-3 sm:h-4 bg-gray-200 dark:bg-gray-700 rounded w-72 sm:w-96 mx-auto"></div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
   
-  
-  if (isLoading || shuffledArticles.length === 0) {
-    return (
-      <motion.section
-        ref={sectionRef}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="py-12 sm:py-16 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="animate-pulse">
-              <div className="h-6 sm:h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-48 sm:w-64 mx-auto mb-4"></div>
-              <div className="h-3 sm:h-4 bg-gray-200 dark:bg-gray-700 rounded w-72 sm:w-96 mx-auto"></div>
-            </div>
-          </div>
-          
-          {/* Loading Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {Array.from({ length: itemsPerView }, (_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
-                  <div className="h-32 sm:h-48 bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="p-4 sm:p-6 space-y-3">
-                    <div className="h-4 sm:h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                    <div className="h-3 sm:h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                    <div className="h-3 sm:h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-    );
+  if (shuffledArticles.length === 0) {
+    return null;
   }
   
   const maxIndex = shuffledArticles.length - itemsPerView;

@@ -14,11 +14,11 @@ const AboutSection = () => {
   ];
 
   const brands = [
-    { name: 'The Telegraph Online', logo: '/brands/The_Telegraph_Online.svg', alt: 'The Telegraph Online' },
-    { name: 'ABP Digital', logo: '/brands/abp_digital.jpg', alt: 'ABP Digital' },
-    { name: 'MyKolkata', logo: '/brands/mykolkata-new.svg', alt: 'MyKolkata' },
-    { name: 'AllCap Communications', logo: '/brands/allcap-communications.svg', alt: 'AllCap Communications' },
-    { name: 'My Chat Lesson', logo: '/brands/my-chat-lesson-logo.png', alt: 'My Chat Lesson' },
+    { name: 'The Telegraph Online', logo: '/brands/The_Telegraph_Online.webp', alt: 'The Telegraph Online' },
+    { name: 'ABP Digital', logo: '/brands/abp_digital.webp', alt: 'ABP Digital' },
+    { name: 'MyKolkata', logo: '/brands/mykolkata-new.webp', alt: 'MyKolkata' },
+    { name: 'AllCap Communications', logo: '/brands/allcap-communications.webp', alt: 'AllCap Communications' },
+    { name: 'My Chat Lesson', logo: '/brands/my-chat-lesson-logo.webp', alt: 'My Chat Lesson' },
   ];
 
   return (

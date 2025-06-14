@@ -58,7 +58,6 @@ const Breadcrumb = ({ article }) => {
 export default function OnlineRomanceClient({ article }) {
   const [xmlContent, setXmlContent] = useState('');
   const [parsedContent, setParsedContent] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -74,8 +73,6 @@ export default function OnlineRomanceClient({ article }) {
         parseXMLContent(xmlText);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -275,17 +272,6 @@ export default function OnlineRomanceClient({ article }) {
       }
     });
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center transition-colors duration-500 font-sans">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading document...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
