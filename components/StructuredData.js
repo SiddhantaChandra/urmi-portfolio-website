@@ -61,17 +61,18 @@ export default function StructuredData() {
         "Event coverage",
         "Content writing and editing",
         "SEO optimization"
-      ]
-    },
-    "estimatedSalary": {
+      ],
+      "estimatedSalary": [{
       "@type": "MonetaryAmount",
       "currency": "INR",
       "value": "28000"
-    },
-    "occupationLocation": {
+    }],"occupationLocation": [{
       "@type": "City",
       "name": "Kolkata"
-    }
+    }]
+    },
+    
+    
   };
 
   const websiteSchema = {
