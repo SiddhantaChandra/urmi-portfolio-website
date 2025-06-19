@@ -1,4 +1,4 @@
-// components/StructuredData.js - Rich snippets for better SERP appearance
+
 export default function StructuredData() {
   const personSchema = {
     "@context": "https://schema.org",
