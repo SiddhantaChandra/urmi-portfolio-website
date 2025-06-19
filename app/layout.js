@@ -131,6 +131,20 @@ export default function RootLayout({ children }) {
         
         {/* Remove redundant Google Fonts preconnects since we're using Next.js font optimization */}
         
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3Q1ER94"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              
+              gtag('config', 'G-GBZ3Q1ER94');
+            `,
+          }}
+        />
+        
         {/* Critical CSS inline - minimal for immediate rendering */}
         <style dangerouslySetInnerHTML={{
           __html: `
