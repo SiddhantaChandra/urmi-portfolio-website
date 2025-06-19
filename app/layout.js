@@ -7,6 +7,7 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: 'swap',
+  preload: true,
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
 });
 
@@ -128,13 +129,7 @@ export default function RootLayout({ children }) {
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         
-        {/* Essential preconnects only */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* DNS prefetch for common corporate DNS servers */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        {/* Remove redundant Google Fonts preconnects since we're using Next.js font optimization */}
         
         {/* Critical CSS inline - minimal for immediate rendering */}
         <style dangerouslySetInnerHTML={{
