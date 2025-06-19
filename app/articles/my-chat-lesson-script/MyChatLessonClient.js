@@ -193,13 +193,13 @@ export default function MyChatLessonClient({ article }) {
             {/* Mobile Top Row */}
             <div className="flex items-center justify-between mb-2">
               <motion.button
-                onClick={() => router.back()}
+                onClick={() => router.push('/articles')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 p-1 -ml-1"
               >
                 <HiArrowLeft className="w-4 h-4" />
-                <span className="text-sm font-medium">Back</span>
+                <span className="text-sm font-medium">Articles</span>
               </motion.button>
 
               <motion.button
@@ -232,13 +232,13 @@ export default function MyChatLessonClient({ article }) {
           {/* Desktop Layout */}
           <div className="hidden md:flex items-center justify-between">
             <motion.button
-              onClick={() => router.back()}
+              onClick={() => router.push('/articles')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300"
             >
               <HiArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Back</span>
+              <span className="font-medium">Articles</span>
             </motion.button>
 
             <div className="text-center">
