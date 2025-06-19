@@ -20,13 +20,9 @@
 	},
 	"routes": [
 		{
-			"pattern": "urmichakraborty.com/*",
+			"pattern": "urmichakraborty.com",
 			"custom_domain": true
-		  },
-		  {
-			"pattern": "www.urmichakraborty.com/*", 
-			"custom_domain": true
-		  },
+		}
 	],
 
 	/**
