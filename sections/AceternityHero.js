@@ -140,7 +140,7 @@ const AceternityHero = () => {
               <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
                   <div className="w-full h-full bg-white dark:bg-gray-800 rounded-full p-2">
-                    <img
+                    <Image
                       src="/Urmi.webp"
                       alt="Urmi Chakraborty"
                       width={256}
