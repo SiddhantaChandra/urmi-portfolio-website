@@ -47,8 +47,14 @@ export default function StructuredData() {
       "Hollywood Entertainment"
     ],
     "hasOccupation": {
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "name": "Urmi Chakraborty - Entertainment Journalist Portfolio",
+        "url": "https://urmichakraborty.com"
+      },
       "@type": "Occupation",
       "name": "Entertainment Journalist",
+      "description": "Working on daily coverage of the entertainment industry. Producing SEO-optimised articles and breaking news while maintaining journalistic accuracy under tight deadlines.",
       "responsibilities": [
         "Entertainment news reporting",
         "Celebrity interviews",
@@ -56,6 +62,15 @@ export default function StructuredData() {
         "Content writing and editing",
         "SEO optimization"
       ]
+    },
+    "estimatedSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "INR",
+      "value": "28000"
+    },
+    "occupationLocation": {
+      "@type": "City",
+      "name": "Kolkata"
     }
   };
 
@@ -80,7 +95,7 @@ export default function StructuredData() {
 
   const professionalServiceSchema = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "Content Writer",
     "name": "Urmi Chakraborty Journalism & Content Writing Services",
     "description": "Professional entertainment journalism, content writing, and editorial services",
     "url": "https://urmichakraborty.com",
@@ -88,9 +103,11 @@ export default function StructuredData() {
     "email": "urmi24112001@gmail.com",
     "address": {
       "@type": "PostalAddress",
+      "postalCode": "700127",
+      "streetAddress": "Teghoria",
       "addressLocality": "Kolkata",
       "addressRegion": "West Bengal",
-      "addressCountry": "India"
+      "addressCountry": "IN"
     },
     "serviceType": [
       "Entertainment Journalism",
@@ -107,6 +124,8 @@ export default function StructuredData() {
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Journalism & Writing Services",
+      "priceRange": "$$",
+      "image": "https://urmichakraborty.com/logo.webp",
       "itemListElement": [
         {
           "@type": "Offer",
