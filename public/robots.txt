@@ -1,14 +1,22 @@
-# Robots.txt for Urmi Chakraborty Portfolio
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://urmichakraborty.com/sitemap.xml
+Sitemap: https://www.urmichakraborty.com/sitemap.xml
 
-# Disallow admin/private areas (if any)
+Allow: /ab6a76142afb478687203d747ba106f1.txt
+
+Allow: /articles/
+Allow: /_next/static/
+Allow: /favicon.ico
+Allow: /logo.webp
+Allow: /Urmi.webp
+
+Allow: /api/indexnow
+
 Disallow: /admin/
 Disallow: /private/
+Disallow: /_next/cache/
+Disallow: /.git/
+Disallow: /node_modules/
 
-# Allow important directories
-Allow: /articles/
-Allow: /_next/static/ 
+Crawl-delay: 1 
