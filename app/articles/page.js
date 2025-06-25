@@ -8,6 +8,7 @@ import { cn } from '../../utils/cn';
 import Image from 'next/image';
 import contentWritingArticles from '../../components/ContentWritingData';
 import journalArticles from '../../components/JournalismData';
+import ArticleFooter from '../../components/ArticleFooter';
 
 const Articles = () => {
   const [allArticles, setAllArticles] = useState([]);
@@ -431,6 +432,9 @@ const Articles = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Article Footer */}
+      <ArticleFooter />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { HiArrowLeft, HiDocumentText, HiEye, HiClock, HiSparkles, HiShare, HiHom
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import RecommendedArticles from '../../../components/RecommendedArticles';
+import ArticleFooter from '../../../components/ArticleFooter';
 
 // Breadcrumb Component
 const Breadcrumb = ({ article }) => {
@@ -519,6 +520,9 @@ export default function OnlineRomanceClient({ article }) {
         currentArticleSlug={article?.slug} 
         currentArticleId={article?.id} 
       />
+
+      {/* Article Footer */}
+      <ArticleFooter />
 
       {/* CSS for grid background and editing styles */}
       <style jsx>{`

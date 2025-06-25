@@ -6,6 +6,7 @@ import { HiArrowLeft, HiSparkles, HiClock, HiEye, HiUser, HiShare, HiHome, HiChe
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../utils/cn';
 import RecommendedArticles from '../../../components/RecommendedArticles';
+import ArticleFooter from '../../../components/ArticleFooter';
 
 // Function to decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -404,6 +405,9 @@ export default function MyChatLessonClient({ article }) {
         currentArticleSlug={article?.slug} 
         currentArticleId={article?.id} 
       />
+
+      {/* Article Footer */}
+      <ArticleFooter />
 
       {/* CSS for grid background */}
       <style jsx>{`

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '../../../utils/cn';
 import Image from 'next/image';
 import RecommendedArticles from '../../../components/RecommendedArticles';
+import ArticleFooter from '../../../components/ArticleFooter';
 
 // Breadcrumb Component
 const Breadcrumb = ({ article }) => {
@@ -441,6 +442,9 @@ export default function ArticleClient({ article }) {
         currentArticleSlug={article?.slug} 
         currentArticleId={article?.id} 
       />
+
+      {/* Article Footer */}
+      <ArticleFooter />
 
       {/* CSS for grid background */}
       <style jsx>{`
