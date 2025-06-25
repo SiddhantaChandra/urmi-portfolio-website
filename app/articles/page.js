@@ -36,7 +36,7 @@ const Articles = () => {
       excerpt: article.subHeading,
       featuredImage: article.image,
       
-      readingTime: 5, // Default reading time
+      readingTime: 5,
       author: 'Urmi Chakraborty',
       isExternal: true
     }));

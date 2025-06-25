@@ -35,11 +35,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# OpenNext
-/.open-next
+# OpenNext (removed - using Vercel now)
+# /.open-next
 
-# wrangler files
-.wrangler
-.dev.vars*
+# wrangler files (removed - using Vercel now)
+# .wrangler
+# .dev.vars*
 
 .vercel

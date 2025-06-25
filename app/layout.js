@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "./contexts/ThemeContext";
 import StructuredData from "../components/StructuredData";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -131,19 +132,7 @@ export default function RootLayout({ children }) {
         
         {/* Remove redundant Google Fonts preconnects since we're using Next.js font optimization */}
         
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3Q1ER94"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              
-              gtag('config', 'G-GBZ3Q1ER94');
-            `,
-          }}
-        />
+        {/* Google Analytics moved to body for better performance */}
         
         {/* Critical CSS inline - minimal for immediate rendering */}
         <style dangerouslySetInnerHTML={{
@@ -172,6 +161,21 @@ export default function RootLayout({ children }) {
         className="antialiased font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
         suppressHydrationWarning={true}
       >
+        {/* Google Analytics - Using Next.js Script component for better performance */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3Q1ER94"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-GBZ3Q1ER94');
+          `}
+        </Script>
+
         <ThemeProvider>
           {children}
         </ThemeProvider>
