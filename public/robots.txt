@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.urmichakraborty.com/sitemap.xml
+Sitemap: https://urmichakraborty.com/sitemap.xml
 
 Allow: /articles
 Allow: /_next/static/
