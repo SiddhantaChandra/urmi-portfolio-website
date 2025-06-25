@@ -3,20 +3,17 @@ Allow: /
 
 Sitemap: https://www.urmichakraborty.com/sitemap.xml
 
-Allow: /ab6a76142afb478687203d747ba106f1.txt
-
-Allow: /articles/
+Allow: /articles
 Allow: /_next/static/
 Allow: /favicon.ico
 Allow: /logo.webp
 Allow: /Urmi.webp
 
 Allow: /api/indexnow
+Allow: /ab6a76142afb478687203d747ba106f1.txt
 
 Disallow: /admin/
 Disallow: /private/
 Disallow: /_next/cache/
 Disallow: /.git/
 Disallow: /node_modules/
-
-Crawl-delay: 1 

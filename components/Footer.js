@@ -73,7 +73,7 @@ const Footer = () => {
   const socialLinks = [
     {
       name: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183/',
+      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183',
       icon: FaLinkedin,
       color: 'hover:text-blue-600 dark:hover:text-blue-400'
     },

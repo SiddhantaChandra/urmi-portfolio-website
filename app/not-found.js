@@ -85,14 +85,14 @@ const MinimalFooter = () => {
           {/* Quick Links */}
           <div className="flex items-center space-x-4 text-sm">
             <a
-              href="mailto:urmichakraborty2022@gmail.com"
+              href="mailto:urmi24112001@gmail.com"
               className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
               <HiMail className="w-4 h-4" />
               <span className="hidden sm:inline">Contact</span>
             </a>
             <a
-              href="https://www.linkedin.com/in/urmichakraborty/"
+              href="https://www.linkedin.com/in/urmi-chakraborty-809678183"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"

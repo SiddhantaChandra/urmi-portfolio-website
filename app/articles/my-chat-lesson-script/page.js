@@ -12,7 +12,7 @@ export async function generateMetadata() {
     };
   }
 
-  const siteUrl = 'https://urmichakraborty.com/';
+  const siteUrl = 'https://urmichakraborty.com';
   const articleUrl = `${siteUrl}/articles/my-chat-lesson-script`;
 
   return {
@@ -68,7 +68,7 @@ export async function generateMetadata() {
 
 // Structured Data Component
 function StructuredData({ article }) {
-  const siteUrl = 'https://urmichakraborty.com/';
+  const siteUrl = 'https://urmichakraborty.com';
   
   const structuredData = {
     "@context": "https://schema.org",

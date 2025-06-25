@@ -24,7 +24,7 @@ const ContactSection = () => {
   const socialLinks = [
     {
       name: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183/',
+      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183',
       description: 'Professional network & updates',
       icon: '👔'
     },
