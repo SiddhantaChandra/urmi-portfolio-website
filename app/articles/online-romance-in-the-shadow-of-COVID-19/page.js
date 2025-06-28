@@ -89,7 +89,7 @@ function StructuredData({ article }) {
       "name": "Urmi Chakraborty",
       "logo": {
         "@type": "ImageObject",
-        "url": `https://urmichakraborty.com/_next/image?url=%2Flogo.webp&w=48&q=75`
+        "url": `https://urmichakraborty.com/Urmi.webp`
       }
     },
     "mainEntityOfPage": {
