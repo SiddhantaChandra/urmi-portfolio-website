@@ -191,7 +191,7 @@ const AboutSection = () => {
                       alt={brand.alt}
                       width={160}
                       height={160}
-                      className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                      className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 rounded-md"
                     />
                   </div>
                 </motion.div>
@@ -218,7 +218,7 @@ const AboutSection = () => {
                       alt={brand.alt}
                       width={112}
                       height={112}
-                      className="max-w-full max-h-full object-contain transition-all duration-300"
+                      className="max-w-full max-h-full object-contain transition-all duration-300 rounded-md"
                     />
                   </div>
                 </motion.div>
@@ -241,7 +241,7 @@ const AboutSection = () => {
                       alt={brands[4].alt}
                       width={112}
                       height={112}
-                      className="max-w-full max-h-full object-contain transition-all duration-300"
+                      className="max-w-full max-h-full object-contain transition-all duration-300 rounded-md"
                     />
                   </div>
                 </div>
