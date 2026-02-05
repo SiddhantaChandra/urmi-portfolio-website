@@ -13,8 +13,8 @@ const AceternityHero = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       const duration = 2000;
-      const startValue = 2250;
-      const endValue = 2276;
+      const startValue = 2350;
+      const endValue = 2434;
       const startTime = Date.now();
       
       const animateCount = () => {
