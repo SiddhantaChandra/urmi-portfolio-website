@@ -30,14 +30,12 @@ const ExperienceSection = () => {
       location: "Kolkata",
       type: "Current Role",
       icon: HiNewspaper,
-      description: "Working on daily coverage of the entertainment industry. Producing SEO-optimised articles and breaking news while maintaining journalistic accuracy under tight deadlines.",
+      description: "Working on daily coverage of the entertainment industry and lifestyle beat. Producing SEO-optimised articles and breaking news while maintaining journalistic accuracy under tight deadlines.",
       achievements: [
         "Report on entertainment news across Hollywood, Bollywood, anime and OTT content",
         "Write and optimize SEO-driven articles to enhance reach and engagement", 
         "Produce spot copies for breaking news, ensuring accuracy and meeting strict deadlines",
         "Cover exclusive celebrity news, film releases and conduct interviews with industry figures",
-        "Provide comprehensive event coverage including Kolkata Comic Con",
-        "Build and maintain a strong network of industry contacts and sources",
         "Edit and proof copies ensuring clarity, error-free and accurate content",
         "Handle The Telegraph Online's social media presence, ensuring timely coverage of trending and viral topics",
         "Boost page views and user engagement by strategically leveraging push notifications for impactful stories"

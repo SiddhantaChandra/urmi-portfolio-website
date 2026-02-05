@@ -73,8 +73,8 @@ const WorkSection = () => {
 
   const tabs = [
     { id: 'all', label: 'All Work', icon: HiEye },
-    { id: 'content', label: 'Content Writing', icon: HiPencil },
-    { id: 'journalism', label: 'Journalism', icon: HiNewspaper }
+    { id: 'journalism', label: 'Journalism', icon: HiNewspaper },
+    { id: 'content', label: 'Content Writing', icon: HiPencil }
   ];
 
   const filteredProjects = activeTab === 'all' 

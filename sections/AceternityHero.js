@@ -190,11 +190,11 @@ const AceternityHero = () => {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mx-auto max-w-4xl leading-relaxed font-sans px-2 sm:px-4"
           >
-            I am passionate about{' '}
+            I am an{' '}
             <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-              crafting compelling stories
+              entertainment and lifestyle journalist
             </span>{' '}
-            that spark conversations and connect with a diverse audience.
+            covering film, television, anime and people-centric stories.
           </motion.div>
 
           {/* Description */}
@@ -204,7 +204,7 @@ const AceternityHero = () => {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed font-sans px-2 sm:px-4"
           >
-            From interviewing personalities to tracking pop culture trends across anime, Hollywood, and Bollywood, I bring nearly two years of experience in entertainment journalism and editorial work. My role at The Telegraph Online combines fast-paced reporting, content editing, and sharp communication, all driven by strong instincts for what resonates with readers.
+            With over two years of experience in reporting and editorial work, I track trends across the film and pop culture landscape while also uncovering compelling city stories that connect with diverse audiences. I specialise in SEO-optimised articles and long-form features with a strong understanding of social media trends and editorial standards.
           </motion.p>
 
           {/* Enhanced CTA Buttons */}

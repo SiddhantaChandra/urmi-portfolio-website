@@ -1,5 +1,103 @@
 const journalArticles = [
     {
+        title: "'Jujutsu Kaisen' Season 3 gives Itadori's trauma the care it deserves",
+        subHeading: "The third season of the fan-favourite anime premiered on Crunchyroll with its first two episodes on Thursday",
+        image: "/articles/journalism/juju_season3_trauma.webp",
+        link: "https://www.telegraphindia.com/entertainment/jujutsu-kaisen-season-3-review-a-dark-introspective-return-after-the-shibuya-incident/cid/2141811",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["Jujutsu Kaisen", "Shibuya Arc", "Anime", "Review", "Itadori Yuji"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "Ghosts of readers past: The lost stories of strangers, inked into old books from College Street",
+        subHeading: "A My Kolkata writer connects with the past through used books - scribbled with inscriptions of previous owners, heartfelt notes and other memorabilia",
+        image: "/articles/journalism/ghosts_of_readers_past.webp",
+        link: "https://www.telegraphindia.com/my-kolkata/lifestyle/what-a-reader-found-inside-second-hand-books-from-college-street-kolkata-photogallery/cid/2132039?slide=1",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["College Street", "Books", "Culture", "Kolkata", "Literature"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "'All of India is in Kolkata': Jhumpa Lahiri on language, belonging and the city that never left her",
+        subHeading: "'I was ashamed to let on that I knew Bangla,' the Pulitzer Prize-winning also revealed, about a time in her life, at the Kolkata Literary Meet",
+        image: "/articles/journalism/jhumpa_lahri.webp",
+        link: "https://www.telegraphindia.com/my-kolkata/people/all-of-india-is-in-kolkata-jhumpa-lahiri-on-language-identity-and-her-bengali-roots/cid/2143931",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["Jhumpa Lahiri", "Language & Identity", "Kolkata Culture", "Diaspora Stories", "Literature"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "How 'My Dress-Up Darling' continues to be a masterclass in self-expression",
+        subHeading: "The second season of the anime is currently streaming on Crunchyroll, with a new episode dropping every Friday",
+        image: "/articles/journalism/mdud_continues_to_be_a_masterclass.webp",
+        link: "https://www.telegraphindia.com/entertainment/how-my-dress-up-darling-season-2-breaks-gender-stereotypes-photogallery/cid/2115198",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["My Dress Up Darling", "Anime", "Self-Expression", "Otaku Culture", "Crunchyroll"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "As 'Good Boy's' Indy seeks Oscar for animal actors, here's a look at 10 other deserving furry friends",
+        subHeading: "'How many great performances must go overlooked before the Academy throws us a bone?' Indy the dog from 'Good Boy' wrote in his letter, that has kickstarted a campaign for our paw-some actors",
+        image: "/articles/journalism/good_boy_indy.webp",
+        link: "https://www.telegraphindia.com/entertainment/as-indy-the-dog-from-good-boy-seeks-oscar-for-animal-actors-heres-a-look-at-10-other-deserving-paw-friends-photogallery/cid/2127170",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["Indy the Dog", "Animal Actors", "Paw Friends", "Movies"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "Revelio! 10 Kolkata spots that look straight out of the Wizarding World of Harry Potter",
+        subHeading: "From Calcutta High Court to St Paul's Cathedral, these British-era structures are sure to remind you of locations from the popular J.K. Rowling book series and the film it was later adapted into",
+        image: "/articles/journalism/revelio.webp",
+        link: "https://www.telegraphindia.com/my-kolkata/places/calcutta-high-court-to-new-market-kolkata-locations-that-look-straight-out-of-the-wizarding-world-of-harry-potter-photogallery/cid/2136009",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["Kolkata Spots", "Harry Potter", "Magical Places", "Aesthetic"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
+        title: "OTT hasn't killed TV yet: Why Millennials and Gen Zs still find an escape in the 'idiot box'",
+        subHeading: "In the era of content streaming, a surprising number of people still turn to the comfort of television. But why? Here's what Kolkatans say",
+        image: "/articles/journalism/OTT_hasnt_killed_TV.webp",
+        link: "https://www.telegraphindia.com/my-kolkata/lifestyle/why-millennials-and-gen-zs-still-turn-to-tv-television-for-relaxation-in-an-era-of-ott/cid/2135507",
+        publication: "Telegraph",
+        category: "Entertainment",
+        articleType: "Published Article",
+        tags: ["Television", "OTT Platforms", "Millennials", "Comfort Viewing"],
+        metrics: [
+            { label: "Publication", value: "Telegraph" },
+            { label: "Category", value: "Entertainment" },
+        ]
+    },
+    {
         title: "New anime 'Takopi's Original Sin' is what 'Doraemon' would be in a darker, twisted world",
         subHeading: "What if Doraemon couldn't save Nobita? What if the blue robot cat, who travelled back in time to rescue a helpless boy with his pocketful of gadgets, arrived too late, or worse, it couldn't comprehend human emotions?",
         image: "/articles/journalism/takopi.webp",
