@@ -53,13 +53,17 @@ const WorkSection = () => {
   }));
 
 
+  const reservedContentCount = 3;
+  const reservedContentProjects = contentProjects.slice(-reservedContentCount);
+  const remainingContentProjects = contentProjects.slice(0, Math.max(contentProjects.length - reservedContentCount, 0));
+
   const createAlternatingProjects = () => {
     const alternating = [];
-    const maxLength = Math.max(contentProjects.length, journalismProjects.length);
+    const maxLength = Math.max(remainingContentProjects.length, journalismProjects.length);
     
     for (let i = 0; i < maxLength; i++) {
-      if (i < contentProjects.length) {
-        alternating.push(contentProjects[i]);
+      if (i < remainingContentProjects.length) {
+        alternating.push(remainingContentProjects[i]);
       }
       if (i < journalismProjects.length) {
         alternating.push(journalismProjects[i]);
@@ -69,7 +73,7 @@ const WorkSection = () => {
     return alternating;
   };
 
-  const allProjects = createAlternatingProjects();
+  const allProjects = [...createAlternatingProjects(), ...reservedContentProjects];
 
   const tabs = [
     { id: 'all', label: 'All Work', icon: HiEye },
