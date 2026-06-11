@@ -150,9 +150,9 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
 
   if (!isInView) {
     return (
-      <div 
+      <div
         ref={sectionRef}
-        className="py-16 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50"
+        className="py-16 bg-neutral-bg dark:bg-neutral-bg-dark"
       >
       </div>
     );
@@ -176,7 +176,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="py-12 sm:py-16 bg-gradient-to-br from-gray-50 via-purple-50/20 to-blue-50/30 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800/50"
+      className="py-12 sm:py-16 bg-neutral-bg dark:bg-neutral-bg-dark"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -216,7 +216,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                 onClick={goToPrev}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 items-center justify-center text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 -ml-5 lg:-ml-6"
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-card-bg dark:bg-card-bg-dark rounded-full shadow-lg border border-card-border dark:border-card-border items-center justify-center text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 -ml-5 lg:-ml-6"
               >
                 <HiChevronLeft className="w-5 h-5 lg:w-6 lg:h-6" />
               </motion.button>
@@ -225,7 +225,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                 onClick={goToNext}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 items-center justify-center text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 -mr-5 lg:-mr-6"
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-card-bg dark:bg-card-bg-dark rounded-full shadow-lg border border-card-border dark:border-card-border items-center justify-center text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 -mr-5 lg:-mr-6"
               >
                 <HiChevronRight className="w-5 h-5 lg:w-6 lg:h-6" />
               </motion.button>
@@ -264,7 +264,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                   viewport={{ once: true }}
                 >
                   <motion.div
-                    className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 cursor-pointer group h-full"
+                    className="bg-card-bg dark:bg-card-bg-dark rounded-xl overflow-hidden shadow-lg border border-card-border dark:border-card-border cursor-pointer group h-full"
                     onClick={() => handleArticleClick(article)}
                     whileHover={{ 
                       y: -4,
@@ -274,7 +274,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   >
                     {/* Article Image */}
-                    <div className="relative h-32 sm:h-40 md:h-48 lg:h-56 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 overflow-hidden">
+                    <div className="relative h-32 sm:h-40 md:h-48 lg:h-56 bg-card-bg dark:bg-card-bg-dark overflow-hidden">
                       {article.displayImage ? (
                         <Image
                           src={article.displayImage}
@@ -300,7 +300,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                       {/* Category Badge */}
                       <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
                         <motion.span 
-                          className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/90 dark:bg-gray-800/90 text-purple-600 dark:text-purple-400 text-xs font-medium rounded backdrop-blur-sm border border-white/20"
+                          className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-neutral-bg dark:bg-neutral-bg-dark text-purple-600 dark:text-purple-400 text-xs font-medium rounded backdrop-blur-sm border border-card-border dark:border-card-border"
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.2 }}
                         >
@@ -314,7 +314,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/90 dark:bg-gray-800/90 rounded-full flex items-center justify-center shadow-lg">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-neutral-bg dark:bg-neutral-bg-dark rounded-full flex items-center justify-center shadow-lg border border-card-border dark:border-card-border">
                           <HiArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600 dark:text-purple-400" />
                         </div>
                       </motion.div>
@@ -347,7 +347,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                 onClick={goToPrev}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
+                className="flex items-center gap-2 px-4 py-2 bg-card-bg dark:bg-card-bg-dark rounded-lg shadow-md border border-card-border dark:border-card-border text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
               >
                 <HiChevronLeft className="w-4 h-4" />
                 <span className="text-sm font-medium">Prev</span>
@@ -357,7 +357,7 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
                 onClick={goToNext}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
+                className="flex items-center gap-2 px-4 py-2 bg-card-bg dark:bg-card-bg-dark rounded-lg shadow-md border border-card-border dark:border-card-border text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300"
               >
                 <span className="text-sm font-medium">Next</span>
                 <HiChevronRight className="w-4 h-4" />

@@ -64,49 +64,10 @@ const AceternityHero = () => {
   };
 
   return (
-    <section 
-      id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 pt-16 sm:pt-20 lg:pt-16 pb-16 sm:pb-20 lg:pb-16"
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500 pt-16 sm:pt-20 lg:pt-16 pb-16 sm:pb-20 lg:pb-16"
     >
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
-      
-      {/* Spotlight Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slow" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slower" />
-      </div>
-
-      {/* Floating Orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 0.6, 0],
-              scale: [0, 1, 0],
-              x: [0, Math.random() * 80 - 40],
-              y: [0, Math.random() * 80 - 40],
-            }}
-            transition={{
-              duration: 12 + i * 2,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "easeInOut",
-            }}
-            className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
-              i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
-            )}
-            style={{
-              left: `${10 + (i * 15)}%`,
-              top: `${20 + (i * 10)}%`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
@@ -120,7 +81,7 @@ const AceternityHero = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg mt-8"
+            className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border border-card-border dark:border-white/20 shadow-lg mt-8"
           >
             <HiSparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
             <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 font-sans">
@@ -138,8 +99,8 @@ const AceternityHero = () => {
             <div className="relative">
               {/* Profile Image with Border */}
               <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
-                  <div className="w-full h-full bg-white dark:bg-gray-800 rounded-full p-2">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
+                      <div className="w-full h-full bg-neutral-bg dark:bg-neutral-bg-dark rounded-full p-2">
                     <Image
                       src="/Urmi.webp"
                       alt="Urmi Chakraborty"
@@ -159,7 +120,7 @@ const AceternityHero = () => {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 lg:-bottom-3 lg:-right-4"
               >
-                <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-2 py-1 sm:px-4 sm:py-2 lg:px-4 lg:py-2 rounded-full shadow-xl border-2 sm:border-4 border-white dark:border-gray-800">
+                <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-2 py-1 sm:px-4 sm:py-2 lg:px-4 lg:py-2 rounded-full shadow-xl border border-neutral-bg dark:border-neutral-bg-dark">
                   <span className="text-xs sm:text-sm lg:text-base font-bold text-gray-900 dark:text-gray-900 whitespace-nowrap">
                     {articleCount}+ Articles
                   </span>
@@ -237,8 +198,8 @@ const AceternityHero = () => {
               onClick={handleViewCaseStudies}
               className={cn(
                 "group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold w-full sm:w-auto",
-                "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border-2 border-purple-200 dark:border-purple-500/30",
-                "hover:bg-white dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
+              "bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-card-border dark:border-white/20",
+              "hover:bg-neutral-bg dark:hover:bg-neutral-bg-dark hover:border-purple-300 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400",
                 "shadow-lg hover:shadow-xl transition-all duration-150 font-sans",
                 "transform-gpu"
               )}
@@ -250,19 +211,6 @@ const AceternityHero = () => {
         </motion.div>
       </div>
 
-      <style jsx>{`
-        .bg-grid-slate-100\\/50 {
-          background-image: linear-gradient(rgba(148, 163, 184, 0.5) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(148, 163, 184, 0.5) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        
-        .dark .bg-grid-slate-700\\/20 {
-          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-      `}</style>
     </section>
   );
 };

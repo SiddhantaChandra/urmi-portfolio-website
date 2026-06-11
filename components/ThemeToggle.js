@@ -136,7 +136,7 @@ export const ThemeToggleWithLabel = ({ className, showLabel = true }) => {
         className={cn(
           "relative flex items-center w-14 h-7 rounded-full transition-all duration-300",
           "bg-gray-300 dark:bg-gray-600",
-          "border-2 border-gray-400 dark:border-gray-500",
+          "border border-gray-400 dark:border-gray-500",
           "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
         )}
         initial={false}

@@ -32,7 +32,7 @@ const ArticleFooter = () => {
   };
 
   return (
-    <footer className="bg-white/80 dark:bg-gray-900/80 border-t border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm mt-8 md:mt-12">
+    <footer className="bg-card-bg dark:bg-card-bg-dark border-t border-card-border dark:border-card-border backdrop-blur-sm mt-8 md:mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
@@ -93,7 +93,7 @@ const ArticleFooter = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 text-sm font-medium px-3 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 text-sm font-medium px-3 py-1 rounded-md hover:bg-card-bg dark:hover:bg-card-bg-dark"
             >
               {link.name}
             </motion.button>
@@ -101,7 +101,7 @@ const ArticleFooter = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-8 pt-6 border-t border-gray-200/50 dark:border-gray-700/50">
+        <div className="mt-8 pt-6 border-t border-card-border dark:border-card-border">
           {/* Copyright and Made with Love */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
             <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">

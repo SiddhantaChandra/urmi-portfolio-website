@@ -17,7 +17,7 @@ const MinimalNavbar = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700"
+      className="fixed top-0 left-0 right-0 z-50 bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border-b border-card-border dark:border-card-border"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -73,7 +73,7 @@ const MinimalFooter = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.8 }}
-      className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-6"
+      className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border-t border-card-border dark:border-card-border py-6"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -171,7 +171,7 @@ export default function NotFound() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-blue-50/50 dark:from-gray-900 dark:via-purple-900/10 dark:to-gray-800 font-sans transition-colors duration-500">
+    <div className="min-h-screen bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500">
       {/* Minimal Header */}
       <MinimalNavbar />
       
@@ -291,7 +291,7 @@ export default function NotFound() {
                 onClick={() => router.push('/articles')}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 px-6 sm:px-8 py-3 rounded-lg font-semibold border-2 border-purple-200 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-lg"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-card-bg dark:bg-card-bg-dark text-purple-600 dark:text-purple-400 px-6 sm:px-8 py-3 rounded-lg font-semibold border border-card-border dark:border-card-border hover:bg-neutral-bg dark:hover:bg-neutral-bg-dark transition-all duration-300 shadow-lg"
               >
                 <HiNewspaper className="w-5 h-5" />
                 View Articles
@@ -313,7 +313,7 @@ export default function NotFound() {
                   placeholder="Search articles..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-700 rounded-lg focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors text-sm sm:text-base"
+                  className="w-full px-4 py-3 pl-12 bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-700 rounded-lg focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors text-sm sm:text-base"
                 />
                 <HiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
@@ -328,14 +328,14 @@ export default function NotFound() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -4, scale: 1.02 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 cursor-pointer group"
+                  className="bg-card-bg dark:bg-card-bg-dark rounded-xl overflow-hidden shadow-lg border border-card-border dark:border-card-border cursor-pointer group"
                   onClick={() => {
                     const href = `/articles/${article.slug}`;
                     router.push(href);
                   }}
                 >
                   {/* Article Image */}
-                  <div className="relative h-40 sm:h-48 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20">
+                  <div className="relative h-40 sm:h-48 bg-card-bg dark:bg-card-bg-dark">
                     {article.featuredImage ? (
                       <Image
                         src={article.featuredImage}

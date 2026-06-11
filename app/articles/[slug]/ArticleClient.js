@@ -193,48 +193,9 @@ export default function ArticleClient({ article }) {
   };
 
   return (
-    <div className="relative min-h-screen font-sans bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-500">
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
-      
-      {/* Spotlight Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-6 animate-pulse-slow" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-6 animate-pulse-slower" />
-      </div>
-
-      {/* Floating Orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 0.3, 0],
-              scale: [0, 1, 0],
-              x: [0, Math.random() * 60 - 30],
-              y: [0, Math.random() * 60 - 30],
-            }}
-            transition={{
-              duration: 18 + i * 3,
-              repeat: Infinity,
-              delay: i * 4,
-              ease: "easeInOut",
-            }}
-            className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-8 dark:opacity-4",
-              i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
-            )}
-            style={{
-              left: `${10 + (i * 15)}%`,
-              top: `${20 + (i * 10)}%`,
-            }}
-          />
-        ))}
-      </div>
-
+    <div className="relative min-h-screen font-sans bg-neutral-bg dark:bg-neutral-bg-dark transition-colors duration-500">
       {/* Header */}
-      <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
+      <header className="relative z-10 bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border-b border-card-border dark:border-card-border sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-2 md:py-3">
           {/* Mobile Layout */}
           <div className="flex items-center justify-between md:hidden">
@@ -265,7 +226,7 @@ export default function ArticleClient({ article }) {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1, duration: 0.2 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border border-card-border dark:border-card-border shadow-sm"
             >
               <HiSparkles className="w-3 h-3 text-purple-600 dark:text-purple-400" />
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -291,7 +252,7 @@ export default function ArticleClient({ article }) {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border border-card-border dark:border-card-border shadow-lg"
               >
                 <HiSparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -377,7 +338,7 @@ export default function ArticleClient({ article }) {
           transition={{ duration: 0.15, delay: 0.15 }}
           className="mb-8 md:mb-12"
         >
-          <div className="bg-purple-50/50 dark:bg-purple-900/20 backdrop-blur-sm rounded-lg p-4 md:p-6 border-l-4 border-purple-600 dark:border-purple-400">
+          <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-4 md:p-6 border-l-4 border-purple-600 dark:border-purple-400">
             <p className="text-base md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-light italic">
               {article.excerpt}
             </p>
@@ -411,7 +372,7 @@ export default function ArticleClient({ article }) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.1, delay: 0.3 + (index * 0.02) }}
-                className="px-3 py-1 bg-purple-100/80 dark:bg-purple-900/70 text-purple-800 dark:text-purple-200 text-sm rounded-full backdrop-blur-sm"
+                className="px-3 py-1 bg-purple-100/80 dark:bg-purple-900/70 text-purple-800 dark:text-purple-200 text-sm rounded-full backdrop-blur-sm border border-card-border dark:border-card-border"
               >
                 {tag}
               </motion.span>
@@ -446,26 +407,6 @@ export default function ArticleClient({ article }) {
       {/* Article Footer */}
       <ArticleFooter />
 
-      {/* CSS for grid background */}
-      <style jsx>{`
-        .bg-grid-slate-100\\/50 {
-          background-image: linear-gradient(rgba(148, 163, 184, 0.5) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(148, 163, 184, 0.5) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        
-        .dark .bg-grid-slate-700\\/20 {
-          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        
-        .dark .bg-grid-slate-700\\/20 {
-          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-      `}</style>
     </div>
   );
 } 

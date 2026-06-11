@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { HiPencilAlt, HiGlobe, HiTrendingUp, HiUsers, HiStar, HiBookOpen } from 'react-icons/hi';
+import { Globe, PencilSimple, TrendUp, Star, BookOpen } from '@phosphor-icons/react';
 import Image from 'next/image';
 
 const AboutSection = () => {
   const skills = [
-    { name: 'SEO Writing', icon: HiGlobe, level: 98 },
-    { name: 'Editing & Proofreading', icon: HiPencilAlt, level: 98 },
-    { name: 'Interviewing Techniques', icon: HiTrendingUp, level: 95 },
-    { name: 'WordPress/CMS', icon: HiBookOpen, level: 91 },
-    { name: 'Social Media Content', icon: HiStar, level: 88 }
+    { name: 'SEO Writing', icon: Globe },
+    { name: 'Editing & Proofreading', icon: PencilSimple },
+    { name: 'Interviewing Techniques', icon: TrendUp },
+    { name: 'WordPress/CMS', icon: BookOpen },
+    { name: 'Social Media Content', icon: Star }
   ];
 
   const brands = [
@@ -22,7 +22,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="pt-16 md:pt-20 bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-800 dark:to-gray-900/50 font-sans transition-colors duration-500">
+    <section id="about" className="pt-16 md:pt-20 bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -52,9 +52,9 @@ const AboutSection = () => {
             className="space-y-6 md:space-y-8 h-full"
           >
             {/* Skills */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-card-border dark:border-white/20 h-full flex flex-col">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans">Core Skills</h3>
-              <div className="space-y-4 md:space-y-6">
+              <div className="flex flex-col justify-between flex-1">
                 {skills.map((skill, index) => {
                   const IconComponent = skill.icon;
                   return (
@@ -64,23 +64,12 @@ const AboutSection = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className="space-y-2 md:space-y-3"
                     >
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center">
-                          <IconComponent className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                      <div className="flex items-center gap-3 md:gap-4">
+                        <div className="w-9 h-9 md:w-11 md:h-11 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center">
+                          <IconComponent weight="bold" className="w-5 h-5 md:w-6 md:h-6 text-white" />
                         </div>
                         <span className="text-base md:text-lg font-medium text-gray-900 dark:text-gray-100 font-sans">{skill.name}</span>
-                        <span className="ml-auto text-xs md:text-sm text-gray-500 dark:text-gray-400 font-sans">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                          viewport={{ once: true }}
-                          className="h-2 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full"
-                        />
                       </div>
                     </motion.div>
                   );
@@ -98,7 +87,7 @@ const AboutSection = () => {
             className="space-y-6 md:space-y-8 h-full"
           >
             {/* What Sets Me Apart */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-white/50 dark:border-gray-700/50 h-full">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-card-border dark:border-white/20 h-full">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans">What Sets Me Apart</h3>
               <div className="space-y-3 md:space-y-4">
                 <div className="flex items-start gap-2 md:gap-3">
@@ -157,7 +146,7 @@ const AboutSection = () => {
 
     
       <div className="relative -mx-3 sm:-mx-6 lg:-mx-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-blue-100/30 dark:from-gray-700/30 dark:to-gray-800/30"></div>
+        <div className="absolute inset-0 bg-card-bg dark:bg-card-bg-dark"></div>
         <div className="relative py-12 md:py-16 px-3 sm:px-6 lg:px-8">
           {/* Section Header */}
           <motion.div
