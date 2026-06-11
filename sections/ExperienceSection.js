@@ -151,7 +151,7 @@ const ExperienceSection = () => {
   }, [scrollYProgress, experiences.length]);
 
   return (
-    <section id="experience" className="py-16 md:py-20 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900/50 font-sans overflow-hidden transition-colors duration-500">
+    <section id="experience" className="py-16 md:py-20 bg-neutral-bg dark:bg-neutral-bg-dark font-sans overflow-hidden transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -176,7 +176,7 @@ const ExperienceSection = () => {
         {/* Experience Timeline */}
         <div ref={containerRef} className="relative">
           {/* Tracing Beam */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 hidden lg:block">
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-card-border dark:bg-card-border hidden lg:block">
             <motion.div
               className="absolute top-0 left-0 w-full bg-gradient-to-b from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 origin-top"
               style={{ height: beamHeight }}
@@ -202,7 +202,7 @@ const ExperienceSection = () => {
                   <div className="hidden lg:flex absolute left-0 top-6 md:top-8 -translate-x-1/2">
                     <motion.div
                       className={cn(
-                        "w-12 h-12 md:w-16 md:h-16 rounded-full border-4 border-white dark:border-gray-800 shadow-lg flex items-center justify-center",
+                        "w-12 h-12 md:w-16 md:h-16 rounded-full border border-white dark:border dark:border-white/60 shadow-lg flex items-center justify-center",
                         `bg-gradient-to-r ${exp.color} ${exp.darkColor}`,
                         isActive ? "scale-110" : "scale-100"
                       )}
@@ -217,10 +217,10 @@ const ExperienceSection = () => {
                   <div className="lg:ml-24 w-full">
                     <motion.div
                       className={cn(
-                        "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 md:p-6 lg:p-8 shadow-lg border transition-all duration-300",
-                        isActive 
-                          ? "border-indigo-200 dark:border-indigo-500/30 shadow-xl transform scale-105" 
-                          : "border-white/50 dark:border-gray-700/50 hover:border-indigo-100 dark:hover:border-indigo-500/20"
+                        "bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-4 md:p-6 lg:p-8 shadow-lg border transition-all duration-300",
+                        isActive
+                          ? "border-purple-300 dark:border-purple-500/30 shadow-xl transform scale-105"
+                          : "border-card-border dark:border-white/20 hover:border-purple-300 dark:hover:border-purple-500/20"
                       )}
                       whileHover={{ y: -5 }}
                     >

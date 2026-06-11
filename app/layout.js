@@ -3,6 +3,7 @@ import "./globals.css";
 import ThemeProvider from "./contexts/ThemeContext";
 import StructuredData from "../components/StructuredData";
 import Script from "next/script";
+import AuthProvider from "./components/AuthProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -158,7 +159,7 @@ export default function RootLayout({ children }) {
         <StructuredData />
       </head>
       <body
-        className="antialiased font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
+        className="antialiased font-sans bg-neutral-bg dark:bg-neutral-bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300"
         suppressHydrationWarning={true}
       >
         {/* Google Analytics - Using Next.js Script component for better performance */}
@@ -176,9 +177,11 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

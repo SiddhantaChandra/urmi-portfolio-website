@@ -63,6 +63,10 @@ module.exports = {
         coral: '#FADADD',
         'dusty-plum': '#D7A9E3',
         'light-gray': '#EDEDED',
+        'neutral-bg': '#ffffff',
+        'neutral-bg-dark': '#141414',
+        'card-bg': '#f8f8f8',
+        'card-bg-dark': '#1a1a1a',
       },
       transitionDuration: {
         '100': '100ms',

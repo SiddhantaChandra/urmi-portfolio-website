@@ -99,48 +99,9 @@ const Articles = () => {
   ];
 
   return (
-    <div className="relative min-h-screen font-sans bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-500">
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
-      
-      {/* Spotlight Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-8 animate-pulse-slow" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-8 animate-pulse-slower" />
-      </div>
-
-      {/* Floating Orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 0.4, 0],
-              scale: [0, 1, 0],
-              x: [0, Math.random() * 60 - 30],
-              y: [0, Math.random() * 60 - 30],
-            }}
-            transition={{
-              duration: 15 + i * 3,
-              repeat: Infinity,
-              delay: i * 3,
-              ease: "easeInOut",
-            }}
-            className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
-              i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
-            )}
-            style={{
-              left: `${10 + (i * 20)}%`,
-              top: `${20 + (i * 15)}%`,
-            }}
-          />
-        ))}
-      </div>
-
+    <div className="relative min-h-screen font-sans bg-neutral-bg dark:bg-neutral-bg-dark transition-colors duration-500">
       {/* Header */}
-      <header className="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-purple-200/50 dark:border-purple-500/30 sticky top-0 z-50">
+      <header className="relative z-10 bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border-b border-card-border dark:border-card-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-6">
           {/* Mobile Layout */}
           <div className="md:hidden">
@@ -160,7 +121,7 @@ const Articles = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border border-card-border dark:border-card-border shadow-sm"
               >
                 <HiSparkles className="w-3 h-3 text-purple-600 dark:text-purple-400" />
                 <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -199,7 +160,7 @@ const Articles = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-500/30 shadow-lg mb-2"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm border border-card-border dark:border-card-border shadow-lg mb-2"
               >
                 <HiSparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -267,7 +228,7 @@ const Articles = () => {
                       "flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-2 md:py-3 rounded-md text-xs md:text-sm font-medium transition-all duration-300 flex-1",
                       selectedType === tab.id
                         ? "bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white shadow-lg"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white/50 dark:hover:bg-gray-700/50"
+                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-neutral-bg dark:hover:bg-neutral-bg-dark"
                     )}
                   >
                     <IconComponent className="w-3 h-3 md:w-4 md:h-4" />
@@ -313,10 +274,10 @@ const Articles = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
                 onClick={() => handleArticleClick(article)}
-                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-purple-200/50 dark:border-purple-500/30 overflow-hidden group cursor-pointer"
+                className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg shadow-lg border border-card-border dark:border-card-border overflow-hidden group cursor-pointer"
               >
                 {/* Article Image */}
-                <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 overflow-hidden">
+                <div className="relative h-48 bg-card-bg dark:bg-card-bg-dark overflow-hidden">
                   <Image
                     src={article.featuredImage || article.image}
                     alt={article.title}
@@ -349,7 +310,7 @@ const Articles = () => {
                   {/* Category Badge */}
                   {article.category && (
                     <div className="absolute bottom-4 right-4">
-                      <span className="px-2 py-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full">
+                      <span className="px-2 py-1 bg-neutral-bg dark:bg-neutral-bg-dark backdrop-blur-sm text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full border border-card-border dark:border-card-border">
                         {article.category}
                       </span>
                     </div>
@@ -382,7 +343,7 @@ const Articles = () => {
                       {article.tags.slice(0, 3).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="px-2 py-1 bg-gray-100/80 dark:bg-gray-700/80 text-gray-600 dark:text-gray-300 text-xs rounded-md font-sans"
+                          className="px-2 py-1 bg-card-bg dark:bg-card-bg-dark text-gray-600 dark:text-gray-300 text-xs rounded-md font-sans border border-card-border dark:border-card-border"
                         >
                           {tag}
                         </span>
@@ -409,7 +370,7 @@ const Articles = () => {
             animate={{ opacity: 1 }}
             className="text-center py-16"
           >
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 border border-purple-200/50 dark:border-purple-500/30 shadow-lg max-w-md mx-auto">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-8 border border-card-border dark:border-card-border shadow-lg max-w-md mx-auto">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 No articles found
               </h3>

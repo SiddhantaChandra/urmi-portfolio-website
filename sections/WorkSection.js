@@ -93,7 +93,7 @@ const WorkSection = () => {
   };
 
   return (
-    <section id="work" className="py-16 md:py-20 bg-white dark:bg-gray-900 font-sans transition-colors duration-500">
+    <section id="work" className="py-16 md:py-20 bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -123,7 +123,7 @@ const WorkSection = () => {
           viewport={{ once: true }}
           className="flex justify-center mb-6 md:mb-8 lg:mb-12 px-2 md:px-4"
         >
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 inline-flex w-full sm:w-auto overflow-x-auto">
+          <div className="bg-card-bg dark:bg-card-bg-dark rounded-lg p-1 inline-flex w-full sm:w-auto overflow-x-auto border border-card-border dark:border-none">
             {tabs.map((tab) => {
               const IconComponent = tab.icon;
               return (
@@ -134,8 +134,8 @@ const WorkSection = () => {
                   whileTap={{ scale: 0.95 }}
                   className={cn(
                     "flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 md:py-3 rounded-md text-xs md:text-sm font-medium transition-all duration-150 whitespace-nowrap flex-1 sm:flex-none justify-center",
-                    activeTab === tab.id
-                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                      activeTab === tab.id
+                      ? "bg-neutral-bg dark:bg-neutral-bg-dark text-gray-900 dark:text-gray-100 shadow-sm border border-card-border dark:border-white/20"
                       : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                   )}
                 >
@@ -173,10 +173,10 @@ const WorkSection = () => {
                   transition={{ duration: 0.4, delay: index * 0.08 }}
                   whileHover={{ y: -8, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group cursor-pointer block"
+                  className="bg-card-bg dark:bg-card-bg-dark rounded-lg shadow-lg border border-card-border dark:border-white/20 overflow-hidden group cursor-pointer block"
                 >
                 {/* Project Image */}
-                <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 overflow-hidden">
+                <div className="relative h-48 bg-card-bg dark:bg-card-bg-dark overflow-hidden">
                   {project.image && project.image !== '/api/placeholder/400/300' ? (
                     <img 
                       src={project.image} 
@@ -187,7 +187,7 @@ const WorkSection = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 dark:from-blue-500/30 dark:to-purple-500/30" />
                   )}
                   <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full">
+                    <span className="px-3 py-1 bg-neutral-bg dark:bg-neutral-bg-dark backdrop-blur-sm text-xs font-medium text-gray-700 dark:text-gray-300 rounded-full border border-card-border dark:border-white/20">
                       {project.type}
                     </span>
                   </div>
@@ -236,7 +236,7 @@ const WorkSection = () => {
                     {project.tags.slice(0, 3).map((tag, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-md font-sans"
+                        className="px-2 py-1 bg-card-bg dark:bg-card-bg-dark text-gray-600 dark:text-gray-300 text-xs rounded-md font-sans border border-card-border dark:border-white/20"
                       >
                         {tag}
                       </span>
@@ -279,10 +279,10 @@ const WorkSection = () => {
                   transition={{ duration: 0.4, delay: index * 0.06 }}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
-                    className="block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md dark:hover:shadow-gray-900/20 transition-all duration-200 group"
+                    className="block bg-card-bg dark:bg-card-bg-dark rounded-xl shadow-sm border border-card-border dark:border-white/20 overflow-hidden hover:shadow-md dark:hover:shadow-gray-900/20 transition-all duration-200 group"
                   >
                     {/* Featured Article Image */}
-                    <div className="relative h-32 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 overflow-hidden">
+                    <div className="relative h-32 bg-card-bg dark:bg-card-bg-dark overflow-hidden">
                       {project.image && project.image !== '/api/placeholder/400/300' ? (
                         <img 
                           src={project.image} 
@@ -340,7 +340,7 @@ const WorkSection = () => {
                   transition={{ duration: 0.4, delay: index * 0.08 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md dark:hover:shadow-gray-900/20 transition-all duration-200 group"
+                   className="block bg-card-bg dark:bg-card-bg-dark rounded-xl shadow-sm border border-card-border dark:border-white/20 overflow-hidden hover:shadow-md dark:hover:shadow-gray-900/20 transition-all duration-200 group"
                 >
                   {/* Simple Article Content */}
                   <div className="p-3">

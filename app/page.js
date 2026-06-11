@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
+    <main className="relative min-h-screen font-sans bg-neutral-bg dark:bg-neutral-bg-dark transition-colors duration-300">
       <ResizableNavbarWrapper />
       
       {/* Hero Section */}

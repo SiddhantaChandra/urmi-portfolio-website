@@ -130,48 +130,14 @@ const ContactSection = () => {
   };
 
   return (
-    <motion.section 
-      id="contact" 
-      className="relative py-16 md:py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-sans transition-colors duration-500 overflow-hidden"
+    <motion.section
+      id="contact"
+      className="relative py-16 md:py-20 bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
-      <div className="absolute inset-0 bg-grid-slate-100/50 dark:bg-grid-slate-700/20 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-500/30 dark:to-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slow" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-300 to-cyan-300 dark:from-blue-500/30 dark:to-cyan-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 dark:opacity-10 animate-pulse-slower" />
-      </div>
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 0.6, 0],
-              scale: [0, 1, 0],
-              x: [0, Math.random() * 80 - 40],
-              y: [0, Math.random() * 80 - 40],
-            }}
-            transition={{
-              duration: 12 + i * 2,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "easeInOut",
-            }}
-            className={cn(
-              "absolute rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 opacity-10 dark:opacity-5",
-              i % 2 === 0 ? "w-4 h-4" : "w-6 h-6"
-            )}
-            style={{
-              left: `${10 + (i * 15)}%`,
-              top: `${20 + (i * 10)}%`,
-            }}
-          />
-        ))}
-      </div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div 
@@ -234,7 +200,7 @@ const ContactSection = () => {
             variants={itemVariants}
           >
             {/* Primary Email CTA */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg border border-white/50 dark:border-gray-700/50">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg border border-card-border dark:border-white/20">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6">
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans mb-2 lg:mb-0">
                   Ready to start a conversation?
@@ -262,7 +228,7 @@ const ContactSection = () => {
 
 
             {/* Contact Information */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50 flex-grow">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20 flex-grow">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Contact Information</h4>
               <div className="space-y-6">
                 {contactInfo.map((item, index) => (
@@ -272,7 +238,7 @@ const ContactSection = () => {
                     whileHover={{ x: 4 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="w-12 h-12 bg-gradient-to-r from-slate-100 to-blue-100 dark:from-slate-800 dark:to-blue-900/50 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-card-bg dark:bg-card-bg-dark rounded-xl flex items-center justify-center border border-card-border dark:border-white/20">
                       <item.icon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
                     </div>
                     <div>
@@ -314,7 +280,7 @@ const ContactSection = () => {
             variants={itemVariants}
           >
             {/* Downloads */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Resources</h4>
               <div className="space-y-4">
                 {quickActions.map((action, index) => (
@@ -323,7 +289,7 @@ const ContactSection = () => {
                     onClick={action.onClick}
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full group bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-800 dark:to-blue-900/30 hover:shadow-md transition-all duration-300 p-4 rounded-lg text-left border border-slate-200/50 dark:border-slate-700/50"
+                    className="w-full group bg-card-bg dark:bg-card-bg-dark hover:shadow-md transition-all duration-300 p-4 rounded-lg text-left border border-card-border dark:border-white/20"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -347,7 +313,7 @@ const ContactSection = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-white/50 dark:border-gray-700/50">
+            <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Connect</h4>
               <div className="space-y-4">
                 {socialLinks.map((link, index) => (
@@ -360,7 +326,7 @@ const ContactSection = () => {
                     transition={{ duration: 0.2 }}
                     className="flex items-center gap-3 group p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200"
                   >
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-card-bg dark:bg-card-bg-dark rounded-lg flex items-center justify-center border border-card-border dark:border-white/20">
                       <span className="text-lg">{link.icon}</span>
                     </div>
                     <div className="flex-1">
@@ -382,38 +348,6 @@ const ContactSection = () => {
         </div>
       </div>
 
-      {/* Custom Styles */}
-      <style jsx>{`
-        .bg-grid-slate-100\\/50 {
-          background-image: linear-gradient(rgba(148, 163, 184, 0.5) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(148, 163, 184, 0.5) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        
-        .dark .bg-grid-slate-700\\/20 {
-          background-image: linear-gradient(rgba(71, 85, 105, 0.2) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(71, 85, 105, 0.2) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.4; }
-        }
-        
-        @keyframes pulse-slower {
-          0%, 100% { opacity: 0.15; }
-          50% { opacity: 0.3; }
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse-slow 8s ease-in-out infinite;
-        }
-        
-        .animate-pulse-slower {
-          animation: pulse-slower 12s ease-in-out infinite;
-        }
-      `}</style>
     </motion.section>
   );
 };
