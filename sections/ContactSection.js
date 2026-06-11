@@ -1,109 +1,28 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { HiMail, HiPhone, HiLocationMarker, HiExternalLink, HiPaperAirplane, HiUser, HiChatAlt, HiDownload, HiChat, HiSparkles } from 'react-icons/hi';
+import { HiExternalLink, HiDownload, HiSparkles } from 'react-icons/hi';
+import * as PhosphorIcons from '@phosphor-icons/react';
 import { cn } from '../utils/cn';
 
-const ContactSection = () => {
-  const contactInfo = [
-    {
-      icon: HiMail,
-      label: 'Email',
-      value: 'urmi24112001@gmail.com',
-      href: 'mailto:urmi24112001@gmail.com'
-    },
-    {
-      icon: HiLocationMarker,
-      label: 'Location',
-      value: 'Kolkata, India',
-      href: null
-    }
-  ];
+const ContactSection = ({ contactInfo = [], resources = [] }) => {
+  const emailContact = contactInfo.find(c => c.type === 'email');
+  const locationContact = contactInfo.find(c => c.type === 'location');
+  const socialLinks = contactInfo.filter(c => c.type === 'social');
+  const actionLinks = contactInfo.filter(c => c.type === 'action');
 
-  const socialLinks = [
-    {
-      name: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183',
-      description: 'Professional network & updates',
-      icon: '👔'
-    },
-    {
-      name: 'Muckrack',
-      href: 'https://muckrack.com/urmi-chakraborty-1',
-      description: 'My Muck Rack profile',
-      icon: '📰'
-    }
-  ];
+  const emailAddress = emailContact?.value || 'urmi24112001@gmail.com';
 
-  const downloadPortfolioPDF = () => {
-    const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
-    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const downloadPortfolioDOCX = () => {
-    const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.docx';
-    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.docx';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const downloadCV = () => {
-    const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_CV.pdf';
-    link.download = 'Urmi_Chakraborty_CV.pdf';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const quickActions = [
-    {
-      title: 'Download CV',
-      description: 'Get my complete resume and professional background',
-      action: 'Download PDF',
-      icon: HiUser,
-      onClick: downloadCV,
-      gradient: 'from-blue-500 to-purple-600'
-    },
-    {
-      title: 'Download Portfolio (PDF)',
-      description: 'View my content writing samples and case studies',
-      action: 'Download PDF',
-      icon: HiDownload,
-      onClick: downloadPortfolioPDF,
-      gradient: 'from-purple-500 to-pink-500'
-    },
-    {
-      title: 'Download Portfolio (DOCX)',
-      description: 'Editable version of my writing samples',
-      action: 'Download DOCX',
-      icon: HiDownload,
-      onClick: downloadPortfolioDOCX,
-      gradient: 'from-pink-500 to-blue-500'
-    }
-  ];
-
-  // Email action functions
   const sendEmail = () => {
-    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Hello Urmi&body=Hi Urmi,%0D%0A%0D%0AI would like to discuss...';
+    window.location.href = `mailto:${emailAddress}?subject=Hello Urmi&body=Hi Urmi,%0D%0A%0D%0AI would like to discuss...`;
   };
 
   const sendEmailWithProject = () => {
-    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Project Inquiry&body=Hi Urmi,%0D%0A%0D%0AI have a project opportunity and would like to discuss:%0D%0A%0D%0AProject Type:%0D%0ABudget:%0D%0ATimeline:%0D%0ADescription:%0D%0A%0D%0ABest regards';
+    window.location.href = `mailto:${emailAddress}?subject=Project Inquiry&body=Hi Urmi,%0D%0A%0D%0AI have a project opportunity and would like to discuss:%0D%0A%0D%0AProject Type:%0D%0ABudget:%0D%0ATimeline:%0D%0ADescription:%0D%0A%0D%0ABest regards`;
   };
 
   const sendEmailWithCollaboration = () => {
-    window.location.href = 'mailto:urmi24112001@gmail.com?subject=Collaboration Opportunity&body=Hi Urmi,%0D%0A%0D%0AI would like to explore a collaboration opportunity:%0D%0A%0D%0AType of collaboration:%0D%0AYour expertise needed:%0D%0AProject details:%0D%0A%0D%0ALooking forward to hearing from you!';
+    window.location.href = `mailto:${emailAddress}?subject=Collaboration Opportunity&body=Hi Urmi,%0D%0A%0D%0AI would like to explore a collaboration opportunity:%0D%0A%0D%0AType of collaboration:%0D%0AYour expertise needed:%0D%0AProject details:%0D%0A%0D%0ALooking forward to hearing from you!`;
   };
 
   const containerVariants = {
@@ -225,34 +144,38 @@ const ContactSection = () => {
               </motion.button>
             </div>
 
-
-
             {/* Contact Information */}
             <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20 flex-grow">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Contact Information</h4>
               <div className="space-y-6">
-                {contactInfo.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-center gap-4"
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="w-12 h-12 bg-card-bg dark:bg-card-bg-dark rounded-xl flex items-center justify-center border border-card-border dark:border-white/20">
-                      <item.icon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{item.label}</p>
-                      {item.href ? (
-                        <a href={item.href} className="font-bold text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
-                          {item.value}
-                        </a>
-                      ) : (
-                        <p className="font-bold text-gray-900 dark:text-gray-100">{item.value}</p>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
+                {contactInfo.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No contact information added yet.</p>
+                )}
+                {contactInfo.filter(c => c.type !== 'social' && c.type !== 'action').map((item, index) => {
+                  const IconComponent = PhosphorIcons[item.icon] || PhosphorIcons.Question;
+                  return (
+                    <motion.div
+                      key={item.id}
+                      className="flex items-center gap-4"
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="w-12 h-12 bg-card-bg dark:bg-card-bg-dark rounded-xl flex items-center justify-center border border-card-border dark:border-white/20">
+                        <IconComponent className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{item.label}</p>
+                        {item.href ? (
+                          <a href={item.href} className="font-bold text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+                            {item.value}
+                          </a>
+                        ) : (
+                          <p className="font-bold text-gray-900 dark:text-gray-100">{item.value}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
               
               {/* Additional Info to Balance Height */}
@@ -269,12 +192,10 @@ const ContactSection = () => {
                   <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
                   <span>Experienced in entertainment journalism</span>
                 </div>
-            
               </div>
             </div>
           </motion.div>
-
-   
+    
           <motion.div 
             className="space-y-8 flex flex-col h-full"
             variants={itemVariants}
@@ -283,32 +204,47 @@ const ContactSection = () => {
             <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Resources</h4>
               <div className="space-y-4">
-                {quickActions.map((action, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={action.onClick}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full group bg-card-bg dark:bg-card-bg-dark hover:shadow-md transition-all duration-300 p-4 rounded-lg text-left border border-card-border dark:border-white/20"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 bg-gradient-to-r ${action.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                          <action.icon className="w-5 h-5 text-white" />
+                {resources.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No resources added yet.</p>
+                )}
+                {resources.map((resource, index) => {
+                  const IconComponent = PhosphorIcons[resource.icon] || PhosphorIcons.Download;
+                  const handleDownload = () => {
+                    const link = document.createElement('a');
+                    link.href = resource.filePath;
+                    link.download = resource.filePath.split('/').pop();
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  };
+                  return (
+                    <motion.button
+                      key={resource.id}
+                      onClick={handleDownload}
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full group bg-card-bg dark:bg-card-bg-dark hover:shadow-md transition-all duration-300 p-4 rounded-lg text-left border border-card-border dark:border-white/20"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 bg-gradient-to-r ${resource.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                            <IconComponent className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-sm">
+                              {resource.title}
+                            </h5>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              {resource.description}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h5 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-sm">
-                            {action.title}
-                          </h5>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                            {action.description}
-                          </p>
-                        </div>
+                        <HiDownload className="w-4 h-4 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
                       </div>
-                      <HiDownload className="w-4 h-4 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
-                    </div>
-                  </motion.button>
-                ))}
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
 
@@ -316,38 +252,41 @@ const ContactSection = () => {
             <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm p-6 rounded-xl border border-card-border dark:border-white/20">
               <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg">Connect</h4>
               <div className="space-y-4">
-                {socialLinks.map((link, index) => (
-                  <motion.a
-                    key={index}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-3 group p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200"
-                  >
-                    <div className="w-10 h-10 bg-card-bg dark:bg-card-bg-dark rounded-lg flex items-center justify-center border border-card-border dark:border-white/20">
-                      <span className="text-lg">{link.icon}</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-sm">
-                        {link.name}
-                      </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {link.description}
-                      </p>
-                    </div>
-                    <HiExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
-                  </motion.a>
-                ))}
+                {socialLinks.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No social links added yet.</p>
+                )}
+                {socialLinks.map((link, index) => {
+                  const IconComponent = PhosphorIcons[link.icon] || PhosphorIcons.Globe;
+                  return (
+                    <motion.a
+                      key={link.id}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-3 group p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200"
+                    >
+                      <div className="w-10 h-10 bg-card-bg dark:bg-card-bg-dark rounded-lg flex items-center justify-center border border-card-border dark:border-white/20">
+                        <IconComponent className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-sm">
+                          {link.label}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          {link.value}
+                        </p>
+                      </div>
+                      <HiExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                    </motion.a>
+                  );
+                })}
               </div>
             </div>
-
-
           </motion.div>
         </div>
       </div>
-
     </motion.section>
   );
 };

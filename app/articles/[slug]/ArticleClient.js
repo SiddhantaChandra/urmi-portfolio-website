@@ -59,6 +59,8 @@ const Breadcrumb = ({ article }) => {
 
 // Content Block Renderer Component
 const ContentBlock = ({ block, index }) => {
+  const content = block.content || {};
+  
   switch (block.type) {
     case 'paragraph':
       return (
@@ -69,12 +71,12 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
           className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg font-sans"
         >
-          {block.content}
+          {content.text}
         </motion.p>
       );
 
-    case 'heading':
-      const HeadingTag = `h${block.level}`;
+    case 'heading': {
+      const HeadingTag = `h${content.level || 2}`;
       const headingClasses = {
         1: "text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 mt-12",
         2: "text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 mt-10",
@@ -89,11 +91,12 @@ const ContentBlock = ({ block, index }) => {
           transition={{ duration: 0.15, delay: index * 0.01 }}
           viewport={{ once: true }}
         >
-          <HeadingTag className={cn(headingClasses[block.level], "font-sans")}>
-            {block.content}
+          <HeadingTag className={cn(headingClasses[content.level || 2], "font-sans")}>
+            {content.text}
           </HeadingTag>
         </motion.div>
       );
+    }
 
     case 'image':
       return (
@@ -106,24 +109,24 @@ const ContentBlock = ({ block, index }) => {
         >
           <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
             <Image
-              src={block.src}
-              alt={block.alt}
+              src={content.src}
+              alt={content.alt || ''}
               fill
               className="object-cover"
               loading="lazy"
             />
           </div>
-          {block.caption && (
+          {content.caption && (
             <figcaption className="text-center text-sm text-gray-600 dark:text-gray-400 mt-3 italic font-sans">
-              {block.caption}
+              {content.caption}
             </figcaption>
           )}
         </motion.figure>
       );
 
-    case 'list':
-      const ListTag = block.listType === 'numbered' ? 'ol' : 'ul';
-      const listClasses = block.listType === 'numbered' 
+    case 'list': {
+      const ListTag = content.listType === 'numbered' ? 'ol' : 'ul';
+      const listClasses = content.listType === 'numbered' 
         ? "list-decimal list-inside space-y-2 mb-6 ml-4"
         : "list-disc list-inside space-y-2 mb-6 ml-4";
 
@@ -135,12 +138,12 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
         >
           <ListTag className={listClasses}>
-            {block.items.map((item, index) => (
+            {(content.items || []).map((item, itemIndex) => (
               <motion.li 
-                key={index}
+                key={itemIndex}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: itemIndex * 0.1 }}
                 viewport={{ once: true }}
                 className="text-gray-700 dark:text-gray-300 leading-relaxed font-sans"
               >
@@ -150,6 +153,7 @@ const ContentBlock = ({ block, index }) => {
           </ListTag>
         </motion.div>
       );
+    }
 
     case 'quote':
       return (
@@ -160,7 +164,7 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
           className="border-l-4 border-purple-600 dark:border-purple-400 pl-6 py-4 my-8 bg-purple-50/50 dark:bg-purple-900/20 rounded-r-lg backdrop-blur-sm italic text-lg text-gray-700 dark:text-gray-300 font-sans"
         >
-          {block.content}
+          {content.text}
         </motion.blockquote>
       );
 
@@ -280,7 +284,7 @@ export default function ArticleClient({ article }) {
         <Breadcrumb article={article} />
         
         {/* Featured Image */}
-        {article.featuredImage && (
+        {article.image && (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -288,7 +292,7 @@ export default function ArticleClient({ article }) {
             className="mb-6 md:mb-8 relative rounded-xl overflow-hidden shadow-lg"
           >
             <Image
-              src={article.featuredImage}
+              src={article.image}
               alt={article.title}
               width={900}
               height={600}
@@ -352,8 +356,8 @@ export default function ArticleClient({ article }) {
           transition={{ duration: 0.15, delay: 0.2 }}
           className="prose prose-lg max-w-none"
         >
-          {article.content?.map((block, index) => (
-            <ContentBlock key={index} block={block} index={index} />
+          {article.content?.blocks?.map((block, index) => (
+            <ContentBlock key={block.id || `block-${index}`} block={block} index={index} />
           ))}
         </motion.div>
 
@@ -366,15 +370,15 @@ export default function ArticleClient({ article }) {
         >
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 md:mb-4 font-sans">Tags</h3>
           <div className="flex flex-wrap gap-2">
-            {article.tags?.map((tag, index) => (
+            {article.tags?.map((tagRelation, index) => (
               <motion.span
-                key={index}
+                key={tagRelation.tag.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.1, delay: 0.3 + (index * 0.02) }}
                 className="px-3 py-1 bg-purple-100/80 dark:bg-purple-900/70 text-purple-800 dark:text-purple-200 text-sm rounded-full backdrop-blur-sm border border-card-border dark:border-card-border"
               >
-                {tag}
+                {tagRelation.tag.name}
               </motion.span>
             ))}
           </div>

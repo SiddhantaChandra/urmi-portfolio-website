@@ -127,10 +127,9 @@ export async function submitAllArticlesToIndexNow() {
   const urlPaths = [
     '',
     '/articles',
-    '/articles/my-chat-lesson-script',
+    '/articles/my-chat-lesson',
     '/articles/bearing-selection-guide',
     '/articles/spring-twists-101',
-    '/articles/online-romance-in-the-shadow-of-COVID-19',
     '/articles/tattoo-color-selection-guide',
     '/articles/morni-hills-travel-guide',
     '/articles/giardia-cats-comprehensive-guide'

@@ -1,12 +1,17 @@
-import contentWritingArticles from '../../../components/ContentWritingData.js';
+import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
 // SEO Metadata function
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
-  const article = contentWritingArticles.find(
-    article => article.slug === resolvedParams.slug
-  );
+  const article = await prisma.article.findUnique({
+    where: { slug: resolvedParams.slug },
+    include: {
+      tags: {
+        include: { tag: true },
+      },
+    },
+  });
 
   if (!article) {
     return {
@@ -15,13 +20,14 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const siteUrl ='https://urmichakraborty.com';
+  const siteUrl = 'https://urmichakraborty.com';
   const articleUrl = `${siteUrl}/articles/${article.slug}`;
+  const tags = article.tags?.map(t => t.tag.name) || [];
 
   return {
     title: `${article.title} | Urmi Chakraborty`,
-    description: article.excerpt.length > 160 ? article.excerpt.substring(0, 157) + '...' : article.excerpt,
-    keywords: article.tags?.join(', '),
+    description: article.excerpt?.length > 160 ? article.excerpt.substring(0, 157) + '...' : article.excerpt,
+    keywords: tags.join(', '),
     authors: [{ name: article.author }],
     creator: article.author,
     publisher: 'Urmi Chakraborty',
@@ -35,7 +41,7 @@ export async function generateMetadata({ params }) {
       siteName: 'Urmi Chakraborty',
       images: [
         {
-          url: article.featuredImage,
+          url: article.image,
           width: 800,
           height: 600,
           alt: article.title,
@@ -45,13 +51,13 @@ export async function generateMetadata({ params }) {
       type: 'article',
       authors: [article.author],
       section: article.category,
-      tags: article.tags,
+      tags: tags,
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt,
-      images: [article.featuredImage],
+      images: [article.image],
       creator: '@urmic660',
     },
     robots: {
@@ -70,7 +76,8 @@ export async function generateMetadata({ params }) {
 
 // Structured Data Component
 function StructuredData({ article }) {
-  const siteUrl =  'https://urmichakraborty.com';
+  const siteUrl = 'https://urmichakraborty.com';
+  const tags = article.tags?.map(t => t.tag.name) || [];
   
   const structuredData = {
     "@context": "https://schema.org",
@@ -79,7 +86,7 @@ function StructuredData({ article }) {
     "description": article.excerpt,
     "image": {
       "@type": "ImageObject",
-      "url": article.featuredImage,
+      "url": article.image,
       "width": 800,
       "height": 400
     },
@@ -100,10 +107,10 @@ function StructuredData({ article }) {
       "@id": `${siteUrl}/articles/${article.slug}`
     },
     "articleSection": article.category,
-    "keywords": article.tags?.join(', '),
-    "wordCount": article.content?.reduce((count, block) => {
+    "keywords": tags.join(', '),
+    "wordCount": article.content?.blocks?.reduce((count, block) => {
       if (block.type === 'paragraph') {
-        return count + block.content.split(' ').length;
+        return count + (block.content?.text || '').split(' ').length;
       }
       return count;
     }, 0) || 0,
@@ -180,9 +187,14 @@ function NotFoundPage() {
 
 export default async function ArticlePage({ params }) {
   const resolvedParams = await params;
-  const article = contentWritingArticles.find(
-    article => article.slug === resolvedParams.slug
-  );
+  const article = await prisma.article.findUnique({
+    where: { slug: resolvedParams.slug },
+    include: {
+      tags: {
+        include: { tag: true },
+      },
+    },
+  });
 
   if (!article) {
     return <NotFoundPage />;

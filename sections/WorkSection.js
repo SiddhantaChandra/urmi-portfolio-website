@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiExternalLink, HiEye, HiClock, HiTrendingUp, HiNewspaper, HiPencil, HiArrowRight } from 'react-icons/hi';
+import { HiEye, HiNewspaper, HiPencil, HiArrowRight } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import { cn } from '../utils/cn';
-import journalArticles from '../components/JournalismData';
-import contentWritingArticles from '../components/ContentWritingData';
+import Image from 'next/image';
 
-const WorkSection = () => {
+const WorkSection = ({ articles = [] }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
@@ -26,54 +25,23 @@ const WorkSection = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Convert articles to project format
-  const contentProjects = contentWritingArticles.map((article, index) => ({
-    id: index + 10,
-    category: 'content',
+  // Map articles to projects
+  const allProjects = articles.map((article) => ({
+    id: article.id,
+    category: article.type === 'journalism' ? 'journalism' : 'content',
     title: article.title,
     description: article.excerpt,
-    image: article.featuredImage,
-    metrics: article.metrics,
-    tags: article.tags,
-    link: `/articles/${article.slug}`,
-    type: article.category,
-    readingTime: article.readingTime
-  }));
-
-  const journalismProjects = journalArticles.map((article, index) => ({
-    id: index + 20,
-    category: 'journalism',
-    title: article.title,
-    description: article.subHeading,
     image: article.image,
-    metrics: article.metrics,
-    tags: article.tags,
-    link: article.link,
-    type: article.articleType
+    metrics: article.metrics || [],
+    tags: article.tags?.map(t => t.tag.name) || [],
+    link: article.isExternal ? article.externalLink : `/articles/${article.slug}`,
+    type: article.articleType || article.category,
+    readingTime: article.readingTime,
+    isExternal: article.isExternal,
   }));
 
-
-  const reservedContentCount = 3;
-  const reservedContentProjects = contentProjects.slice(-reservedContentCount);
-  const remainingContentProjects = contentProjects.slice(0, Math.max(contentProjects.length - reservedContentCount, 0));
-
-  const createAlternatingProjects = () => {
-    const alternating = [];
-    const maxLength = Math.max(remainingContentProjects.length, journalismProjects.length);
-    
-    for (let i = 0; i < maxLength; i++) {
-      if (i < remainingContentProjects.length) {
-        alternating.push(remainingContentProjects[i]);
-      }
-      if (i < journalismProjects.length) {
-        alternating.push(journalismProjects[i]);
-      }
-    }
-    
-    return alternating;
-  };
-
-  const allProjects = [...createAlternatingProjects(), ...reservedContentProjects];
+  const contentProjects = allProjects.filter(p => p.category === 'content');
+  const journalismProjects = allProjects.filter(p => p.category === 'journalism');
 
   const tabs = [
     { id: 'all', label: 'All Work', icon: HiEye },
@@ -150,6 +118,11 @@ const WorkSection = () => {
           </div>
         </motion.div>
 
+        {allProjects.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">No articles published yet.</p>
+          </div>
+        )}
         
         {/* Desktop/Tablet: Card Grid Layout */}
         <div className="hidden md:block">
@@ -166,8 +139,8 @@ const WorkSection = () => {
                 <motion.a
                   key={`desktop-${project.id}`}
                   href={project.link}
-                  target={project.category === 'journalism' ? "_blank" : "_self"}
-                  rel={project.category === 'journalism' ? "noopener noreferrer" : undefined}
+                  target={project.isExternal ? "_blank" : "_self"}
+                  rel={project.isExternal ? "noopener noreferrer" : undefined}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
@@ -213,23 +186,25 @@ const WorkSection = () => {
                   </p>
 
                   {/* Metrics */}
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    {project.metrics.filter(metric => metric.label !== 'Category' && metric.label !== 'Industry' && metric.label !== 'Publication').map((metric, idx) => (
-                      <div key={idx} className="text-center">
-                        <div className={cn(
-                          "text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent font-sans",
-                          project.category === 'content' 
-                            ? "from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400" 
-                            : "from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400"
-                        )}>
-                          {metric.value}
+                  {project.metrics && project.metrics.length > 0 && (
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {project.metrics.filter(metric => metric.label !== 'Category' && metric.label !== 'Industry' && metric.label !== 'Publication').map((metric, idx) => (
+                        <div key={idx} className="text-center">
+                          <div className={cn(
+                            "text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent font-sans",
+                            project.category === 'content' 
+                              ? "from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400" 
+                              : "from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400"
+                          )}>
+                            {metric.value}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 font-sans">
+                            {metric.label}
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 font-sans">
-                          {metric.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -249,7 +224,7 @@ const WorkSection = () => {
                   </div>
                 </div>
               </motion.a>
-            ))}
+              ))}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -272,8 +247,8 @@ const WorkSection = () => {
                   <motion.a
                     key={`mobile-featured-${project.id}`}
                     href={project.link}
-                    target={project.category === 'journalism' ? "_blank" : "_self"}
-                    rel={project.category === 'journalism' ? "noopener noreferrer" : undefined}
+                    target={project.isExternal ? "_blank" : "_self"}
+                    rel={project.isExternal ? "noopener noreferrer" : undefined}
                                       initial={{ opacity: 0, x: -20, scale: 0.95 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.06 }}
@@ -306,23 +281,25 @@ const WorkSection = () => {
                       </p>
 
                       {/* Metrics for featured article */}
-                      <div className="flex items-center gap-4">
-                        {project.metrics.filter(metric => metric.label !== 'Category' && metric.label !== 'Industry' && metric.label !== 'Publication').slice(0, 3).map((metric, idx) => (
-                          <div key={idx} className="flex items-center gap-1">
-                            <span className={cn(
-                              "text-sm font-bold",
-                              project.category === 'content' 
-                                ? "text-blue-600 dark:text-blue-400" 
-                                : "text-purple-600 dark:text-purple-400"
-                            )}>
-                              {metric.value}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-500">
-                              {metric.label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                      {project.metrics && project.metrics.length > 0 && (
+                        <div className="flex items-center gap-4">
+                          {project.metrics.filter(metric => metric.label !== 'Category' && metric.label !== 'Industry' && metric.label !== 'Publication').slice(0, 3).map((metric, idx) => (
+                            <div key={idx} className="flex items-center gap-1">
+                              <span className={cn(
+                                "text-sm font-bold",
+                                project.category === 'content' 
+                                  ? "text-blue-600 dark:text-blue-400" 
+                                  : "text-purple-600 dark:text-purple-400"
+                              )}>
+                                {metric.value}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-500">
+                                {metric.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.a>
                 );
@@ -333,8 +310,8 @@ const WorkSection = () => {
                 <motion.a
                   key={`mobile-simple-${project.id}`}
                   href={project.link}
-                  target={project.category === 'journalism' ? "_blank" : "_self"}
-                  rel={project.category === 'journalism' ? "noopener noreferrer" : undefined}
+                  target={project.isExternal ? "_blank" : "_self"}
+                  rel={project.isExternal ? "noopener noreferrer" : undefined}
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}

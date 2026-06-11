@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id              String   @id @default(uuid())
+  heroBadge       String
+  heroTitle       String
+  heroSubtitle    String
+  heroDescription String
+  articleCount    Int
+  profileImage    String
+  resumePath      String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Skill {
+  id           String   @id @default(uuid())
+  name         String
+  icon         String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Differentiator {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Brand {
+  id           String   @id @default(uuid())
+  name         String
+  logo         String
+  alt          String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Experience {
+  id           String                @id @default(uuid())
+  period       String
+  role         String
+  company      String
+  location     String
+  type         String
+  description  String
+  icon         String
+  color        String
+  darkColor    String
+  displayOrder Int                   @default(0)
+  achievements ExperienceAchievement[]
+  skills       ExperienceSkill[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+}
+
+model ExperienceAchievement {
+  id           String     @id @default(uuid())
+  experienceId String
+  text         String
+  displayOrder Int        @default(0)
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+}
+
+model ExperienceSkill {
+  id           String     @id @default(uuid())
+  experienceId String
+  name         String
+  displayOrder Int        @default(0)
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+}
+
+model ContactInfo {
+  id           String   @id @default(uuid())
+  label        String
+  value        String
+  href         String?
+  icon         String
+  type         String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Resource {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  filePath     String
+  icon         String
+  gradient     String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Article {
+  id            String                @id @default(uuid())
+  title         String
+  slug          String                @unique
+  excerpt       String
+  image         String
+  category      String
+  type          String
+  articleType   String
+  readingTime   Int?
+  author        String
+  isExternal    Boolean               @default(false)
+  externalLink  String?
+  publication   String?
+  status        String                @default("draft")
+  displayOrder  Int                   @default(0)
+  metrics       Json?
+  content       Json?
+  tags          ArticleTagRelation[]
+  contentBlocks ArticleContentBlock[]
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+}
+
+model ArticleTag {
+  id        String               @id @default(uuid())
+  name      String               @unique
+  articles  ArticleTagRelation[]
+  createdAt DateTime             @default(now())
+}
+
+model ArticleTagRelation {
+  articleId String
+  tagId     String
+  article   Article    @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       ArticleTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+}
+
+model ArticleContentBlock {
+  id           String   @id @default(uuid())
+  articleId    String
+  type         String
+  content      Json
+  displayOrder Int      @default(0)
+  article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+}

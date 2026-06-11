@@ -43,3 +43,5 @@ next-env.d.ts
 # .dev.vars*
 
 .vercel
+
+/lib/generated/prisma

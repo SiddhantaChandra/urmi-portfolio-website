@@ -1,20 +1,21 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { HiDownload, HiEye, HiMail, HiSparkles } from 'react-icons/hi';
+import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-const AceternityHero = () => {
-  const [articleCount, setArticleCount] = useState(2250);
+const AceternityHero = ({ profile }) => {
+  const targetCount = profile?.articleCount || 2434;
+  const [articleCount, setArticleCount] = useState(Math.max(0, targetCount - 100));
 
   // Animate article counter
   useEffect(() => {
     const timer = setTimeout(() => {
       const duration = 2000;
-      const startValue = 2350;
-      const endValue = 2434;
+      const startValue = Math.max(0, targetCount - 100);
+      const endValue = targetCount;
       const startTime = Date.now();
       
       const animateCount = () => {
@@ -37,12 +38,13 @@ const AceternityHero = () => {
     }, 900); 
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [targetCount]);
 
   const handleDownloadResume = () => {
+    const resumePath = profile?.resumePath || '/Urmi_Chakraborty_CV.pdf';
     const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_CV.pdf';
-    link.download = 'Urmi_Chakraborty_CV.pdf';
+    link.href = resumePath;
+    link.download = resumePath.split('/').pop();
     link.target = '_blank';
     document.body.appendChild(link);
     link.click();
@@ -51,13 +53,6 @@ const AceternityHero = () => {
 
   const handleViewCaseStudies = () => {
     const element = document.querySelector('#work');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleContact = () => {
-    const element = document.querySelector('#contact');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -85,7 +80,7 @@ const AceternityHero = () => {
           >
             <HiSparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
             <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 font-sans">
-            Dedicated Entertainment Journalist
+              {profile?.heroBadge || 'Dedicated Entertainment Journalist'}
             </span>
           </motion.div>
 
@@ -102,7 +97,7 @@ const AceternityHero = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 rounded-full p-1 shadow-2xl">
                       <div className="w-full h-full bg-neutral-bg dark:bg-neutral-bg-dark rounded-full p-2">
                     <Image
-                      src="/Urmi.webp"
+                      src={profile?.profileImage || '/Urmi.webp'}
                       alt="Urmi Chakraborty"
                       width={256}
                       height={256}
@@ -137,10 +132,7 @@ const AceternityHero = () => {
             className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight font-sans"
           >
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent">
-              Hi, I'm{' '}
-            </span>
-            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 bg-clip-text text-transparent">
-              Urmi Chakraborty
+              {profile?.heroTitle || "Hi, I'm Urmi Chakraborty"}
             </span>
           </motion.h1>
 
@@ -151,11 +143,15 @@ const AceternityHero = () => {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mx-auto max-w-4xl leading-relaxed font-sans px-2 sm:px-4"
           >
-            I am an{' '}
-            <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-              entertainment and lifestyle journalist
-            </span>{' '}
-            covering film, television, anime and people-centric stories.
+            {profile?.heroSubtitle || (
+              <>
+                I am an{' '}
+                <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+                  entertainment and lifestyle journalist
+                </span>{' '}
+                covering film, television, anime and people-centric stories.
+              </>
+            )}
           </motion.div>
 
           {/* Description */}
@@ -165,7 +161,7 @@ const AceternityHero = () => {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed font-sans px-2 sm:px-4"
           >
-            With over two years of experience in reporting and editorial work, I track trends across the film and pop culture landscape while also uncovering compelling city stories that connect with diverse audiences. I specialise in SEO-optimised articles and long-form features with a strong understanding of social media trends and editorial standards.
+            {profile?.heroDescription || 'With over two years of experience in reporting and editorial work, I track trends across the film and pop culture landscape while also uncovering compelling city stories that connect with diverse audiences. I specialise in SEO-optimised articles and long-form features with a strong understanding of social media trends and editorial standards.'}
           </motion.p>
 
           {/* Enhanced CTA Buttons */}
