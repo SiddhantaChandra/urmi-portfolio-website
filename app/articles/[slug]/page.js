@@ -1,11 +1,12 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { blocksToPlainText, normalizeStoredContent } from '@/lib/article-content';
 
 // SEO Metadata function
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
-  const article = await prisma.article.findUnique({
-    where: { slug: resolvedParams.slug },
+  const article = await prisma.article.findFirst({
+    where: { slug: resolvedParams.slug, status: 'published', isExternal: false },
     include: {
       tags: {
         include: { tag: true },
@@ -78,6 +79,8 @@ export async function generateMetadata({ params }) {
 function StructuredData({ article }) {
   const siteUrl = 'https://urmichakraborty.com';
   const tags = article.tags?.map(t => t.tag.name) || [];
+  const normalizedContent = normalizeStoredContent(article.content);
+  const wordCount = blocksToPlainText(normalizedContent, 12000).split(/\s+/).filter(Boolean).length;
   
   const structuredData = {
     "@context": "https://schema.org",
@@ -108,13 +111,8 @@ function StructuredData({ article }) {
     },
     "articleSection": article.category,
     "keywords": tags.join(', '),
-    "wordCount": article.content?.blocks?.reduce((count, block) => {
-      if (block.type === 'paragraph') {
-        return count + (block.content?.text || '').split(' ').length;
-      }
-      return count;
-    }, 0) || 0,
-    "timeRequired": `PT${article.readingTime}M`,
+    "wordCount": wordCount,
+    "timeRequired": `PT${article.readingTime || 1}M`,
     "url": `${siteUrl}/articles/${article.slug}`
   };
 
@@ -187,8 +185,8 @@ function NotFoundPage() {
 
 export default async function ArticlePage({ params }) {
   const resolvedParams = await params;
-  const article = await prisma.article.findUnique({
-    where: { slug: resolvedParams.slug },
+  const article = await prisma.article.findFirst({
+    where: { slug: resolvedParams.slug, status: 'published', isExternal: false },
     include: {
       tags: {
         include: { tag: true },
@@ -206,7 +204,7 @@ export default async function ArticlePage({ params }) {
   return (
     <>
       <StructuredData article={article} />
-      <ArticleClient article={article} />
+      <ArticleClient article={{ ...article, content: normalizeStoredContent(article.content) }} />
     </>
   );
 } 

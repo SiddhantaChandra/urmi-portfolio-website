@@ -25,27 +25,33 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Welcome to the CMS</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+      <div className="cms-page-header">
+        <div>
+          <p className="cms-eyebrow">Overview</p>
+          <h1 className="cms-page-title">Welcome to the editorial dashboard</h1>
+          <p className="cms-page-subtitle">
           Logged in as {session.user?.email} ({role})
-        </p>
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          <h2 className="text-xl font-semibold mb-2">Articles</h2>
-          <p className="text-gray-600 dark:text-gray-400">Manage your articles and content.</p>
+        <div className="cms-card p-6">
+          <p className="cms-eyebrow">Publishing</p>
+          <h2 className="text-xl font-semibold mt-3 text-[var(--cms-ink)]">Articles</h2>
+          <p className="cms-muted mt-2">Manage internal articles, external links, drafts, and public publishing state.</p>
         </div>
 
-        <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          <h2 className="text-xl font-semibold mb-2">SEO</h2>
-          <p className="text-gray-600 dark:text-gray-400">Optimize search engine visibility.</p>
+        <div className="cms-card p-6">
+          <p className="cms-eyebrow">Presence</p>
+          <h2 className="text-xl font-semibold mt-3 text-[var(--cms-ink)]">SEO</h2>
+          <p className="cms-muted mt-2">Keep the public profile polished with better metadata, summaries, and content hygiene.</p>
         </div>
 
-        <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          <h2 className="text-xl font-semibold mb-2">Analytics</h2>
-          <p className="text-gray-600 dark:text-gray-400">View traffic and engagement stats.</p>
+        <div className="cms-card p-6">
+          <p className="cms-eyebrow">Signals</p>
+          <h2 className="text-xl font-semibold mt-3 text-[var(--cms-ink)]">Analytics</h2>
+          <p className="cms-muted mt-2">Use this space for portfolio performance and engagement tooling as the CMS expands.</p>
         </div>
       </div>
     </div>

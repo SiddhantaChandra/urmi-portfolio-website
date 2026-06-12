@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { hasLegacyContentFormat, normalizeStoredContent } from '@/lib/article-content';
 
 // ==================== PROFILE ====================
 
@@ -618,9 +619,101 @@ export async function reorderResources(orderedIds) {
 
 // ==================== ARTICLES ====================
 
-export async function getArticles() {
-  return await prisma.article.findMany({
-    orderBy: { displayOrder: 'asc' },
+function parseJsonValue(value) {
+  if (!value) return null;
+  if (typeof value === 'string') {
+    return JSON.parse(value);
+  }
+  return value;
+}
+
+function normalizeTagsInput(tags) {
+  if (!tags) return [];
+  if (Array.isArray(tags)) {
+    return [...new Set(tags.map((tag) => String(tag).trim()).filter(Boolean))];
+  }
+
+  return [...new Set(
+    String(tags)
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean)
+  )];
+}
+
+function slugifyValue(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizeArticlePayload(data, { preserveStatus = false } = {}) {
+  const isExternal = data.isExternal === true || data.isExternal === 'true';
+  const parsedContent = parseJsonValue(data.content);
+  const normalizedTitle = String(data.title || '').trim();
+  const explicitSlug = String(data.slug || '').trim();
+  const fallbackSlug = slugifyValue(normalizedTitle) || `article-${Date.now()}`;
+  const slug = explicitSlug || (isExternal ? `${fallbackSlug}-${Date.now()}` : fallbackSlug);
+
+  return {
+    title: normalizedTitle,
+    slug,
+    excerpt: String(data.excerpt || '').trim(),
+    image: String(data.image || '').trim(),
+    category: String(data.category || '').trim(),
+    type: String(data.type || 'journalism').trim(),
+    articleType: String(data.articleType || (isExternal ? 'External Link' : 'Internal Article')).trim(),
+    readingTime: data.readingTime ? parseInt(data.readingTime, 10) : null,
+    author: String(data.author || 'Urmi Chakraborty').trim(),
+    isExternal,
+    externalLink: isExternal ? String(data.externalLink || '').trim() : null,
+    publication: String(data.publication || '').trim() || null,
+    status: preserveStatus ? undefined : (String(data.status || 'draft').trim() || 'draft'),
+    metrics: parseJsonValue(data.metrics),
+    content: isExternal ? null : (parsedContent ? normalizeStoredContent(parsedContent) : { blocks: [] }),
+    tags: normalizeTagsInput(data.tags),
+  };
+}
+
+async function syncArticleTags(articleId, tagNames) {
+  await prisma.articleTagRelation.deleteMany({
+    where: { articleId },
+  });
+
+  if (!tagNames.length) return;
+
+  const existingTags = await prisma.articleTag.findMany({
+    where: { name: { in: tagNames } },
+  });
+
+  const existingByName = new Map(existingTags.map((tag) => [tag.name, tag]));
+  const missingNames = tagNames.filter((name) => !existingByName.has(name));
+
+  if (missingNames.length) {
+    await prisma.articleTag.createMany({
+      data: missingNames.map((name) => ({ name })),
+      skipDuplicates: true,
+    });
+  }
+
+  const allTags = await prisma.articleTag.findMany({
+    where: { name: { in: tagNames } },
+  });
+
+  await prisma.articleTagRelation.createMany({
+    data: allTags.map((tag) => ({
+      articleId,
+      tagId: tag.id,
+    })),
+    skipDuplicates: true,
+  });
+}
+
+async function getArticleWithRelations(id) {
+  return prisma.article.findUnique({
+    where: { id },
     include: {
       tags: {
         include: {
@@ -631,8 +724,60 @@ export async function getArticles() {
   });
 }
 
+function withComputedTags(article) {
+  if (!article) return article;
+  return {
+    ...article,
+    tagsText: article.tags?.map((relation) => relation.tag.name).join(', ') || '',
+  };
+}
+
+export async function normalizeLegacyArticleContent() {
+  try {
+    const articles = await prisma.article.findMany({
+      where: { isExternal: false, NOT: { content: null } },
+      select: { id: true, content: true },
+    });
+
+    const legacyArticles = articles.filter((article) => hasLegacyContentFormat(article.content));
+
+    await Promise.all(
+      legacyArticles.map((article) =>
+        prisma.article.update({
+          where: { id: article.id },
+          data: { content: normalizeStoredContent(article.content) },
+        })
+      )
+    );
+
+    if (legacyArticles.length) {
+      revalidatePath('/articles');
+    }
+
+    return { success: true, count: legacyArticles.length };
+  } catch (error) {
+    console.error('Normalize legacy article content error:', error);
+    return { success: false, error: 'Failed to normalize legacy article content.' };
+  }
+}
+
+export async function getArticles() {
+  const articles = await prisma.article.findMany({
+    orderBy: { displayOrder: 'asc' },
+    include: {
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+    },
+  });
+
+  return articles.map(withComputedTags);
+}
+
 export async function getPublishedArticles() {
-  return await prisma.article.findMany({
+  const articles = await prisma.article.findMany({
     where: { status: 'published' },
     orderBy: { displayOrder: 'asc' },
     include: {
@@ -643,10 +788,12 @@ export async function getPublishedArticles() {
       },
     },
   });
+
+  return articles.map(withComputedTags);
 }
 
 export async function getArticleBySlug(slug) {
-  return await prisma.article.findUnique({
+  const article = await prisma.article.findUnique({
     where: { slug },
     include: {
       tags: {
@@ -659,38 +806,50 @@ export async function getArticleBySlug(slug) {
       },
     },
   });
+
+  return withComputedTags(article);
 }
 
 export async function createArticle(data) {
   try {
+    const normalized = normalizeArticlePayload(data);
+
+    if (normalized.isExternal && !normalized.externalLink) {
+      return { success: false, error: 'External links require a URL.' };
+    }
+
     const maxOrder = await prisma.article.findFirst({
       orderBy: { displayOrder: 'desc' },
     });
 
     const article = await prisma.article.create({
       data: {
-        title: data.title,
-        slug: data.slug,
-        excerpt: data.excerpt,
-        image: data.image,
-        category: data.category,
-        type: data.type,
-        articleType: data.articleType,
-        readingTime: data.readingTime ? parseInt(data.readingTime) : null,
-        author: data.author || 'Urmi Chakraborty',
-        isExternal: data.isExternal || false,
-        externalLink: data.externalLink,
-        publication: data.publication,
-        status: data.status || 'draft',
+        title: normalized.title,
+        slug: normalized.slug,
+        excerpt: normalized.excerpt,
+        image: normalized.image,
+        category: normalized.category,
+        type: normalized.type,
+        articleType: normalized.articleType,
+        readingTime: normalized.readingTime,
+        author: normalized.author,
+        isExternal: normalized.isExternal,
+        externalLink: normalized.externalLink,
+        publication: normalized.publication,
+        status: normalized.status || 'draft',
         displayOrder: maxOrder ? maxOrder.displayOrder + 1 : 0,
-        metrics: data.metrics ? JSON.parse(data.metrics) : null,
-        content: data.content ? (typeof data.content === 'string' ? JSON.parse(data.content) : data.content) : null,
+        metrics: normalized.metrics,
+        content: normalized.content,
       },
     });
 
+    await syncArticleTags(article.id, normalized.tags);
+    const hydrated = await getArticleWithRelations(article.id);
+
     revalidatePath('/');
     revalidatePath('/articles');
-    return { success: true, data: article };
+    revalidatePath('/cms/dashboard/articles');
+    return { success: true, data: withComputedTags(hydrated) };
   } catch (error) {
     console.error('Create article error:', error);
     return { success: false, error: 'Failed to create article.' };
@@ -699,31 +858,47 @@ export async function createArticle(data) {
 
 export async function updateArticle(id, data) {
   try {
+    const normalized = normalizeArticlePayload(data);
+
+    if (normalized.isExternal && !normalized.externalLink) {
+      return { success: false, error: 'External links require a URL.' };
+    }
+
+    const existing = await prisma.article.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
+
     const article = await prisma.article.update({
       where: { id },
       data: {
-        title: data.title,
-        slug: data.slug,
-        excerpt: data.excerpt,
-        image: data.image,
-        category: data.category,
-        type: data.type,
-        articleType: data.articleType,
-        readingTime: data.readingTime ? parseInt(data.readingTime) : null,
-        author: data.author,
-        isExternal: data.isExternal,
-        externalLink: data.externalLink,
-        publication: data.publication,
-        status: data.status,
-        metrics: data.metrics ? (typeof data.metrics === 'string' ? JSON.parse(data.metrics) : data.metrics) : null,
-        content: data.content ? (typeof data.content === 'string' ? JSON.parse(data.content) : data.content) : null,
+        title: normalized.title,
+        slug: normalized.slug,
+        excerpt: normalized.excerpt,
+        image: normalized.image,
+        category: normalized.category,
+        type: normalized.type,
+        articleType: normalized.articleType,
+        readingTime: normalized.readingTime,
+        author: normalized.author,
+        isExternal: normalized.isExternal,
+        externalLink: normalized.externalLink,
+        publication: normalized.publication,
+        status: normalized.status || 'draft',
+        metrics: normalized.metrics,
+        content: normalized.content,
       },
     });
 
+    await syncArticleTags(article.id, normalized.tags);
+    const hydrated = await getArticleWithRelations(article.id);
+
     revalidatePath('/');
     revalidatePath('/articles');
-    revalidatePath(`/articles/${data.slug}`);
-    return { success: true, data: article };
+    if (existing?.slug) revalidatePath(`/articles/${existing.slug}`);
+    if (normalized.slug) revalidatePath(`/articles/${normalized.slug}`);
+    revalidatePath('/cms/dashboard/articles');
+    return { success: true, data: withComputedTags(hydrated) };
   } catch (error) {
     console.error('Update article error:', error);
     return { success: false, error: 'Failed to update article.' };
@@ -735,6 +910,7 @@ export async function deleteArticle(id) {
     await prisma.article.delete({ where: { id } });
     revalidatePath('/');
     revalidatePath('/articles');
+    revalidatePath('/cms/dashboard/articles');
     return { success: true };
   } catch (error) {
     console.error('Delete article error:', error);
@@ -744,13 +920,15 @@ export async function deleteArticle(id) {
 
 export async function publishArticle(id) {
   try {
-    const article = await prisma.article.update({
+    await prisma.article.update({
       where: { id },
       data: { status: 'published' },
     });
+    const article = await getArticleWithRelations(id);
     revalidatePath('/');
     revalidatePath('/articles');
-    return { success: true, data: article };
+    revalidatePath('/cms/dashboard/articles');
+    return { success: true, data: withComputedTags(article) };
   } catch (error) {
     console.error('Publish article error:', error);
     return { success: false, error: 'Failed to publish article.' };
@@ -759,13 +937,15 @@ export async function publishArticle(id) {
 
 export async function archiveArticle(id) {
   try {
-    const article = await prisma.article.update({
+    await prisma.article.update({
       where: { id },
       data: { status: 'archived' },
     });
+    const article = await getArticleWithRelations(id);
     revalidatePath('/');
     revalidatePath('/articles');
-    return { success: true, data: article };
+    revalidatePath('/cms/dashboard/articles');
+    return { success: true, data: withComputedTags(article) };
   } catch (error) {
     console.error('Archive article error:', error);
     return { success: false, error: 'Failed to archive article.' };

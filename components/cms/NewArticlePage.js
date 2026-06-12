@@ -1,282 +1,285 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createArticle } from '@/app/actions/db';
 import { uploadToR2 } from '@/app/actions/r2';
 import BlockNoteEditor from '@/components/cms/BlockNoteEditor';
-import { blockNoteToBlocks } from '@/components/cms/article-content';
-import { HiArrowLeft, HiSave, HiDocumentText } from 'react-icons/hi';
+import { blockNoteToBlocks } from '@/lib/article-content';
+import { HiArrowLeft, HiOutlineDocumentAdd, HiOutlineUpload, HiOutlineSave } from 'react-icons/hi';
+
+const baseForm = {
+  title: '',
+  slug: '',
+  excerpt: '',
+  image: '',
+  category: '',
+  tagsText: '',
+  type: 'journalism',
+  articleType: 'Internal Article',
+  readingTime: '',
+  author: 'Urmi Chakraborty',
+  publication: '',
+  status: 'draft',
+};
 
 export default function NewArticlePage() {
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState('content');
   const imageInputRef = useRef(null);
+  const [form, setForm] = useState(baseForm);
+  const [editorDocument, setEditorDocument] = useState([]);
+  const [savingState, setSavingState] = useState('');
+  const [message, setMessage] = useState('');
 
-  const [form, setForm] = useState({
-    title: '',
-    slug: '',
-    excerpt: '',
-    image: '',
-    category: '',
-    type: 'journalism',
-    articleType: 'Published Article',
-    readingTime: '',
-    author: 'Urmi Chakraborty',
-    publication: '',
-    status: 'draft',
-  });
-
-  const [editorContent, setEditorContent] = useState([]);
-
-  const showMessage = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(''), 3000);
-  };
-
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('prefix', 'articles/');
-    const res = await uploadToR2(fd);
-    if (res.success) {
-      setForm((prev) => ({ ...prev, image: res.filePath }));
-      showMessage('Image uploaded to R2');
-    } else {
-      showMessage('Upload failed: ' + res.error);
-    }
-  };
-
-  const handleEditorChange = useCallback((document) => {
-    setEditorContent(document);
-  }, []);
-
-  const handleSave = async (e) => {
-    if (e) e.preventDefault();
-    setSaving(true);
-
-    const content = blockNoteToBlocks(editorContent);
-    const data = {
-      ...form,
-      readingTime: form.readingTime ? parseInt(form.readingTime) : null,
-      isExternal: false,
-      content: JSON.stringify(content),
-    };
-
-    const res = await createArticle(data);
-    if (res.success) {
-      showMessage('Article created successfully');
-      router.push('/cms/dashboard/articles');
-    } else {
-      showMessage('Failed to create article: ' + (res.error || 'Unknown error'));
-    }
-    setSaving(false);
+  const showMessage = (next) => {
+    setMessage(next);
+    window.setTimeout(() => setMessage(''), 3000);
   };
 
   const updateField = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const payload = new FormData();
+    payload.append('file', file);
+    payload.append('prefix', 'articles/');
+
+    const result = await uploadToR2(payload);
+    if (!result.success) {
+      showMessage(`Upload failed: ${result.error}`);
+      return;
+    }
+
+    updateField('image', result.filePath);
+    showMessage('Cover image uploaded');
+  };
+
+  const handleSave = async (targetStatus) => {
+    setSavingState(targetStatus);
+
+    const result = await createArticle({
+      ...form,
+      status: targetStatus,
+      isExternal: false,
+      tags: form.tagsText,
+      content: JSON.stringify(blockNoteToBlocks(editorDocument)),
+    });
+
+    if (!result.success) {
+      showMessage(result.error || 'Failed to save article');
+      setSavingState('');
+      return;
+    }
+
+    router.push(`/cms/dashboard/articles/${result.data.id}`);
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
+    <div className="max-w-6xl mx-auto space-y-6">
+      <div className="cms-page-header">
+        <div className="flex items-start gap-3">
           <button
             onClick={() => router.push('/cms/dashboard/articles')}
-            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="cms-icon-button mt-1"
+            aria-label="Back to articles"
           >
             <HiArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold">New Article</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Create a new article</p>
+            <p className="cms-eyebrow">Internal article</p>
+            <h1 className="cms-page-title">Write a new article</h1>
+            <p className="cms-page-subtitle">
+              Drafts stay private until you publish them on the site.
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            onClick={() => handleSave('draft')}
+            disabled={!!savingState}
+            className="cms-secondary-btn"
           >
-            <HiSave className="w-4 h-4" />
-            {saving ? 'Saving...' : 'Save Article'}
+            <HiOutlineSave className="w-4 h-4" />
+            {savingState === 'draft' ? 'Saving draft...' : 'Save Draft'}
+          </button>
+          <button
+            onClick={() => handleSave('published')}
+            disabled={!!savingState}
+            className="cms-primary-btn"
+          >
+            <HiOutlineDocumentAdd className="w-4 h-4" />
+            {savingState === 'published' ? 'Publishing...' : 'Publish Article'}
           </button>
         </div>
       </div>
 
-      {message && (
-        <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
-          {message}
-        </div>
-      )}
+      {message ? <div className="cms-toast">{message}</div> : null}
 
-      {/* Tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-gray-200 dark:border-gray-800">
-        <button
-          onClick={() => setActiveTab('content')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 ${activeTab === 'content' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-        >
-          Content
-        </button>
-        <button
-          onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 ${activeTab === 'settings' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-        >
-          Settings
-        </button>
-      </div>
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.75fr)_minmax(320px,0.9fr)]">
+        <section className="cms-card p-6 space-y-5">
+          <div className="space-y-2">
+            <label className="cms-label">Title</label>
+            <input
+              value={form.title}
+              onChange={(event) => updateField('title', event.target.value)}
+              placeholder="Article title"
+              className="cms-input"
+            />
+          </div>
 
-      {/* Content Tab */}
-      {activeTab === 'content' && (
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input
-                value={form.title}
-                onChange={(e) => updateField('title', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                placeholder="Article title"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Slug</label>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="cms-label">Slug</label>
               <input
                 value={form.slug}
-                onChange={(e) => updateField('slug', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                onChange={(event) => updateField('slug', event.target.value)}
                 placeholder="article-slug"
-                required
+                className="cms-input"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Excerpt</label>
-              <textarea
-                value={form.excerpt}
-                onChange={(e) => updateField('excerpt', e.target.value)}
-                rows={4}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                placeholder="Short excerpt for the article..."
-                required
-              />
-            </div>
-          </div>
-
-          {/* BlockNote Editor */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Article Content</label>
-            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
-              <BlockNoteEditor initialBlocks={[]} onChange={handleEditorChange} />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Settings Tab */}
-      {activeTab === 'settings' && (
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
+            <div className="space-y-2">
+              <label className="cms-label">Category</label>
               <input
                 value={form.category}
-                onChange={(e) => updateField('category', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                onChange={(event) => updateField('category', event.target.value)}
+                placeholder="Entertainment"
+                className="cms-input"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="cms-label">Excerpt</label>
+            <textarea
+              value={form.excerpt}
+              onChange={(event) => updateField('excerpt', event.target.value)}
+              rows={4}
+              placeholder="Short summary used in the CMS and public article cards"
+              className="cms-input min-h-28"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="cms-label">Article body</label>
+            <BlockNoteEditor initialContent={null} onChange={setEditorDocument} />
+          </div>
+        </section>
+
+        <aside className="space-y-6">
+          <section className="cms-card p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Type</label>
-              <select
-                value={form.type}
-                onChange={(e) => updateField('type', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              >
-                <option value="journalism">Journalism</option>
-                <option value="content-writing">Content Writing</option>
-              </select>
+              <p className="cms-section-title">Publishing</p>
+              <p className="cms-muted">Save freely as draft, then publish when ready.</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Article Type</label>
-              <input
-                value={form.articleType}
-                onChange={(e) => updateField('articleType', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Reading Time (min)</label>
-              <input
-                type="number"
-                value={form.readingTime}
-                onChange={(e) => updateField('readingTime', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Author</label>
-              <input
-                value={form.author}
-                onChange={(e) => updateField('author', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Publication</label>
-              <input
-                value={form.publication}
-                onChange={(e) => updateField('publication', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
+            <div className="space-y-2">
+              <label className="cms-label">Status</label>
               <select
                 value={form.status}
-                onChange={(e) => updateField('status', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                onChange={(event) => updateField('status', event.target.value)}
+                className="cms-input"
               >
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
                 <option value="archived">Archived</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Featured Image</label>
-              <div className="flex items-center gap-3">
+          </section>
+
+          <section className="cms-card p-6 space-y-4">
+            <p className="cms-section-title">Metadata</p>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <label className="cms-label">Author</label>
                 <input
-                  type="file"
-                  accept="image/*"
-                  ref={imageInputRef}
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => imageInputRef.current?.click()}
-                  className="px-3 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
-                >
-                  Upload to R2
-                </button>
-                <input
-                  value={form.image}
-                  onChange={(e) => updateField('image', e.target.value)}
-                  placeholder="Or paste image URL"
-                  className="flex-1 px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                  value={form.author}
+                  onChange={(event) => updateField('author', event.target.value)}
+                  className="cms-input"
                 />
               </div>
-              {form.image && (
-                <img src={form.image} alt="" className="mt-2 w-20 h-20 object-cover rounded" />
-              )}
+              <div className="space-y-2">
+                <label className="cms-label">Publication</label>
+                <input
+                  value={form.publication}
+                  onChange={(event) => updateField('publication', event.target.value)}
+                  placeholder="Optional internal label"
+                  className="cms-input"
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="cms-label">Portfolio type</label>
+                  <select
+                    value={form.type}
+                    onChange={(event) => updateField('type', event.target.value)}
+                    className="cms-input"
+                  >
+                    <option value="journalism">Journalism</option>
+                    <option value="content-writing">Content Writing</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="cms-label">Reading time</label>
+                  <input
+                    type="number"
+                    value={form.readingTime}
+                    onChange={(event) => updateField('readingTime', event.target.value)}
+                    placeholder="5"
+                    className="cms-input"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Tags</label>
+                <input
+                  value={form.tagsText}
+                  onChange={(event) => updateField('tagsText', event.target.value)}
+                  placeholder="anime, review, feature"
+                  className="cms-input"
+                />
+                <p className="cms-help-text">Use commas to separate tags.</p>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </section>
+
+          <section className="cms-card p-6 space-y-4">
+            <p className="cms-section-title">Cover image</p>
+            <div className="flex flex-wrap gap-3">
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                className="cms-secondary-btn"
+              >
+                <HiOutlineUpload className="w-4 h-4" />
+                Upload to R2
+              </button>
+            </div>
+            <input
+              value={form.image}
+              onChange={(event) => updateField('image', event.target.value)}
+              placeholder="Or paste an image URL"
+              className="cms-input"
+            />
+            {form.image ? (
+              <img
+                src={form.image}
+                alt=""
+                className="w-full h-48 rounded-2xl object-cover border border-[var(--cms-border)]"
+              />
+            ) : null}
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }
