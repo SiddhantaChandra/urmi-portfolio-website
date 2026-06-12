@@ -1,6 +1,6 @@
-import contentWritingArticles from '../components/ContentWritingData.js';
+import prisma from '@/lib/prisma';
 
-export default function sitemap() {
+export default async function sitemap() {
   const baseUrl = 'https://urmichakraborty.com';
   const currentDate = new Date();
   
@@ -20,24 +20,18 @@ export default function sitemap() {
     },
   ];
 
-  // Dynamic article pages from content writing data
-  const articlePages = contentWritingArticles
-    .filter(article => article.slug) // Only include articles with slugs
-    .map((article) => {
-      // Use article's last modified date if available, otherwise use current date
-      const lastModified = article.lastModified 
-        ? new Date(article.lastModified) 
-        : article.publishedDate 
-        ? new Date(article.publishedDate)
-        : currentDate;
+  // Dynamic article pages from database
+  const articles = await prisma.article.findMany({
+    where: { status: 'published' },
+    select: { slug: true, updatedAt: true },
+  });
 
-      return {
-        url: `${baseUrl}/articles/${article.slug}`,
-        lastModified: lastModified,
-        changeFrequency: 'yearly', // Articles rarely change once published
-        priority: 0.8,
-      };
-    });
+  const articlePages = articles.map((article) => ({
+    url: `${baseUrl}/articles/${article.slug}`,
+    lastModified: article.updatedAt || currentDate,
+    changeFrequency: 'yearly',
+    priority: 0.8,
+  }));
 
   // Combine all pages
   const allPages = [...staticPages, ...articlePages];

@@ -5,8 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { HiChevronLeft, HiChevronRight, HiEye, HiClock, HiArrowRight } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import contentWritingArticles from './ContentWritingData';
-import journalArticles from './JournalismData';
+
 
 const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   const router = useRouter();
@@ -61,32 +60,32 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   useEffect(() => {
     if (!isInView) return;
     
-    const allArticles = [...contentWritingArticles, ...journalArticles];
-    
-    const seenTitles = new Set();
-    const uniqueArticles = allArticles.filter(article => {
-      if (article.slug === currentArticleSlug || article.id === currentArticleId) {
-        return false;
+    async function fetchArticles() {
+      try {
+        const res = await fetch('/api/articles');
+        const data = await res.json();
+        if (data.articles) {
+          const filtered = data.articles.filter(article => 
+            article.slug !== currentArticleSlug && article.id !== currentArticleId
+          );
+          
+          const shuffled = filtered
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 8)
+            .map((article, index) => ({
+              ...article,
+              uniqueKey: `${article.slug || article.id}-${index}`,
+              displayImage: article.image,
+            }));
+          
+          setShuffledArticles(shuffled);
+        }
+      } catch (error) {
+        console.error('Failed to fetch recommended articles:', error);
       }
-      
-      if (seenTitles.has(article.title)) {
-        return false;
-      }
-      
-      seenTitles.add(article.title);
-      return true;
-    });
+    }
     
-    const shuffled = uniqueArticles
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 8)
-      .map((article, index) => ({
-        ...article,
-        uniqueKey: `${article.slug || article.id || article.title.replace(/\s+/g, '-').toLowerCase()}-${index}`,
-        displayImage: article.featuredImage || article.image,
-      }));
-    
-    setShuffledArticles(shuffled);
+    fetchArticles();
   }, [isInView, currentArticleSlug, currentArticleId]);
 
   const goToNext = useCallback(() => {
@@ -110,10 +109,10 @@ const RecommendedArticles = ({ currentArticleSlug, currentArticleId }) => {
   }, [shuffledArticles.length, itemsPerView]);
   
   const handleArticleClick = useCallback((article) => {
-    if (article.slug) {
+    if (article.isExternal && article.externalLink) {
+      window.open(article.externalLink, '_blank');
+    } else if (article.slug) {
       router.push(`/articles/${article.slug}`);
-    } else if (article.link) {
-      window.open(article.link, '_blank');
     } else if (article.id) {
       router.push(`/articles/${article.id}`);
     }

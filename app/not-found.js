@@ -5,8 +5,6 @@ import { useState, useEffect } from 'react';
 import { HiHome, HiNewspaper, HiSearch, HiSparkles, HiEye, HiRefresh, HiMail, HiExternalLink } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import contentWritingArticles from '../components/ContentWritingData';
-import journalArticles from '../components/JournalismData';
 
 // Minimal Navbar Component
 const MinimalNavbar = () => {
@@ -111,9 +109,23 @@ export default function NotFound() {
   const router = useRouter();
   const [floatingElements, setFloatingElements] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [allArticles, setAllArticles] = useState([]);
   
-  // Get recent articles
-  const allArticles = [...contentWritingArticles, ...journalArticles].slice(0, 6);
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const res = await fetch('/api/articles');
+        const data = await res.json();
+        if (data.articles) {
+          setAllArticles(data.articles.slice(0, 6));
+        }
+      } catch (error) {
+        console.error('Failed to fetch articles:', error);
+      }
+    }
+    fetchArticles();
+  }, []);
+
   const filteredArticles = allArticles.filter(article =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     article.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
@@ -330,15 +342,19 @@ export default function NotFound() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="bg-card-bg dark:bg-card-bg-dark rounded-xl overflow-hidden shadow-lg border border-card-border dark:border-card-border cursor-pointer group"
                   onClick={() => {
-                    const href = `/articles/${article.slug}`;
-                    router.push(href);
+                    const href = article.isExternal ? article.externalLink : `/articles/${article.slug}`;
+                    if (article.isExternal) {
+                      window.open(href, '_blank');
+                    } else {
+                      router.push(href);
+                    }
                   }}
                 >
                   {/* Article Image */}
                   <div className="relative h-40 sm:h-48 bg-card-bg dark:bg-card-bg-dark">
-                    {article.featuredImage ? (
+                    {article.image ? (
                       <Image
-                        src={article.featuredImage}
+                        src={article.image}
                         alt={article.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"

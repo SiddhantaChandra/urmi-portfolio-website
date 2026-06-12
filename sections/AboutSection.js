@@ -1,26 +1,10 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Globe, PencilSimple, TrendUp, Star, BookOpen } from '@phosphor-icons/react';
+import * as PhosphorIcons from '@phosphor-icons/react';
 import Image from 'next/image';
 
-const AboutSection = () => {
-  const skills = [
-    { name: 'SEO Writing', icon: Globe },
-    { name: 'Editing & Proofreading', icon: PencilSimple },
-    { name: 'Interviewing Techniques', icon: TrendUp },
-    { name: 'WordPress/CMS', icon: BookOpen },
-    { name: 'Social Media Content', icon: Star }
-  ];
-
-  const brands = [
-    { name: 'The Telegraph Online', logo: '/brands/The_Telegraph_Online.webp', alt: 'The Telegraph Online' },
-    { name: 'ABP Digital', logo: '/brands/abp_digital.webp', alt: 'ABP Digital' },
-    { name: 'MyKolkata', logo: '/brands/mykolkata-new.webp', alt: 'MyKolkata' },
-    { name: 'AllCap Communications', logo: '/brands/allcap-communications.webp', alt: 'AllCap Communications' },
-    { name: 'My Chat Lesson', logo: '/brands/my-chat-lesson-logo.webp', alt: 'My Chat Lesson' },
-  ];
-
+const AboutSection = ({ skills = [], differentiators = [], brands = [] }) => {
   return (
     <section id="about" className="pt-16 md:pt-20 bg-neutral-bg dark:bg-neutral-bg-dark font-sans transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -55,11 +39,14 @@ const AboutSection = () => {
             <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-card-border dark:border-white/20 h-full flex flex-col">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans">Core Skills</h3>
               <div className="flex flex-col justify-between flex-1">
+                {skills.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No skills added yet.</p>
+                )}
                 {skills.map((skill, index) => {
-                  const IconComponent = skill.icon;
+                  const IconComponent = PhosphorIcons[skill.icon] || PhosphorIcons.Question;
                   return (
                     <motion.div
-                      key={skill.name}
+                      key={skill.id}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -90,54 +77,26 @@ const AboutSection = () => {
             <div className="bg-card-bg dark:bg-card-bg-dark backdrop-blur-sm rounded-lg p-5 md:p-8 shadow-lg border border-card-border dark:border-white/20 h-full">
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6 font-sans">What Sets Me Apart</h3>
               <div className="space-y-3 md:space-y-4">
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">Audience Understanding:</strong> Capture attention and maintain engagement
-                  </p>
-                </div>
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">SEO-driven Approach:</strong> Boost page views using Google trends research
-                  </p>
-                </div>
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">Cross-industry Storytelling:</strong> Write for audiences ranging from entertainment to city and culture
-                  </p>
-                </div>
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">Meeting Deadlines:</strong> Deliver daily news while maintaining editorial standards
-                  </p>
-                </div>
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">Interviewing Techniques:</strong> Source and interview multiple subjects effectively under pressure
-                  </p>
-                </div>
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">✓</span>
-                  </div>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
-                    <strong className="text-gray-900 dark:text-gray-100">Boosting Visibility:</strong> Use push notifications to increase page views
-                  </p>
-                </div>
+                {differentiators.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No differentiators added yet.</p>
+                )}
+                {differentiators.map((diff, index) => (
+                  <motion.div
+                    key={diff.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex items-start gap-2 md:gap-3"
+                  >
+                    <div className="w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">✓</span>
+                    </div>
+                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed font-sans">
+                      <strong className="text-gray-900 dark:text-gray-100">{diff.title}:</strong> {diff.description}
+                    </p>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -165,9 +124,12 @@ const AboutSection = () => {
           {/* Desktop - Static Grid */}
           <div className="hidden md:block">
             <div className="flex items-center justify-center gap-16 lg:gap-24">
+              {brands.length === 0 && (
+                <p className="text-gray-500 dark:text-gray-400 text-sm">No brands added yet.</p>
+              )}
               {brands.map((brand, index) => (
                 <motion.div
-                  key={brand.name}
+                  key={brand.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -194,7 +156,7 @@ const AboutSection = () => {
               {/* First 4 brands in 2x2 grid */}
               {brands.slice(0, 4).map((brand, index) => (
                 <motion.div
-                  key={brand.name}
+                  key={brand.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}

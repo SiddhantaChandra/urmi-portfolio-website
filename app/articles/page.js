@@ -6,8 +6,6 @@ import { HiSearch, HiEye, HiClock, HiTag, HiArrowLeft, HiExternalLink, HiNewspap
 import { useRouter } from 'next/navigation';
 import { cn } from '../../utils/cn';
 import Image from 'next/image';
-import contentWritingArticles from '../../components/ContentWritingData';
-import journalArticles from '../../components/JournalismData';
 import ArticleFooter from '../../components/ArticleFooter';
 
 const Articles = () => {
@@ -18,51 +16,31 @@ const Articles = () => {
   const [selectedType, setSelectedType] = useState('all');
   const router = useRouter();
 
-  // Combine and normalize article data
+  // Fetch articles from API
   useEffect(() => {
-    // Convert articles to normalized format
-    const contentArticles = contentWritingArticles.map(article => ({
-      ...article,
-      type: 'content-writing',
-      articleType: 'Content Writing',
-      link: `/articles/${article.slug}`,
-      isExternal: false
-    }));
-
-    const journalismArticles = journalArticles.map(article => ({
-      ...article,
-      id: article.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-      slug: article.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-      type: 'journalism',
-      excerpt: article.subHeading,
-      featuredImage: article.image,
-      
-      readingTime: 5,
-      author: 'Urmi Chakraborty',
-      isExternal: true
-    }));
-
-    // Create alternating pattern
-    const createAlternatingArticles = () => {
-      const alternating = [];
-      const maxLength = Math.max(contentArticles.length, journalismArticles.length);
-      
-      for (let i = 0; i < maxLength; i++) {
-        if (i < contentArticles.length) {
-          alternating.push(contentArticles[i]);
+    async function fetchArticles() {
+      try {
+        const res = await fetch('/api/articles');
+        const data = await res.json();
+        if (data.articles) {
+          const normalized = data.articles.map(article => ({
+            ...article,
+            type: article.type,
+            articleType: article.articleType,
+            excerpt: article.excerpt,
+            featuredImage: article.image,
+            link: article.isExternal ? article.externalLink : `/articles/${article.slug}`,
+            isExternal: article.isExternal,
+            tags: article.tags?.map(t => t.tag.name) || [],
+          }));
+          setAllArticles(normalized);
+          setFilteredArticles(normalized);
         }
-        if (i < journalismArticles.length) {
-          alternating.push(journalismArticles[i]);
-        }
+      } catch (error) {
+        console.error('Failed to fetch articles:', error);
       }
-      
-      return alternating;
-    };
-
-    const combinedArticles = createAlternatingArticles();
-
-    setAllArticles(combinedArticles);
-    setFilteredArticles(combinedArticles);
+    }
+    fetchArticles();
   }, []);
 
   // Filter articles based on search and filters

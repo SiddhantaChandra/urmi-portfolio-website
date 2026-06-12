@@ -6,6 +6,10 @@
 .pnp.js
 .yarn/install-state.gz
 
+# environment
+.env
+.env.*
+
 # testing
 /coverage
 
@@ -43,3 +47,5 @@ next-env.d.ts
 # .dev.vars*
 
 .vercel
+
+/lib/generated/prisma
