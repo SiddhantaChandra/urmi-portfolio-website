@@ -179,7 +179,7 @@ export default function EditArticlesPage() {
           {!showForm && (
             <>
               <button
-                onClick={() => startCreate('custom')}
+                onClick={() => router.push('/cms/dashboard/articles/new')}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm"
               >
                 <HiDocumentText className="w-4 h-4" /> New Article
