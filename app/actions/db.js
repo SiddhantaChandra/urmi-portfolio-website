@@ -735,7 +735,7 @@ function withComputedTags(article) {
 export async function normalizeLegacyArticleContent() {
   try {
     const articles = await prisma.article.findMany({
-      where: { isExternal: false, NOT: { content: null } },
+      where: { isExternal: false, content: { not: null } },
       select: { id: true, content: true },
     });
 

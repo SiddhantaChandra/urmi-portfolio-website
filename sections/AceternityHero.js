@@ -4,11 +4,16 @@ import { motion } from 'framer-motion';
 import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { cn } from '../utils/cn';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 
 const AceternityHero = ({ profile }) => {
   const targetCount = profile?.articleCount || 2434;
-  const [articleCount, setArticleCount] = useState(Math.max(0, targetCount - 100));
+  const [displayCount, setDisplayCount] = useState(targetCount);
+
+  // Set initial animation value before browser paint to avoid a flash
+  useLayoutEffect(() => {
+    setDisplayCount(Math.max(0, targetCount - 100));
+  }, [targetCount]);
 
   // Animate article counter
   useEffect(() => {
@@ -27,7 +32,7 @@ const AceternityHero = ({ profile }) => {
         const easeOutCubic = 1 - Math.pow(1 - progress, 3);
         const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutCubic);
         
-        setArticleCount(currentValue);
+        setDisplayCount(currentValue);
         
         if (progress < 1) {
           requestAnimationFrame(animateCount);
@@ -117,7 +122,7 @@ const AceternityHero = ({ profile }) => {
               >
                 <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-2 py-1 sm:px-4 sm:py-2 lg:px-4 lg:py-2 rounded-full shadow-xl border border-neutral-bg dark:border-neutral-bg-dark">
                   <span className="text-xs sm:text-sm lg:text-base font-bold text-gray-900 dark:text-gray-900 whitespace-nowrap">
-                    {articleCount}+ Articles
+                    {displayCount}+ Articles
                   </span>
                 </div>
               </motion.div>
