@@ -3,25 +3,30 @@
 import { useState, useEffect, useRef } from 'react';
 import { authClient } from '@/lib/auth/client';
 import { useRouter } from 'next/navigation';
-import {
-  getResources, createResource, updateResource, deleteResource, reorderResources,
-} from '@/app/actions/db';
+import { getResources, createResource, updateResource } from '@/app/actions/db';
 import { uploadToR2, deleteFromR2 } from '@/app/actions/r2';
-import * as PhosphorIcons from '@phosphor-icons/react';
+import { HiOutlineUpload, HiOutlineTrash } from 'react-icons/hi';
 
 export const dynamic = 'force-dynamic';
+
+const TABS = [
+  { id: 'cv', label: 'CV', defaultTitle: 'CV', defaultDescription: 'Download my CV' },
+  { id: 'portfolio-pdf', label: 'Portfolio (PDF)', defaultTitle: 'Portfolio (PDF)', defaultDescription: 'Download Portfolio PDF' },
+  { id: 'portfolio-docx', label: 'Portfolio (DOCX)', defaultTitle: 'Portfolio (DOCX)', defaultDescription: 'Download Portfolio DOCX' },
+];
 
 export default function EditResourcesPage() {
   const router = useRouter();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [activeTab, setActiveTab] = useState('cv');
   const fileInputRef = useRef(null);
 
-  const [form, setForm] = useState({
-    title: '', description: '', filePath: '', icon: '', gradient: '',
+  const [forms, setForms] = useState({
+    cv: { description: '', filePath: '' },
+    'portfolio-pdf': { description: '', filePath: '' },
+    'portfolio-docx': { description: '', filePath: '' },
   });
 
   useEffect(() => {
@@ -32,7 +37,40 @@ export default function EditResourcesPage() {
         return;
       }
       const data = await getResources();
-      setResources(data);
+
+      // Ensure all three tabs exist
+      const updatedData = [...data];
+      for (const tab of TABS) {
+        const existing = updatedData.find(
+          d => d.title?.toLowerCase() === tab.id.toLowerCase()
+        );
+        if (!existing) {
+          const res = await createResource({
+            title: tab.id,
+            description: tab.defaultDescription,
+            filePath: '',
+          });
+          if (res.success) {
+            updatedData.push(res.data);
+          }
+        }
+      }
+
+      setResources(updatedData);
+      setForms({
+        cv: {
+          description: updatedData.find(d => d.title?.toLowerCase() === 'cv')?.description || '',
+          filePath: updatedData.find(d => d.title?.toLowerCase() === 'cv')?.filePath || '',
+        },
+        'portfolio-pdf': {
+          description: updatedData.find(d => d.title?.toLowerCase() === 'portfolio-pdf')?.description || '',
+          filePath: updatedData.find(d => d.title?.toLowerCase() === 'portfolio-pdf')?.filePath || '',
+        },
+        'portfolio-docx': {
+          description: updatedData.find(d => d.title?.toLowerCase() === 'portfolio-docx')?.description || '',
+          filePath: updatedData.find(d => d.title?.toLowerCase() === 'portfolio-docx')?.filePath || '',
+        },
+      });
       setLoading(false);
     }
     load();
@@ -43,136 +81,160 @@ export default function EditResourcesPage() {
     setTimeout(() => setMessage(''), 3000);
   };
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleFileUpload = async (tabId) => {
+    const file = fileInputRef.current?.files?.[0];
     if (!file) return;
     const fd = new FormData();
     fd.append('file', file);
     fd.append('prefix', 'documents/');
     const res = await uploadToR2(fd);
     if (res.success) {
-      if (form.filePath) {
-        await deleteFromR2(form.filePath);
+      const existingPath = forms[tabId].filePath;
+      if (existingPath) {
+        await deleteFromR2(existingPath);
       }
-      setForm(prev => ({ ...prev, filePath: res.filePath }));
-      showMessage('File uploaded to R2');
+      setForms(prev => ({ ...prev, [tabId]: { ...prev[tabId], filePath: res.filePath } }));
+      showMessage('File uploaded');
     } else {
       showMessage('Upload failed: ' + res.error);
     }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleRemoveFile = async (tabId) => {
+    const existingPath = forms[tabId].filePath;
+    if (existingPath) {
+      await deleteFromR2(existingPath);
+    }
+    setForms(prev => ({ ...prev, [tabId]: { ...prev[tabId], filePath: '' } }));
+    showMessage('File removed');
+  };
+
+  const handleSubmit = async (e, tabId) => {
     e.preventDefault();
-    if (editingId) {
-      const res = await updateResource(editingId, form);
-      if (res.success) {
-        setResources(resources.map(r => r.id === editingId ? res.data : r));
-        setEditingId(null);
-        setShowForm(false);
-        setForm({ title: '', description: '', filePath: '', icon: '', gradient: '' });
-        showMessage('Resource updated');
-      }
-    } else {
-      const res = await createResource(form);
-      if (res.success) {
-        setResources([...resources, res.data]);
-        setShowForm(false);
-        setForm({ title: '', description: '', filePath: '', icon: '', gradient: '' });
-        showMessage('Resource created');
-      }
-    }
-  };
+    const tab = TABS.find(t => t.id === tabId);
+    const item = resources.find(d => d.title?.toLowerCase() === tabId.toLowerCase());
+    if (!item) return;
 
-  const handleDelete = async (id) => {
-    if (!confirm('Delete this resource?')) return;
-    const resource = resources.find(r => r.id === id);
-    if (resource?.filePath) {
-      await deleteFromR2(resource.filePath);
-    }
-    const res = await deleteResource(id);
+    const res = await updateResource(item.id, {
+      title: tab.id,
+      description: forms[tabId].description,
+      filePath: forms[tabId].filePath,
+    });
+
     if (res.success) {
-      setResources(resources.filter(r => r.id !== id));
-      showMessage('Resource deleted');
+      setResources(resources.map(r => (r.id === item.id ? res.data : r)));
+      showMessage(`${tab.label} updated`);
     }
   };
 
-  const moveItem = (id, direction) => {
-    const index = resources.findIndex(r => r.id === id);
-    if (index < 0) return;
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= resources.length) return;
-    const newArr = [...resources];
-    [newArr[index], newArr[newIndex]] = [newArr[newIndex], newArr[index]];
-    setResources(newArr);
-    reorderResources(newArr.map(r => r.id));
+  const updateForm = (tabId, field, value) => {
+    setForms(prev => ({ ...prev, [tabId]: { ...prev[tabId], [field]: value } }));
   };
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-6"></div>
-        <div className="animate-pulse h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div className="space-y-6">
+        <div className="cms-skeleton h-28" />
+        <div className="cms-skeleton h-96" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Resources</h1>
-        <button onClick={() => { setShowForm(true); setEditingId(null); setForm({ title: '', description: '', filePath: '', icon: '', gradient: '' }); }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">+ Add Resource</button>
+    <div className="max-w-4xl mx-auto mb-60">
+      <div className="mb-6">
+        <p className="cms-eyebrow">Resources</p>
+        <h1 className="cms-page-title">Edit Resources</h1>
       </div>
 
-      {message && <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">{message}</div>}
+      {message ? <div className="cms-toast mb-4">{message}</div> : null}
 
-      {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4 mb-6">
-          <h3 className="text-lg font-semibold">{editingId ? 'Edit Resource' : 'Add Resource'}</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium mb-1">Title</label><input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-            <div><label className="block text-sm font-medium mb-1">Description</label><input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-            <div><label className="block text-sm font-medium mb-1">Icon</label><input value={form.icon} onChange={e => setForm({...form, icon: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" placeholder="Phosphor icon name" required /></div>
-            <div><label className="block text-sm font-medium mb-1">Gradient</label><input value={form.gradient} onChange={e => setForm({...form, gradient: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" placeholder="e.g. from-blue-500 to-purple-600" required /></div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">File</label>
-            <div className="flex items-center gap-4">
-              <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
-              <button type="button" onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Upload File</button>
-              <span className="text-sm text-gray-500">{form.filePath || 'No file'}</span>
+      <div className="cms-filter-group mb-6">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={activeTab === tab.id ? 'cms-filter-active' : 'cms-filter-button'}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {TABS.map(tab =>
+        activeTab === tab.id ? (
+          <form
+            key={tab.id}
+            onSubmit={(e) => handleSubmit(e, tab.id)}
+            className="cms-card p-6 space-y-5"
+          >
+            <p className="cms-section-title">{tab.label}</p>
+
+            <div className="space-y-2">
+              <label className="cms-label">Description</label>
+              <input
+                value={forms[tab.id].description}
+                onChange={(e) => updateForm(tab.id, 'description', e.target.value)}
+                className="cms-input"
+                placeholder={tab.defaultDescription}
+              />
             </div>
-          </div>
-          <div className="flex gap-2">
-            <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{editingId ? 'Update' : 'Add'}</button>
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Cancel</button>
-          </div>
-        </form>
+
+            <div className="space-y-2">
+              <label className="cms-label">File</label>
+              <div className="flex items-center gap-4 flex-wrap">
+                {forms[tab.id].filePath ? (
+                  <span className="cms-help-text">{forms[tab.id].filePath}</span>
+                ) : (
+                  <span className="cms-help-text">No file uploaded</span>
+                )}
+                <input ref={fileInputRef} type="file" className="hidden" />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="cms-secondary-btn"
+                >
+                  <HiOutlineUpload className="w-4 h-4" />
+                  Upload File
+                </button>
+                {forms[tab.id].filePath && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(tab.id)}
+                    className="cms-danger-btn"
+                  >
+                    <HiOutlineTrash className="w-4 h-4" />
+                    Remove
+                  </button>
+                )}
+              </div>
+              {fileInputRef.current?.files?.[0] && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm text-[var(--cms-muted)]">
+                    Selected: {fileInputRef.current.files[0].name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleFileUpload(tab.id)}
+                    className="cms-primary-btn !py-1 !px-3 text-sm"
+                  >
+                    Confirm Upload
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <button type="submit" className="cms-primary-btn">
+                Save {tab.label}
+              </button>
+            </div>
+          </form>
+        ) : null
       )}
-
-      <div className="space-y-2">
-        {resources.map((resource, index) => {
-          const Icon = PhosphorIcons[resource.icon] || PhosphorIcons.Download;
-          return (
-            <div key={resource.id} className="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${resource.gradient} flex items-center justify-center`}>
-                  <Icon className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <span className="font-medium">{resource.title}</span>
-                  <p className="text-sm text-gray-500">{resource.description}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button onClick={() => moveItem(resource.id, 'up')} disabled={index === 0} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↑</button>
-                <button onClick={() => moveItem(resource.id, 'down')} disabled={index === resources.length - 1} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↓</button>
-                <button onClick={() => { setEditingId(resource.id); setForm({ title: resource.title, description: resource.description, filePath: resource.filePath, icon: resource.icon, gradient: resource.gradient }); setShowForm(true); }} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">Edit</button>
-                <button onClick={() => handleDelete(resource.id)} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">Delete</button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }

@@ -298,9 +298,10 @@ export async function createExperience(data) {
         location: data.location,
         type: data.type,
         description: data.description,
-        icon: data.icon,
-        color: data.color,
-        darkColor: data.darkColor,
+        icon: data.icon || '',
+        color: data.color || '',
+        darkColor: data.darkColor || '',
+        logo: data.logo || null,
         displayOrder: maxOrder ? maxOrder.displayOrder + 1 : 0,
       },
     });
@@ -323,9 +324,10 @@ export async function updateExperience(id, data) {
         location: data.location,
         type: data.type,
         description: data.description,
-        icon: data.icon,
-        color: data.color,
-        darkColor: data.darkColor,
+        icon: data.icon || '',
+        color: data.color || '',
+        darkColor: data.darkColor || '',
+        logo: data.logo || null,
       },
     });
     revalidatePath('/');
@@ -555,8 +557,6 @@ export async function createResource(data) {
         title: data.title,
         description: data.description,
         filePath: data.filePath,
-        icon: data.icon,
-        gradient: data.gradient,
         displayOrder: maxOrder ? maxOrder.displayOrder + 1 : 0,
       },
     });
@@ -576,8 +576,6 @@ export async function updateResource(id, data) {
         title: data.title,
         description: data.description,
         filePath: data.filePath,
-        icon: data.icon,
-        gradient: data.gradient,
       },
     });
     revalidatePath('/');

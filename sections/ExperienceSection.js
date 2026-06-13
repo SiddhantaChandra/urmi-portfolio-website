@@ -91,14 +91,18 @@ const ExperienceSection = ({ experiences = [] }) => {
                   <div className="hidden lg:flex absolute left-0 top-6 md:top-8 -translate-x-1/2">
                     <motion.div
                       className={cn(
-                        "w-12 h-12 md:w-16 md:h-16 rounded-full border border-white dark:border dark:border-white/60 shadow-lg flex items-center justify-center",
-                        `bg-gradient-to-r ${exp.color} ${exp.darkColor}`,
+                        "w-12 h-12 md:w-16 md:h-16 rounded-full border border-white dark:border dark:border-white/60 shadow-lg flex items-center justify-center overflow-hidden",
+                        exp.logo ? "bg-white dark:bg-gray-800" : `bg-gradient-to-r ${exp.color} ${exp.darkColor}`,
                         isActive ? "scale-110" : "scale-100"
                       )}
                       animate={{ scale: isActive ? 1.1 : 1 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      {exp.logo ? (
+                        <img src={exp.logo} alt="" className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-white dark:border-white/60 shadow-lg" />
+                      ) : (
+                        <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      )}
                     </motion.div>
                   </div>
 
@@ -117,16 +121,20 @@ const ExperienceSection = ({ experiences = [] }) => {
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6">
                         <div className="flex items-start gap-3 md:gap-4 mb-3 md:mb-4 sm:mb-0">
                           <div className={cn(
-                            "w-12 h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center lg:hidden flex-shrink-0 shadow-md",
-                            `bg-gradient-to-r ${exp.color} ${exp.darkColor}`
+                            "w-12 h-12 md:w-14 md:h-14 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center lg:hidden flex-shrink-0 shadow-md overflow-hidden",
+                            exp.logo ? "" : `bg-gradient-to-r ${exp.color} ${exp.darkColor}`
                           )}>
-                            <IconComponent className="w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 text-white" />
+                            {exp.logo ? (
+                              <img src={exp.logo} alt="" className="w-full h-full object-cover rounded-xl" />
+                            ) : (
+                              <IconComponent className="w-6 h-6 md:w-7 md:h-7 lg:w-6 lg:h-6 text-white" />
+                            )}
                           </div>
                           <div className="min-w-0 flex-1">
                             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 font-sans leading-tight">{exp.role}</h3>
                             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mt-1">
                               <HiOfficeBuilding className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
-                              <span className="font-sans text-xs md:text-sm lg:text-base">{exp.company}</span>
+                              <span className="font-sans text-xs md:text-sm lg:text-base">{exp.company}{exp.location ? ` · ${exp.location}` : ''}</span>
                             </div>
                           </div>
                         </div>

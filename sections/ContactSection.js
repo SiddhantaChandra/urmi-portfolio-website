@@ -8,7 +8,11 @@ import { cn } from '../utils/cn';
 const ContactSection = ({ contactInfo = [], resources = [] }) => {
   const emailContact = contactInfo.find(c => c.type === 'email');
   const locationContact = contactInfo.find(c => c.type === 'location');
-  const socialLinks = contactInfo.filter(c => c.type === 'social');
+  const socialLinks = contactInfo.filter(c =>
+    c.type === 'social' ||
+    c.label?.toLowerCase() === 'linkedin' ||
+    c.label?.toLowerCase() === 'muckrack'
+  );
   const actionLinks = contactInfo.filter(c => c.type === 'action');
 
   const emailAddress = emailContact?.value || 'urmi24112001@gmail.com';
@@ -207,8 +211,7 @@ const ContactSection = ({ contactInfo = [], resources = [] }) => {
                 {resources.length === 0 && (
                   <p className="text-gray-500 dark:text-gray-400 text-sm">No resources added yet.</p>
                 )}
-                {resources.map((resource, index) => {
-                  const IconComponent = PhosphorIcons[resource.icon] || PhosphorIcons.Download;
+                {resources.map((resource) => {
                   const handleDownload = () => {
                     const link = document.createElement('a');
                     link.href = resource.filePath;
@@ -218,6 +221,12 @@ const ContactSection = ({ contactInfo = [], resources = [] }) => {
                     link.click();
                     document.body.removeChild(link);
                   };
+                  const labelMap = {
+                    'cv': 'CV',
+                    'portfolio-pdf': 'Portfolio (PDF)',
+                    'portfolio-docx': 'Portfolio (DOCX)',
+                  };
+                  const title = labelMap[resource.title?.toLowerCase()] || resource.title;
                   return (
                     <motion.button
                       key={resource.id}
@@ -228,12 +237,12 @@ const ContactSection = ({ contactInfo = [], resources = [] }) => {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 bg-gradient-to-r ${resource.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                            <IconComponent className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center flex-shrink-0">
+                            <HiDownload className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <h5 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors text-sm">
-                              {resource.title}
+                              {title}
                             </h5>
                             <p className="text-xs text-gray-600 dark:text-gray-400">
                               {resource.description}
