@@ -8,12 +8,23 @@ import Image from 'next/image';
 import { useState, useEffect, useLayoutEffect } from 'react';
 
 const AceternityHero = ({ profile, contactInfo = [] }) => {
-  const socialLinks = contactInfo.filter(
-    (c) =>
-      c.type === 'social' ||
-      c.label?.toLowerCase() === 'linkedin' ||
-      c.label?.toLowerCase() === 'muckrack'
-  );
+  const socialLinks = contactInfo
+    .filter(
+      (c) =>
+        c.type === 'social' ||
+        c.label?.toLowerCase() === 'linkedin' ||
+        c.label?.toLowerCase() === 'muckrack'
+    )
+    .filter((item, index, arr) => {
+      const itemKey = item.id ?? `${item.type}-${item.label}-${item.href}`;
+      return (
+        index ===
+        arr.findIndex((candidate) => {
+          const candidateKey = candidate.id ?? `${candidate.type}-${candidate.label}-${candidate.href}`;
+          return candidateKey === itemKey;
+        })
+      );
+    });
   const targetCount = profile?.articleCount || 2434;
   const [displayCount, setDisplayCount] = useState(targetCount);
 
@@ -53,7 +64,7 @@ const AceternityHero = ({ profile, contactInfo = [] }) => {
   }, [targetCount]);
 
   const handleDownloadResume = () => {
-    const resumePath = profile?.resumePath || '/Urmi_Chakraborty_CV.pdf';
+    const resumePath = profile?.resumePath;
     const link = document.createElement('a');
     link.href = resumePath;
     link.download = resumePath.split('/').pop();

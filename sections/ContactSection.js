@@ -8,11 +8,22 @@ import { cn } from '../utils/cn';
 const ContactSection = ({ contactInfo = [], resources = [] }) => {
   const emailContact = contactInfo.find(c => c.type === 'email');
   const locationContact = contactInfo.find(c => c.type === 'location');
-  const socialLinks = contactInfo.filter(c =>
-    c.type === 'social' ||
-    c.label?.toLowerCase() === 'linkedin' ||
-    c.label?.toLowerCase() === 'muckrack'
-  );
+  const socialLinks = contactInfo
+    .filter(c =>
+      c.type === 'social' ||
+      c.label?.toLowerCase() === 'linkedin' ||
+      c.label?.toLowerCase() === 'muckrack'
+    )
+    .filter((item, index, arr) => {
+      const itemKey = item.id ?? `${item.type}-${item.label}-${item.href}`;
+      return (
+        index ===
+        arr.findIndex((candidate) => {
+          const candidateKey = candidate.id ?? `${candidate.type}-${candidate.label}-${candidate.href}`;
+          return candidateKey === itemKey;
+        })
+      );
+    });
   const actionLinks = contactInfo.filter(c => c.type === 'action');
 
   const emailAddress = emailContact?.value || 'urmi24112001@gmail.com';

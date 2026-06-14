@@ -8,6 +8,9 @@ const nextConfig = {
 
 		return config;
 	},
+	images: {
+		domains: ['cdn.urmichakraborty.com'],
+	},
 };
 
 export default nextConfig;
