@@ -23,6 +23,12 @@ export async function middleware(request) {
 
 export const config = {
   matcher: [
-    '/cms/dashboard/:path*',
+    {
+      source: '/cms/dashboard/:path*',
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
   ],
 };

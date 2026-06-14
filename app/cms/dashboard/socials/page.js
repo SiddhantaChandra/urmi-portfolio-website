@@ -29,8 +29,12 @@ export default function EditSocialsPage() {
   useEffect(() => {
     async function load() {
       const { data: session } = await authClient.getSession();
-      if (!session || session.user?.role !== 'admin') {
-        router.push('/');
+      if (!session) {
+        router.replace('/cms/login');
+        return;
+      }
+      if (session.user?.role !== 'admin') {
+        router.replace('/');
         return;
       }
       const data = await getContactInfo();
