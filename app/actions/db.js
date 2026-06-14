@@ -557,6 +557,8 @@ export async function createResource(data) {
         title: data.title,
         description: data.description,
         filePath: data.filePath,
+        icon: data.icon || '',
+        gradient: data.gradient || '',
         displayOrder: maxOrder ? maxOrder.displayOrder + 1 : 0,
       },
     });
@@ -576,6 +578,8 @@ export async function updateResource(id, data) {
         title: data.title,
         description: data.description,
         filePath: data.filePath,
+        icon: data.icon ?? undefined,
+        gradient: data.gradient ?? undefined,
       },
     });
     revalidatePath('/');

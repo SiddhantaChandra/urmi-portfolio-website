@@ -211,7 +211,7 @@ const ContactSection = ({ contactInfo = [], resources = [] }) => {
                 {resources.length === 0 && (
                   <p className="text-gray-500 dark:text-gray-400 text-sm">No resources added yet.</p>
                 )}
-                {resources.map((resource) => {
+                {resources.filter((resource) => resource.filePath).map((resource) => {
                   const handleDownload = () => {
                     const link = document.createElement('a');
                     link.href = resource.filePath;
