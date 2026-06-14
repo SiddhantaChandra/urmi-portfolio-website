@@ -39,9 +39,10 @@ export default async function Home() {
       <AceternityHero profile={profile} contactInfo={contactInfo} />
 
       {/* Other sections */}
-      <AboutSection skills={skills} differentiators={differentiators} brands={brands} />
+
       <ExperienceSection experiences={experiences} />
       <WorkSection articles={articles} />
+      <AboutSection skills={skills} differentiators={differentiators} brands={brands} />
       <ContactSection contactInfo={contactInfo} resources={resources} />
       <Footer resources={resources} contactInfo={contactInfo} />
     </main>

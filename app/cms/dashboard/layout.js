@@ -11,10 +11,6 @@ const navItems = [
     children: [{ label: 'Edit Hero section', href: '/cms/dashboard/hero' }],
   },
   {
-    label: 'About me',
-    children: [{ label: 'Edit About Me', href: '/cms/dashboard/about' }],
-  },
-  {
     label: 'Experience',
     children: [{ label: 'Edit experience', href: '/cms/dashboard/experience' }],
   },
@@ -24,6 +20,10 @@ const navItems = [
       { label: 'Edit articles', href: '/cms/dashboard/articles' },
       { label: 'View articles', href: '/cms/dashboard/articles/view' },
     ],
+  },
+    {
+    label: 'About me',
+    children: [{ label: 'Edit About Me', href: '/cms/dashboard/about' }],
   },
   {
     label: 'Socials & Resource',
