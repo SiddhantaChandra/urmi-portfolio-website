@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { authClient } from '@/lib/auth/client';
 import { useRouter } from 'next/navigation';
 import {
@@ -21,6 +21,9 @@ export default function EditAboutPage() {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [iconSearch, setIconSearch] = useState('');
+  const iconPickerRef = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -42,6 +45,26 @@ export default function EditAboutPage() {
     setMessage(msg);
     setTimeout(() => setMessage(''), 3000);
   };
+
+  const ALL_PHOSPHOR_ICONS = useMemo(() => {
+    return Object.keys(PhosphorIcons).filter(k => {
+      const val = PhosphorIcons[k];
+      if (typeof val !== 'function' && typeof val !== 'object') return false;
+      const nonIcons = ['Icon', 'IconBase', 'IconContext', 'IconProps', 'IconWeight', 'SSR', 'renderPathForWeight', 'default', '__esModule'];
+      return !nonIcons.includes(k);
+    }).sort();
+  }, []);
+
+  useEffect(() => {
+    if (!showIconPicker) return;
+    const handleClick = (e) => {
+      if (iconPickerRef.current && !iconPickerRef.current.contains(e.target)) {
+        setShowIconPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showIconPicker]);
 
   // Skills
   const [skillForm, setSkillForm] = useState({ name: '', icon: '' });
@@ -195,21 +218,20 @@ export default function EditAboutPage() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Edit About Me</h1>
+    <div className="max-w-4xl mx-auto mb-60">
+      <div className="mb-6">
+        <p className="cms-eyebrow">About me</p>
+        <h1 className="cms-page-title">Edit About Me</h1>
+      </div>
       
-      {message && (
-        <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
-          {message}
-        </div>
-      )}
+      {message ? <div className="cms-toast mb-4">{message}</div> : null}
 
-      <div className="flex gap-2 mb-6">
+      <div className="cms-filter-group mb-6">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-lg font-medium ${activeTab === tab.id ? 'bg-purple-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}
+            className={activeTab === tab.id ? 'cms-filter-active' : 'cms-filter-button'}
           >
             {tab.label}
           </button>
@@ -219,38 +241,97 @@ export default function EditAboutPage() {
       {/* Skills Tab */}
       {activeTab === 'skills' && (
         <div className="space-y-6">
-          <form onSubmit={handleSkillSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-            <h3 className="text-lg font-semibold">{editingSkill ? 'Edit Skill' : 'Add Skill'}</h3>
+          <form onSubmit={handleSkillSubmit} className={`cms-card p-6 space-y-5 relative ${showIconPicker ? 'z-20' : ''}`}>
+            <p className="cms-section-title">{editingSkill ? 'Edit Skill' : 'Add Skill'}</p>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required />
+              <div className="space-y-2">
+                <label className="cms-label">Name</label>
+                <input value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} className="cms-input" required />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Phosphor Icon</label>
-                <input value={skillForm.icon} onChange={e => setSkillForm({...skillForm, icon: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" placeholder="e.g. Globe" required />
+              <div className="relative space-y-2">
+                <label className="cms-label">Phosphor Icon</label>
+                <button
+                  type="button"
+                  onClick={() => setShowIconPicker(!showIconPicker)}
+                  className="cms-input w-full flex items-center gap-3 text-left"
+                >
+                  {(() => {
+                    const SelectedIcon = skillForm.icon ? (PhosphorIcons[skillForm.icon] || PhosphorIcons.Question) : null;
+                    return SelectedIcon ? (
+                      <>
+                        <SelectedIcon className="w-5 h-5" />
+                        <span className="flex-1">{skillForm.icon}</span>
+                      </>
+                    ) : (
+                      <span className="text-[var(--cms-muted)]">Select an icon...</span>
+                    );
+                  })()}
+                  <span className="ml-auto text-[var(--cms-muted)]">▼</span>
+                </button>
+                {showIconPicker && (
+                  <div
+                    ref={iconPickerRef}
+                    className="absolute top-full left-0 mt-2 w-full z-[100] bg-[var(--cms-surface)] border border-[var(--cms-border)] rounded-[28px] shadow-lg max-h-80 overflow-hidden flex flex-col"
+                  >
+                    <div className="p-3 border-b border-[var(--cms-border)]">
+                      <input
+                        autoFocus
+                        value={iconSearch}
+                        onChange={e => setIconSearch(e.target.value)}
+                        placeholder="Search icons..."
+                        className="cms-input"
+                        onClick={e => e.stopPropagation()}
+                      />
+                    </div>
+                    <div className="overflow-y-auto p-3 grid grid-cols-6 gap-2 max-h-60">
+                      {(iconSearch.trim()
+                        ? ALL_PHOSPHOR_ICONS.filter(name => name.toLowerCase().includes(iconSearch.toLowerCase()))
+                        : ALL_PHOSPHOR_ICONS
+                      ).map(name => {
+                        const Icon = PhosphorIcons[name];
+                        return (
+                          <button
+                            key={name}
+                            type="button"
+                            onClick={() => {
+                              setSkillForm({...skillForm, icon: name});
+                              setShowIconPicker(false);
+                              setIconSearch('');
+                            }}
+                            className={`flex flex-col items-center gap-1 p-2 rounded-[18px] hover:bg-[var(--cms-accent-soft)] ${skillForm.icon === name ? 'bg-[var(--cms-accent-soft)] ring-1 ring-[var(--cms-accent)]' : ''}`}
+                          >
+                            <Icon className="w-5 h-5" />
+                            <span className="text-[10px] truncate w-full text-center text-[var(--cms-muted)]">{name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex gap-2">
-              <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{editingSkill ? 'Update' : 'Add'}</button>
-              {editingSkill && <button type="button" onClick={() => { setEditingSkill(null); setSkillForm({name:'',icon:''}); }} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Cancel</button>}
+              <button type="submit" className="cms-primary-btn">{editingSkill ? 'Update' : 'Add'}</button>
+              {editingSkill && <button type="button" onClick={() => { setEditingSkill(null); setSkillForm({name:'',icon:''}); }} className="cms-secondary-btn">Cancel</button>}
             </div>
           </form>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {skills.map((skill, index) => {
               const Icon = PhosphorIcons[skill.icon] || PhosphorIcons.Question;
               return (
-                <div key={skill.id} className="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+                <div key={skill.id} className="cms-list-card">
                   <div className="flex items-center gap-3">
-                    <Icon className="w-5 h-5" />
+                    <div className="w-10 h-10 rounded-[18px] bg-[var(--cms-accent-soft)] flex items-center justify-center">
+                      <Icon className="w-5 h-5 text-[var(--cms-accent-strong)]" />
+                    </div>
                     <span className="font-medium">{skill.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => moveItem(skills, setSkills, skill.id, 'up')} disabled={index === 0} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↑</button>
-                    <button onClick={() => moveItem(skills, setSkills, skill.id, 'down')} disabled={index === skills.length - 1} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↓</button>
-                    <button onClick={() => { setEditingSkill(skill.id); setSkillForm({ name: skill.name, icon: skill.icon }); }} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">Edit</button>
-                    <button onClick={() => handleDeleteSkill(skill.id)} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">Delete</button>
+                    <button onClick={() => moveItem(skills, setSkills, skill.id, 'up')} disabled={index === 0} className="cms-icon-button disabled:opacity-30">↑</button>
+                    <button onClick={() => moveItem(skills, setSkills, skill.id, 'down')} disabled={index === skills.length - 1} className="cms-icon-button disabled:opacity-30">↓</button>
+                    <button onClick={() => { setEditingSkill(skill.id); setSkillForm({ name: skill.name, icon: skill.icon }); }} className="cms-secondary-btn">Edit</button>
+                    <button onClick={() => handleDeleteSkill(skill.id)} className="cms-danger-btn">Delete</button>
                   </div>
                 </div>
               );
@@ -262,34 +343,34 @@ export default function EditAboutPage() {
       {/* Differentiators Tab */}
       {activeTab === 'differentiators' && (
         <div className="space-y-6">
-          <form onSubmit={handleDiffSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-            <h3 className="text-lg font-semibold">{editingDiff ? 'Edit Differentiator' : 'Add Differentiator'}</h3>
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input value={diffForm.title} onChange={e => setDiffForm({...diffForm, title: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required />
+          <form onSubmit={handleDiffSubmit} className="cms-card p-6 space-y-5">
+            <p className="cms-section-title">{editingDiff ? 'Edit Differentiator' : 'Add Differentiator'}</p>
+            <div className="space-y-2">
+              <label className="cms-label">Title</label>
+              <input value={diffForm.title} onChange={e => setDiffForm({...diffForm, title: e.target.value})} className="cms-input" required />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
-              <textarea value={diffForm.description} onChange={e => setDiffForm({...diffForm, description: e.target.value})} rows={3} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required />
+            <div className="space-y-2">
+              <label className="cms-label">Description</label>
+              <textarea value={diffForm.description} onChange={e => setDiffForm({...diffForm, description: e.target.value})} rows={3} className="cms-input min-h-24" required />
             </div>
             <div className="flex gap-2">
-              <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{editingDiff ? 'Update' : 'Add'}</button>
-              {editingDiff && <button type="button" onClick={() => { setEditingDiff(null); setDiffForm({title:'',description:''}); }} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Cancel</button>}
+              <button type="submit" className="cms-primary-btn">{editingDiff ? 'Update' : 'Add'}</button>
+              {editingDiff && <button type="button" onClick={() => { setEditingDiff(null); setDiffForm({title:'',description:''}); }} className="cms-secondary-btn">Cancel</button>}
             </div>
           </form>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {differentiators.map((diff, index) => (
-              <div key={diff.id} className="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+              <div key={diff.id} className="cms-list-card">
                 <div>
                   <span className="font-medium">{diff.title}</span>
-                  <p className="text-sm text-gray-500">{diff.description}</p>
+                  <p className="text-sm text-[var(--cms-muted)]">{diff.description}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => moveItem(differentiators, setDifferentiators, diff.id, 'up')} disabled={index === 0} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↑</button>
-                  <button onClick={() => moveItem(differentiators, setDifferentiators, diff.id, 'down')} disabled={index === differentiators.length - 1} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↓</button>
-                  <button onClick={() => { setEditingDiff(diff.id); setDiffForm({ title: diff.title, description: diff.description }); }} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">Edit</button>
-                  <button onClick={() => handleDeleteDiff(diff.id)} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">Delete</button>
+                  <button onClick={() => moveItem(differentiators, setDifferentiators, diff.id, 'up')} disabled={index === 0} className="cms-icon-button disabled:opacity-30">↑</button>
+                  <button onClick={() => moveItem(differentiators, setDifferentiators, diff.id, 'down')} disabled={index === differentiators.length - 1} className="cms-icon-button disabled:opacity-30">↓</button>
+                  <button onClick={() => { setEditingDiff(diff.id); setDiffForm({ title: diff.title, description: diff.description }); }} className="cms-secondary-btn">Edit</button>
+                  <button onClick={() => handleDeleteDiff(diff.id)} className="cms-danger-btn">Delete</button>
                 </div>
               </div>
             ))}
@@ -300,42 +381,54 @@ export default function EditAboutPage() {
       {/* Brands Tab */}
       {activeTab === 'brands' && (
         <div className="space-y-6">
-          <form onSubmit={handleBrandSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-            <h3 className="text-lg font-semibold">{editingBrand ? 'Edit Brand' : 'Add Brand'}</h3>
-            <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
-              <input value={brandForm.name} onChange={e => setBrandForm({...brandForm, name: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required />
+          <form onSubmit={handleBrandSubmit} className="cms-card p-6 space-y-5">
+            <p className="cms-section-title">{editingBrand ? 'Edit Brand' : 'Add Brand'}</p>
+            <div className="space-y-2">
+              <label className="cms-label">Name</label>
+              <input value={brandForm.name} onChange={e => setBrandForm({...brandForm, name: e.target.value})} className="cms-input" required />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Logo</label>
-              <div className="flex items-center gap-4">
-                {brandForm.logo && <img src={brandForm.logo} alt="" className="w-16 h-16 object-contain" />}
-                <input type="file" accept="image/*" onChange={handleBrandImageUpload} className="text-sm" />
-                <span className="text-sm text-gray-500">{brandForm.logo || 'No logo'}</span>
+            <div className="space-y-2">
+              <label className="cms-label">Logo</label>
+              <div className="flex items-center gap-4 flex-wrap">
+                {brandForm.logo ? (
+                  <img src={brandForm.logo} alt="" className="w-16 h-16 object-contain rounded-2xl border border-[var(--cms-border)]" />
+                ) : (
+                  <div className="cms-list-art-placeholder w-16 h-16">
+                    <span className="cms-muted text-sm">No logo</span>
+                  </div>
+                )}
+                <input type="file" accept="image/*" onChange={handleBrandImageUpload} className="cms-input text-sm py-2" />
+                <span className="cms-help-text">{brandForm.logo || 'No logo uploaded'}</span>
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Alt Text</label>
-              <input value={brandForm.alt} onChange={e => setBrandForm({...brandForm, alt: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
+            <div className="space-y-2">
+              <label className="cms-label">Alt Text</label>
+              <input value={brandForm.alt} onChange={e => setBrandForm({...brandForm, alt: e.target.value})} className="cms-input" />
             </div>
             <div className="flex gap-2">
-              <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{editingBrand ? 'Update' : 'Add'}</button>
-              {editingBrand && <button type="button" onClick={() => { setEditingBrand(null); setBrandForm({name:'',logo:'',alt:''}); }} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Cancel</button>}
+              <button type="submit" className="cms-primary-btn">{editingBrand ? 'Update' : 'Add'}</button>
+              {editingBrand && <button type="button" onClick={() => { setEditingBrand(null); setBrandForm({name:'',logo:'',alt:''}); }} className="cms-secondary-btn">Cancel</button>}
             </div>
           </form>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {brands.map((brand, index) => (
-              <div key={brand.id} className="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+              <div key={brand.id} className="cms-list-card">
                 <div className="flex items-center gap-3">
-                  {brand.logo && <img src={brand.logo} alt={brand.alt} className="w-10 h-10 object-contain" />}
+                  {brand.logo ? (
+                    <img src={brand.logo} alt={brand.alt} className="w-10 h-10 object-contain rounded-xl border border-[var(--cms-border)]" />
+                  ) : (
+                    <div className="cms-list-art-placeholder w-10 h-10 rounded-xl">
+                      <span className="cms-muted text-xs">—</span>
+                    </div>
+                  )}
                   <span className="font-medium">{brand.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => moveItem(brands, setBrands, brand.id, 'up')} disabled={index === 0} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↑</button>
-                  <button onClick={() => moveItem(brands, setBrands, brand.id, 'down')} disabled={index === brands.length - 1} className="p-1 text-gray-500 hover:text-purple-600 disabled:opacity-30">↓</button>
-                  <button onClick={() => { setEditingBrand(brand.id); setBrandForm({ name: brand.name, logo: brand.logo, alt: brand.alt }); }} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">Edit</button>
-                  <button onClick={() => handleDeleteBrand(brand.id)} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">Delete</button>
+                  <button onClick={() => moveItem(brands, setBrands, brand.id, 'up')} disabled={index === 0} className="cms-icon-button disabled:opacity-30">↑</button>
+                  <button onClick={() => moveItem(brands, setBrands, brand.id, 'down')} disabled={index === brands.length - 1} className="cms-icon-button disabled:opacity-30">↓</button>
+                  <button onClick={() => { setEditingBrand(brand.id); setBrandForm({ name: brand.name, logo: brand.logo, alt: brand.alt }); }} className="cms-secondary-btn">Edit</button>
+                  <button onClick={() => handleDeleteBrand(brand.id)} className="cms-danger-btn">Delete</button>
                 </div>
               </div>
             ))}

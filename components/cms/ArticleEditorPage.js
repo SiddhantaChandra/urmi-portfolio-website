@@ -1,196 +1,348 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authClient } from '@/lib/auth/client';
-import { updateArticle } from '@/app/actions/db';
-import ArticleEditor from '@/components/cms/ArticleEditor';
-import { HiArrowLeft, HiSave, HiEye } from 'react-icons/hi';
+import { deleteFromR2, uploadToR2 } from '@/app/actions/r2';
+import { archiveArticle, updateArticle } from '@/app/actions/db';
+import BlockNoteEditor from '@/components/cms/BlockNoteEditor';
+import { blockNoteToBlocks, blocksToBlockNote, normalizeStoredContent } from '@/lib/article-content';
+import {
+  HiArrowLeft,
+  HiOutlineArchive,
+  HiOutlineSave,
+  HiOutlineUpload,
+  HiOutlineGlobeAlt,
+} from 'react-icons/hi';
 
 export default function ArticleEditorPage({ article }) {
   const router = useRouter();
-  const [blocks, setBlocks] = useState([]);
-  const [saving, setSaving] = useState(false);
+  const imageInputRef = useRef(null);
   const [message, setMessage] = useState('');
-  const [title, setTitle] = useState(article.title || '');
-  const [excerpt, setExcerpt] = useState(article.excerpt || '');
-  const [readingTime, setReadingTime] = useState(article.readingTime ? String(article.readingTime) : '');
-  const [image, setImage] = useState(article.image || '');
-  const [category, setCategory] = useState(article.category || '');
-  const [articleType, setArticleType] = useState(article.articleType || 'Published Article');
-  const [publication, setPublication] = useState(article.publication || '');
-  const [status, setStatus] = useState(article.status || 'draft');
-  const [activeTab, setActiveTab] = useState('content');
+  const [pendingAction, setPendingAction] = useState('');
+  const [editorDocument, setEditorDocument] = useState(null);
+  const [form, setForm] = useState({
+    title: article.title || '',
+    slug: article.slug || '',
+    excerpt: article.excerpt || '',
+    image: article.image || '',
+    category: article.category || '',
+    tagsText: article.tags?.map((relation) => relation.tag.name).join(', ') || '',
+    type: article.type || 'journalism',
+    articleType: article.articleType || (article.isExternal ? 'External Link' : 'Internal Article'),
+    readingTime: article.readingTime ? String(article.readingTime) : '',
+    author: article.author || 'Urmi Chakraborty',
+    publication: article.publication || '',
+    status: article.status || 'draft',
+    externalLink: article.externalLink || '',
+  });
 
-  useEffect(() => {
-    async function checkAuth() {
-      const { data: session } = await authClient.getSession();
-      if (!session || session.user?.role !== 'admin') {
-        router.push('/');
-      }
-    }
-    checkAuth();
-  }, [router]);
+  const isExternal = article.isExternal;
+  const normalizedContent = useMemo(
+    () => (isExternal ? null : normalizeStoredContent(article.content)),
+    [article.content, isExternal]
+  );
 
-  useEffect(() => {
-    // Load content from article.content JSON
-    if (article.content && article.content.blocks && Array.isArray(article.content.blocks)) {
-      setBlocks(article.content.blocks);
-    } else {
-      // If no content, start with one empty paragraph
-      setBlocks([{ id: 'block-1', type: 'paragraph', content: { text: '' } }]);
-    }
-  }, [article]);
-
-  const showMessage = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(''), 3000);
+  const showMessage = (next) => {
+    setMessage(next);
+    window.setTimeout(() => setMessage(''), 3000);
   };
 
-  const handleSave = useCallback(async () => {
-    setSaving(true);
-    const content = { blocks };
-    const res = await updateArticle(article.id, {
-      title,
-      slug: article.slug,
-      excerpt,
-      image,
-      category,
-      type: article.type,
-      articleType,
-      readingTime: readingTime ? parseInt(readingTime) : null,
-      author: article.author,
-      isExternal: article.isExternal,
-      externalLink: article.externalLink,
-      publication,
-      status,
-      content: JSON.stringify(content),
-    });
-    if (res.success) {
-      showMessage('Article saved successfully');
-    } else {
-      showMessage('Failed to save: ' + (res.error || 'Unknown error'));
-    }
-    setSaving(false);
-  }, [article, blocks, title, excerpt, image, category, articleType, readingTime, publication, status]);
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
 
-  const handleBlocksChange = useCallback((newBlocks) => {
-    setBlocks(newBlocks);
-  }, []);
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const payload = new FormData();
+    payload.append('file', file);
+    payload.append('prefix', 'articles/');
+
+    const result = await uploadToR2(payload);
+    if (!result.success) {
+      showMessage(`Upload failed: ${result.error}`);
+      return;
+    }
+
+    if (form.image) {
+      await deleteFromR2(form.image);
+    }
+
+    updateField('image', result.filePath);
+    showMessage('Cover image updated');
+  };
+
+  const persist = async (targetStatus = form.status) => {
+    setPendingAction(targetStatus === 'published' ? 'publish' : 'save');
+
+    const result = await updateArticle(article.id, {
+      ...form,
+      status: targetStatus,
+      isExternal,
+      tags: form.tagsText,
+      content: isExternal
+        ? null
+        : JSON.stringify(
+            blockNoteToBlocks(
+              Array.isArray(editorDocument) ? editorDocument : blocksToBlockNote(normalizedContent)
+            )
+          ),
+    });
+
+    if (!result.success) {
+      showMessage(result.error || 'Failed to save article');
+      setPendingAction('');
+      return;
+    }
+
+    updateField('status', targetStatus);
+    showMessage(targetStatus === 'published' ? 'Article published' : 'Article saved');
+    setPendingAction('');
+  };
+
+  const handleArchive = async () => {
+    setPendingAction('archive');
+    const result = await archiveArticle(article.id);
+    if (!result.success) {
+      showMessage(result.error || 'Failed to archive article');
+      setPendingAction('');
+      return;
+    }
+
+    updateField('status', 'archived');
+    showMessage('Article archived');
+    setPendingAction('');
+  };
+
+  const handleQuickPublish = async () => {
+    await persist('published');
+  };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
+    <div className="max-w-6xl mx-auto space-y-6">
+      <div className="cms-page-header">
+        <div className="flex items-start gap-3">
           <button
             onClick={() => router.push('/cms/dashboard/articles')}
-            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="cms-icon-button mt-1"
+            aria-label="Back to articles"
           >
             <HiArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold">{article.isExternal ? 'Edit Link' : 'Edit Article'}</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{article.slug}</p>
+            <p className="cms-eyebrow">{isExternal ? 'External article link' : 'Internal article'}</p>
+            <h1 className="cms-page-title">{isExternal ? 'Edit external link' : 'Edit article'}</h1>
+            <p className="cms-page-subtitle">
+              {isExternal
+                ? 'Manage the portfolio metadata for articles published on other platforms.'
+                : 'Update content, metadata, and publishing state from a single page.'}
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            onClick={() => persist('draft')}
+            disabled={!!pendingAction}
+            className="cms-secondary-btn"
           >
-            <HiSave className="w-4 h-4" />
-            {saving ? 'Saving...' : 'Save'}
+            <HiOutlineSave className="w-4 h-4" />
+            {pendingAction === 'save' ? 'Saving...' : 'Save Draft'}
+          </button>
+          <button
+            onClick={handleQuickPublish}
+            disabled={!!pendingAction}
+            className="cms-primary-btn"
+          >
+            <HiOutlineGlobeAlt className="w-4 h-4" />
+            {pendingAction === 'publish' ? 'Publishing...' : 'Publish'}
+          </button>
+          <button
+            onClick={handleArchive}
+            disabled={!!pendingAction}
+            className="cms-danger-btn"
+          >
+            <HiOutlineArchive className="w-4 h-4" />
+            {pendingAction === 'archive' ? 'Archiving...' : 'Archive'}
           </button>
         </div>
       </div>
 
-      {message && (
-        <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
-          {message}
-        </div>
-      )}
+      {message ? <div className="cms-toast">{message}</div> : null}
 
-      {/* Tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-gray-200 dark:border-gray-800">
-        <button
-          onClick={() => setActiveTab('content')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 ${activeTab === 'content' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-        >
-          Content
-        </button>
-        <button
-          onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2 text-sm font-medium border-b-2 ${activeTab === 'settings' ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-        >
-          Settings
-        </button>
-      </div>
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.75fr)_minmax(320px,0.9fr)]">
+        <section className="cms-card p-6 space-y-5">
+          <div className="space-y-2">
+            <label className="cms-label">Title</label>
+            <input
+              value={form.title}
+              onChange={(event) => updateField('title', event.target.value)}
+              className="cms-input"
+            />
+          </div>
 
-      {/* Content Tab */}
-      {activeTab === 'content' && (
-        <div className="space-y-6">
-          {!article.isExternal ? (
-            <ArticleEditor initialBlocks={blocks} onChange={handleBlocksChange} />
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="cms-label">Slug</label>
+              <input
+                value={form.slug}
+                onChange={(event) => updateField('slug', event.target.value)}
+                className="cms-input"
+                disabled={isExternal}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="cms-label">Category</label>
+              <input
+                value={form.category}
+                onChange={(event) => updateField('category', event.target.value)}
+                className="cms-input"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="cms-label">Excerpt</label>
+            <textarea
+              value={form.excerpt}
+              onChange={(event) => updateField('excerpt', event.target.value)}
+              rows={4}
+              className="cms-input min-h-28"
+            />
+          </div>
+
+          {isExternal ? (
+            <div className="cms-inline-note">
+              External links do not use internal article body content. Visitors open the original publication URL from portfolio listings.
+            </div>
           ) : (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-              <p className="text-yellow-800 dark:text-yellow-200">
-                This is an external link article. It does not have custom content.
-                The article redirects to: <a href={article.externalLink} target="_blank" rel="noopener noreferrer" className="underline font-medium">{article.externalLink}</a>
-              </p>
+            <div className="space-y-2">
+              <label className="cms-label">Article body</label>
+              <BlockNoteEditor
+                initialContent={normalizedContent}
+                onChange={setEditorDocument}
+              />
             </div>
           )}
-        </div>
-      )}
+        </section>
 
-      {/* Settings Tab */}
-      {activeTab === 'settings' && (
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <aside className="space-y-6">
+          <section className="cms-card p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
+              <p className="cms-section-title">Publishing</p>
+              <p className="cms-muted">Current state: <span className="capitalize">{form.status}</span></p>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Slug</label>
-              <input value={article.slug} disabled className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 bg-gray-50 dark:bg-gray-950" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
-              <input value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Article Type</label>
-              <input value={articleType} onChange={(e) => setArticleType(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Reading Time (min)</label>
-              <input type="number" value={readingTime} onChange={(e) => setReadingTime(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Publication</label>
-              <input value={publication} onChange={(e) => setPublication(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700">
+            <div className="space-y-2">
+              <label className="cms-label">Status</label>
+              <select
+                value={form.status}
+                onChange={(event) => updateField('status', event.target.value)}
+                className="cms-input"
+              >
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
                 <option value="archived">Archived</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Featured Image URL</label>
-              <input value={image} onChange={(e) => setImage(e.target.value)} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
+          </section>
+
+          <section className="cms-card p-6 space-y-4">
+            <p className="cms-section-title">Metadata</p>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <label className="cms-label">Author</label>
+                <input
+                  value={form.author}
+                  onChange={(event) => updateField('author', event.target.value)}
+                  className="cms-input"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Publication</label>
+                <input
+                  value={form.publication}
+                  onChange={(event) => updateField('publication', event.target.value)}
+                  className="cms-input"
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="cms-label">Portfolio type</label>
+                  <select
+                    value={form.type}
+                    onChange={(event) => updateField('type', event.target.value)}
+                    className="cms-input"
+                  >
+                    <option value="journalism">Journalism</option>
+                    <option value="content-writing">Content Writing</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="cms-label">Reading time</label>
+                  <input
+                    type="number"
+                    value={form.readingTime}
+                    onChange={(event) => updateField('readingTime', event.target.value)}
+                    className="cms-input"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Tags</label>
+                <input
+                  value={form.tagsText}
+                  onChange={(event) => updateField('tagsText', event.target.value)}
+                  className="cms-input"
+                />
+                <p className="cms-help-text">Use commas to separate tags.</p>
+              </div>
+              {isExternal ? (
+                <div className="space-y-2">
+                  <label className="cms-label">External URL</label>
+                  <input
+                    value={form.externalLink}
+                    onChange={(event) => updateField('externalLink', event.target.value)}
+                    className="cms-input"
+                  />
+                </div>
+              ) : null}
             </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Excerpt</label>
-            <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={4} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-          </div>
-        </div>
-      )}
+          </section>
+
+          <section className="cms-card p-6 space-y-4">
+            <p className="cms-section-title">Cover image</p>
+            <div className="flex flex-wrap gap-3">
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                className="cms-secondary-btn"
+              >
+                <HiOutlineUpload className="w-4 h-4" />
+                Upload to R2
+              </button>
+            </div>
+            <input
+              value={form.image}
+              onChange={(event) => updateField('image', event.target.value)}
+              className="cms-input"
+            />
+            {form.image ? (
+              <img
+                src={form.image}
+                alt=""
+                className="w-full h-48 rounded-2xl object-cover border border-[var(--cms-border)]"
+              />
+            ) : null}
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }

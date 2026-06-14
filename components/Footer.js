@@ -1,14 +1,57 @@
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiMail, HiLocationMarker, HiExternalLink, HiPhone, HiHeart, HiDownload, HiArrowUp } from 'react-icons/hi';
-import { FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { HiMail, HiLocationMarker, HiHeart, HiDownload, HiArrowUp } from 'react-icons/hi';
+import * as PhosphorIcons from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const Footer = () => {
+const DEFAULT_CV_PATH = '/Urmi_Chakraborty_CV.pdf';
+const DEFAULT_PORTFOLIO_PATH = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
+
+const FALLBACK_SOCIALS = [
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183',
+    icon: 'LinkedinLogo',
+    color: 'hover:text-blue-600 dark:hover:text-blue-400',
+  },
+  {
+    label: 'Muckrack',
+    href: 'https://muckrack.com/urmi-chakraborty-1',
+    icon: 'Globe',
+    color: 'hover:text-green-600 dark:hover:text-green-400',
+  },
+];
+
+const Footer = ({ resources = [], contactInfo = [] }) => {
   const currentYear = new Date().getFullYear();
   const [showBackToTop, setShowBackToTop] = useState(false);
+
+  const cvResource = resources.find(
+    (r) => r.title?.toLowerCase() === 'cv' && r.filePath
+  );
+  const portfolioPdfResource = resources.find(
+    (r) => r.title?.toLowerCase() === 'portfolio-pdf' && r.filePath
+  );
+
+  const dynamicSocialLinks = contactInfo.filter(
+    (c) =>
+      c.type === 'social' ||
+      c.label?.toLowerCase() === 'linkedin' ||
+      c.label?.toLowerCase() === 'muckrack'
+  );
+
+  const socialLinks =
+    dynamicSocialLinks.length > 0
+      ? dynamicSocialLinks.map((link) => ({
+          ...link,
+          color:
+            link.label?.toLowerCase() === 'linkedin'
+              ? 'hover:text-blue-600 dark:hover:text-blue-400'
+              : 'hover:text-green-600 dark:hover:text-green-400',
+        }))
+      : FALLBACK_SOCIALS;
 
   // Show back to top button when user scrolls down
   useEffect(() => {
@@ -27,24 +70,30 @@ const Footer = () => {
     });
   };
 
-  const downloadCV = () => {
+  const downloadFile = (url, fallbackFilename) => {
+    if (!url) return;
     const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_CV.pdf';
-    link.download = 'Urmi_Chakraborty_CV.pdf';
+    link.href = url;
+    link.download = fallbackFilename;
     link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
+  const downloadCV = () => {
+    downloadFile(
+      cvResource?.filePath || DEFAULT_CV_PATH,
+      'Urmi_Chakraborty_CV.pdf'
+    );
+  };
+
   const downloadPortfolio = () => {
-    const link = document.createElement('a');
-    link.href = '/Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
-    link.download = 'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadFile(
+      portfolioPdfResource?.filePath || DEFAULT_PORTFOLIO_PATH,
+      'Urmi_Chakraborty_Portfolio_Content_Writing_Samples.pdf'
+    );
   };
 
   const navigationLinks = [
@@ -70,22 +119,7 @@ const Footer = () => {
     { name: 'View Work Samples', href: '#work' }
   ];
 
-  const socialLinks = [
-    {
-      name: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/urmi-chakraborty-809678183',
-      icon: FaLinkedin,
-      color: 'hover:text-blue-600 dark:hover:text-blue-400'
-    },
-    {
-      name: 'Muckrack',
-      href: 'https://muckrack.com/urmi-chakraborty-1',
-      icon: HiExternalLink,
-      color: 'hover:text-green-600 dark:hover:text-green-400'
-    }
-  ];
-
-  const contactInfo = [
+  const footerContactInfo = [
     {
       icon: HiMail,
       text: 'urmi24112001@gmail.com',
@@ -136,7 +170,7 @@ const Footer = () => {
               
               {/* Contact Info */}
               <div className="space-y-2.5 md:space-y-3 mb-4 md:mb-6">
-                {contactInfo.map((contact, index) => {
+                {footerContactInfo.map((contact, index) => {
                   const IconComponent = contact.icon;
                   return (
                     <motion.div
@@ -166,10 +200,10 @@ const Footer = () => {
               {/* Social Links */}
               <div className="flex gap-3 md:gap-4">
                 {socialLinks.map((social, index) => {
-                  const IconComponent = social.icon;
+                  const IconComponent = PhosphorIcons[social.icon] || PhosphorIcons.Globe;
                   return (
                     <motion.a
-                      key={social.name}
+                      key={social.label || social.name}
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"

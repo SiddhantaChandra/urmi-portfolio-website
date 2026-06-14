@@ -1,31 +1,98 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { authClient } from '@/lib/auth/client';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth/client';
 import {
-  getArticles, createArticle, updateArticle, deleteArticle, publishArticle, archiveArticle,
+  archiveArticle,
+  createArticle,
+  deleteArticle,
+  getArticles,
+  normalizeLegacyArticleContent,
+  publishArticle,
+  updateArticle,
 } from '@/app/actions/db';
-import { uploadToR2, deleteFromR2 } from '@/app/actions/r2';
-import { HiPencil, HiEye, HiLink, HiDocumentText, HiPlus, HiX } from 'react-icons/hi';
+import { deleteFromR2, uploadToR2 } from '@/app/actions/r2';
+import {
+  HiLink,
+  HiOutlineAdjustments,
+  HiOutlineDocumentAdd,
+  HiOutlineExternalLink,
+  HiOutlinePencilAlt,
+  HiOutlineSave,
+  HiOutlineSearch,
+  HiOutlineTrash,
+  HiOutlineUpload,
+  HiOutlineViewGrid,
+  HiX,
+} from 'react-icons/hi';
 
 export const dynamic = 'force-dynamic';
 
+const emptyForm = {
+  id: '',
+  title: '',
+  slug: '',
+  excerpt: '',
+  image: '',
+  category: '',
+  tagsText: '',
+  type: 'journalism',
+  articleType: 'External Link',
+  readingTime: '',
+  author: 'Urmi Chakraborty',
+  publication: '',
+  status: 'draft',
+  externalLink: '',
+  isExternal: true,
+};
+
+const sortOptions = [
+  { value: 'updated-desc', label: 'Recently updated' },
+  { value: 'created-desc', label: 'Newest created' },
+  { value: 'title-asc', label: 'Title A-Z' },
+  { value: 'status-asc', label: 'Status' },
+  { value: 'kind-asc', label: 'Internal first' },
+];
+
+function compareArticles(left, right, sortValue) {
+  switch (sortValue) {
+    case 'created-desc':
+      return new Date(right.createdAt) - new Date(left.createdAt);
+    case 'title-asc':
+      return left.title.localeCompare(right.title);
+    case 'status-asc':
+      return left.status.localeCompare(right.status) || left.title.localeCompare(right.title);
+    case 'kind-asc':
+      return Number(left.isExternal) - Number(right.isExternal) || left.title.localeCompare(right.title);
+    case 'updated-desc':
+    default:
+      return new Date(right.updatedAt) - new Date(left.updatedAt);
+  }
+}
+
+function StatsCard({ label, value, hint }) {
+  return (
+    <div className="cms-card p-5">
+      <p className="cms-muted uppercase tracking-[0.18em] text-[11px]">{label}</p>
+      <p className="text-3xl font-semibold text-[var(--cms-ink)] mt-3">{value}</p>
+      <p className="cms-help-text mt-2">{hint}</p>
+    </div>
+  );
+}
+
 export default function EditArticlesPage() {
   const router = useRouter();
+  const imageInputRef = useRef(null);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
-  const [showForm, setShowForm] = useState(false);
-  const [formMode, setFormMode] = useState(null); // 'custom' | 'link' | null
-  const [editingId, setEditingId] = useState(null);
-  const imageInputRef = useRef(null);
-
-  const [form, setForm] = useState({
-    title: '', slug: '', excerpt: '', image: '', category: '', type: 'journalism',
-    articleType: 'Published Article', readingTime: '', author: 'Urmi Chakraborty',
-    isExternal: false, externalLink: '', publication: '', status: 'draft',
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [sortValue, setSortValue] = useState('updated-desc');
+  const [showModal, setShowModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     async function load() {
@@ -34,281 +101,485 @@ export default function EditArticlesPage() {
         router.push('/');
         return;
       }
-      const arts = await getArticles();
-      setArticles(arts);
+
+      const normalization = await normalizeLegacyArticleContent();
+      const loadedArticles = await getArticles();
+      setArticles(loadedArticles);
       setLoading(false);
+
+      if (normalization.success && normalization.count) {
+        setMessage(`Normalized ${normalization.count} legacy article bodies.`);
+      }
     }
+
     load();
   }, [router]);
 
-  const showMessage = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(''), 3000);
+  const showMessage = (next) => {
+    setMessage(next);
+    window.setTimeout(() => setMessage(''), 3000);
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('prefix', 'articles/');
-    const res = await uploadToR2(fd);
-    if (res.success) {
-      if (form.image) {
-        await deleteFromR2(form.image);
-      }
-      setForm(prev => ({ ...prev, image: res.filePath }));
-      showMessage('Image uploaded to R2');
-    } else {
-      showMessage('Upload failed: ' + res.error);
-    }
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = {
-      ...form,
-      readingTime: form.readingTime ? parseInt(form.readingTime) : null,
-      isExternal: form.isExternal === true || form.isExternal === 'true',
-    };
-    if (editingId) {
-      const res = await updateArticle(editingId, data);
-      if (res.success) {
-        setArticles(articles.map(a => a.id === editingId ? res.data : a));
-        setEditingId(null);
-        setShowForm(false);
-        setFormMode(null);
-        resetForm();
-        showMessage('Article updated');
-      }
-    } else {
-      const res = await createArticle(data);
-      if (res.success) {
-        setArticles([...articles, res.data]);
-        setShowForm(false);
-        setFormMode(null);
-        resetForm();
-        showMessage('Article created');
-      }
-    }
+  const openExternalCreate = () => {
+    setForm(emptyForm);
+    setShowModal(true);
   };
 
-  const resetForm = () => {
+  const openMetadataEditor = (article) => {
     setForm({
-      title: '', slug: '', excerpt: '', image: '', category: '', type: 'journalism',
-      articleType: 'Published Article', readingTime: '', author: 'Urmi Chakraborty',
-      isExternal: false, externalLink: '', publication: '', status: 'draft',
+      id: article.id,
+      title: article.title || '',
+      slug: article.slug || '',
+      excerpt: article.excerpt || '',
+      image: article.image || '',
+      category: article.category || '',
+      tagsText: article.tagsText || '',
+      type: article.type || 'journalism',
+      articleType: article.articleType || (article.isExternal ? 'External Link' : 'Internal Article'),
+      readingTime: article.readingTime ? String(article.readingTime) : '',
+      author: article.author || 'Urmi Chakraborty',
+      publication: article.publication || '',
+      status: article.status || 'draft',
+      externalLink: article.externalLink || '',
+      isExternal: article.isExternal,
     });
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setForm(emptyForm);
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const payload = new FormData();
+    payload.append('file', file);
+    payload.append('prefix', 'articles/');
+    const result = await uploadToR2(payload);
+
+    if (!result.success) {
+      showMessage(result.error || 'Upload failed');
+      return;
+    }
+
+    if (form.image) {
+      await deleteFromR2(form.image);
+    }
+
+    updateField('image', result.filePath);
+    showMessage('Image uploaded');
+  };
+
+  const handleMetadataSave = async () => {
+    setSaving(true);
+    const payload = {
+      ...form,
+      tags: form.tagsText,
+    };
+
+    const result = form.id
+      ? await updateArticle(form.id, payload)
+      : await createArticle(payload);
+
+    setSaving(false);
+
+    if (!result.success) {
+      showMessage(result.error || 'Failed to save article');
+      return;
+    }
+
+    setArticles((current) => {
+      if (form.id) {
+        return current.map((article) => (article.id === form.id ? result.data : article));
+      }
+
+      return [result.data, ...current];
+    });
+
+    closeModal();
+    showMessage(form.id ? 'Metadata updated' : 'External link created');
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this article?')) return;
-    const res = await deleteArticle(id);
-    if (res.success) {
-      setArticles(articles.filter(a => a.id !== id));
-      showMessage('Article deleted');
+    const result = await deleteArticle(id);
+    if (!result.success) {
+      showMessage(result.error || 'Failed to delete article');
+      return;
     }
+
+    setArticles((current) => current.filter((article) => article.id !== id));
+    showMessage('Article deleted');
   };
 
   const handlePublish = async (id) => {
-    const res = await publishArticle(id);
-    if (res.success) {
-      setArticles(articles.map(a => a.id === id ? { ...a, status: 'published' } : a));
-      showMessage('Article published');
+    const result = await publishArticle(id);
+    if (!result.success) {
+      showMessage(result.error || 'Failed to publish article');
+      return;
     }
+
+    setArticles((current) => current.map((article) => (article.id === id ? { ...article, ...result.data } : article)));
+    showMessage('Article published');
   };
 
   const handleArchive = async (id) => {
-    const res = await archiveArticle(id);
-    if (res.success) {
-      setArticles(articles.map(a => a.id === id ? { ...a, status: 'archived' } : a));
-      showMessage('Article archived');
+    const result = await archiveArticle(id);
+    if (!result.success) {
+      showMessage(result.error || 'Failed to archive article');
+      return;
     }
+
+    setArticles((current) => current.map((article) => (article.id === id ? { ...article, ...result.data } : article)));
+    showMessage('Article archived');
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'published': return 'bg-green-100 text-green-700';
-      case 'draft': return 'bg-yellow-100 text-yellow-700';
-      case 'archived': return 'bg-gray-100 text-gray-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  };
+  const filteredArticles = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
 
-  const getArticleTypeBadge = (article) => {
-    if (article.isExternal) {
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-700">
-          <HiLink className="w-3 h-3" /> Link
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-purple-100 text-purple-700">
-        <HiDocumentText className="w-3 h-3" /> Article
-      </span>
-    );
-  };
+    return articles
+      .filter((article) => {
+        const matchesType =
+          typeFilter === 'all' ||
+          (typeFilter === 'internal' && !article.isExternal) ||
+          (typeFilter === 'external' && article.isExternal);
 
-  const startCreate = (mode) => {
-    setFormMode(mode);
-    setEditingId(null);
-    setShowForm(true);
-    setForm({
-      title: '', slug: '', excerpt: '', image: '', category: '', type: 'journalism',
-      articleType: 'Published Article', readingTime: '', author: 'Urmi Chakraborty',
-      isExternal: mode === 'link',
-      externalLink: '', publication: '', status: 'draft',
-    });
-  };
+        if (!matchesType) return false;
+        if (!query) return true;
+
+        const haystack = [
+          article.title,
+          article.excerpt,
+          article.category,
+          article.publication,
+          article.externalLink,
+          article.tagsText,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        return haystack.includes(query);
+      })
+      .sort((left, right) => compareArticles(left, right, sortValue));
+  }, [articles, searchTerm, sortValue, typeFilter]);
+
+  const stats = useMemo(() => {
+    const internal = articles.filter((article) => !article.isExternal).length;
+    const external = articles.filter((article) => article.isExternal).length;
+    const drafts = articles.filter((article) => article.status === 'draft').length;
+    const published = articles.filter((article) => article.status === 'published').length;
+
+    return {
+      total: articles.length,
+      internal,
+      external,
+      drafts,
+      published,
+    };
+  }, [articles]);
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-6"></div>
-        <div className="animate-pulse h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div className="space-y-6">
+        <div className="cms-skeleton h-28" />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="cms-skeleton h-28" />
+          ))}
+        </div>
+        <div className="cms-skeleton h-96" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Articles</h1>
-        <div className="flex items-center gap-2">
-          {!showForm && (
-            <>
-              <button
-                onClick={() => router.push('/cms/dashboard/articles/new')}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm"
-              >
-                <HiDocumentText className="w-4 h-4" /> New Article
-              </button>
-              <button
-                onClick={() => startCreate('link')}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-              >
-                <HiLink className="w-4 h-4" /> Add Link
-              </button>
-            </>
-          )}
+    <div className="space-y-6">
+      <div className="cms-page-header">
+        <div>
+          <p className="cms-eyebrow">Articles desk</p>
+          <h1 className="cms-page-title">Manage articles and external links</h1>
+          <p className="cms-page-subtitle">
+            Internal articles publish on this site. External links stay as portfolio references to third-party publications.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => router.push('/cms/dashboard/articles/new')}
+            className="cms-primary-btn"
+          >
+            <HiOutlineDocumentAdd className="w-4 h-4" />
+            New Article
+          </button>
+          <button onClick={openExternalCreate} className="cms-secondary-btn">
+            <HiLink className="w-4 h-4" />
+            Add Link
+          </button>
         </div>
       </div>
 
-      {message && (
-        <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
-          {message}
-        </div>
-      )}
+      {message ? <div className="cms-toast">{message}</div> : null}
 
-      {/* Creation Modal */}
-      {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">
-                {editingId ? 'Edit' : formMode === 'link' ? 'Add Link' : 'New Article'}
-              </h3>
-              <button onClick={() => { setShowForm(false); setFormMode(null); resetForm(); }} className="p-1 text-gray-400 hover:text-gray-600">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <StatsCard label="Total" value={stats.total} hint="All managed entries" />
+        <StatsCard label="Internal" value={stats.internal} hint="Published on this site" />
+        <StatsCard label="External" value={stats.external} hint="Outbound portfolio links" />
+        <StatsCard label="Drafts" value={stats.drafts} hint="Not visible publicly" />
+        <StatsCard label="Published" value={stats.published} hint="Visible in the public portfolio" />
+      </div>
+
+      <section className="cms-card p-5 space-y-5">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative flex-1 max-w-xl">
+            <HiOutlineSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--cms-muted)] w-5 h-5" />
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Search title, excerpt, category, tags or URL"
+              className="cms-input"
+              style={{ paddingLeft: '3.25rem' }}
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <div className="cms-filter-group">
+              <button
+                onClick={() => setTypeFilter('all')}
+                className={typeFilter === 'all' ? 'cms-filter-active' : 'cms-filter-button'}
+              >
+                <HiOutlineViewGrid className="w-4 h-4" />
+                All
+              </button>
+              <button
+                onClick={() => setTypeFilter('internal')}
+                className={typeFilter === 'internal' ? 'cms-filter-active' : 'cms-filter-button'}
+              >
+                Internal
+              </button>
+              <button
+                onClick={() => setTypeFilter('external')}
+                className={typeFilter === 'external' ? 'cms-filter-active' : 'cms-filter-button'}
+              >
+                External
+              </button>
+            </div>
+
+            <div className="relative min-w-52">
+              <HiOutlineAdjustments className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--cms-muted)] w-4 h-4" />
+              <select
+                value={sortValue}
+                onChange={(event) => setSortValue(event.target.value)}
+                className="cms-input"
+                style={{ paddingLeft: '3rem' }}
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {filteredArticles.map((article) => (
+            <article key={article.id} className="cms-list-card">
+              <div className="flex items-start gap-4 min-w-0">
+                {article.image ? (
+                  <img
+                    src={article.image}
+                    alt=""
+                    className="w-16 h-16 rounded-2xl object-cover border border-[var(--cms-border)] shrink-0"
+                  />
+                ) : (
+                  <div className="cms-list-art-placeholder shrink-0">
+                    {article.isExternal ? <HiOutlineExternalLink className="w-5 h-5" /> : <HiOutlineDocumentAdd className="w-5 h-5" />}
+                  </div>
+                )}
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span className={article.isExternal ? 'cms-pill-external' : 'cms-pill-internal'}>
+                      {article.isExternal ? 'External' : 'Internal'}
+                    </span>
+                    <span className="cms-pill-status capitalize">{article.status}</span>
+                    {article.category ? <span className="cms-pill-neutral">{article.category}</span> : null}
+                    {article.tagsText ? <span className="cms-pill-neutral">{article.tagsText}</span> : null}
+                  </div>
+                  <h3 className="text-lg font-semibold text-[var(--cms-ink)] truncate">{article.title}</h3>
+                  <p className="cms-muted mt-1 line-clamp-2">{article.excerpt}</p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-[var(--cms-muted)]">
+                    <span>{article.publication || 'No publication label'}</span>
+                    <span>{article.type}</span>
+                    <span>Updated {new Date(article.updatedAt).toLocaleDateString()}</span>
+                    {article.isExternal && article.externalLink ? <span className="truncate">{article.externalLink}</span> : null}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {!article.isExternal ? (
+                  <button
+                    onClick={() => router.push(`/cms/dashboard/articles/${article.id}`)}
+                    className="cms-secondary-btn"
+                  >
+                    <HiOutlinePencilAlt className="w-4 h-4" />
+                    Edit Content
+                  </button>
+                ) : null}
+                <button onClick={() => openMetadataEditor(article)} className="cms-secondary-btn">
+                  <HiOutlineSave className="w-4 h-4" />
+                  Edit Meta
+                </button>
+                {article.status !== 'published' ? (
+                  <button onClick={() => handlePublish(article.id)} className="cms-primary-btn">
+                    Publish
+                  </button>
+                ) : (
+                  <button onClick={() => handleArchive(article.id)} className="cms-secondary-btn">
+                    Archive
+                  </button>
+                )}
+                <button onClick={() => handleDelete(article.id)} className="cms-danger-btn">
+                  <HiOutlineTrash className="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+            </article>
+          ))}
+
+          {!filteredArticles.length ? (
+            <div className="cms-empty-state">
+              <h3 className="text-xl font-semibold text-[var(--cms-ink)]">No articles match the current view</h3>
+              <p className="cms-muted">
+                Try a different search term, switch the type filter, or create a new internal article or external link.
+              </p>
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      {showModal ? (
+        <div className="fixed inset-0 z-50 bg-black/35 backdrop-blur-sm p-4 flex items-center justify-center">
+          <div className="cms-modal">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="cms-eyebrow">{form.isExternal ? 'External link' : 'Internal metadata'}</p>
+                <h2 className="text-2xl font-semibold text-[var(--cms-ink)]">
+                  {form.id ? 'Edit article metadata' : 'Add external article link'}
+                </h2>
+              </div>
+              <button onClick={closeModal} className="cms-icon-button">
                 <HiX className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div><label className="block text-sm font-medium mb-1">Title</label><input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-                <div><label className="block text-sm font-medium mb-1">Slug</label><input value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-                <div><label className="block text-sm font-medium mb-1">Category</label><input value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-                <div><label className="block text-sm font-medium mb-1">Type</label>
-                  <select value={form.type} onChange={e => setForm({...form, type: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required>
-                    <option value="journalism">Journalism</option>
-                    <option value="content-writing">Content Writing</option>
-                  </select>
-                </div>
-                <div><label className="block text-sm font-medium mb-1">Article Type</label><input value={form.articleType} onChange={e => setForm({...form, articleType: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-                <div><label className="block text-sm font-medium mb-1">Reading Time (min)</label><input type="number" value={form.readingTime} onChange={e => setForm({...form, readingTime: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" /></div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Featured Image</label>
-                  <div className="flex items-center gap-3">
-                    <input type="file" accept="image/*" ref={imageInputRef} onChange={handleImageUpload} className="hidden" />
-                    <button type="button" onClick={() => imageInputRef.current?.click()} className="px-3 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700">Upload to R2</button>
-                    <input value={form.image} onChange={e => setForm({...form, image: e.target.value})} placeholder="Or paste image URL" className="flex-1 px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" />
-                  </div>
-                  {form.image && <img src={form.image} alt="" className="mt-2 w-20 h-20 object-cover rounded" />}
-                </div>
-                <div><label className="block text-sm font-medium mb-1">Publication</label><input value={form.publication} onChange={e => setForm({...form, publication: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" /></div>
-                <div><label className="block text-sm font-medium mb-1">Status</label>
-                  <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required>
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                    <option value="archived">Archived</option>
-                  </select>
-                </div>
-                {formMode === 'link' && (
-                  <div className="col-span-2">
-                    <label className="block text-sm font-medium mb-1">External Link</label>
-                    <input value={form.externalLink} onChange={e => setForm({...form, externalLink: e.target.value})} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required />
-                  </div>
-                )}
+
+            <div className="grid gap-4 md:grid-cols-2 mt-6">
+              <div className="space-y-2 md:col-span-2">
+                <label className="cms-label">Title</label>
+                <input value={form.title} onChange={(event) => updateField('title', event.target.value)} className="cms-input" />
               </div>
-              <div><label className="block text-sm font-medium mb-1">Excerpt</label><textarea value={form.excerpt} onChange={e => setForm({...form, excerpt: e.target.value})} rows={3} className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700" required /></div>
-              <div className="flex gap-2">
-                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{editingId ? 'Update' : 'Add'}</button>
-                <button type="button" onClick={() => { setShowForm(false); setFormMode(null); resetForm(); }} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Cancel</button>
+              <div className="space-y-2">
+                <label className="cms-label">Slug</label>
+                <input
+                  value={form.slug}
+                  onChange={(event) => updateField('slug', event.target.value)}
+                  className="cms-input"
+                  disabled={form.isExternal}
+                />
               </div>
-            </form>
+              <div className="space-y-2">
+                <label className="cms-label">Category</label>
+                <input value={form.category} onChange={(event) => updateField('category', event.target.value)} className="cms-input" />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="cms-label">Excerpt</label>
+                <textarea
+                  value={form.excerpt}
+                  onChange={(event) => updateField('excerpt', event.target.value)}
+                  rows={4}
+                  className="cms-input min-h-24"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Author</label>
+                <input value={form.author} onChange={(event) => updateField('author', event.target.value)} className="cms-input" />
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Publication</label>
+                <input value={form.publication} onChange={(event) => updateField('publication', event.target.value)} className="cms-input" />
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Portfolio type</label>
+                <select value={form.type} onChange={(event) => updateField('type', event.target.value)} className="cms-input">
+                  <option value="journalism">Journalism</option>
+                  <option value="content-writing">Content Writing</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Reading time</label>
+                <input
+                  type="number"
+                  value={form.readingTime}
+                  onChange={(event) => updateField('readingTime', event.target.value)}
+                  className="cms-input"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="cms-label">Tags</label>
+                <input value={form.tagsText} onChange={(event) => updateField('tagsText', event.target.value)} className="cms-input" />
+              </div>
+              <div className="space-y-2">
+                <label className="cms-label">Status</label>
+                <select value={form.status} onChange={(event) => updateField('status', event.target.value)} className="cms-input">
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+              {form.isExternal ? (
+                <div className="space-y-2">
+                  <label className="cms-label">External URL</label>
+                  <input value={form.externalLink} onChange={(event) => updateField('externalLink', event.target.value)} className="cms-input" />
+                </div>
+              ) : null}
+              <div className="space-y-2 md:col-span-2">
+                <label className="cms-label">Cover image</label>
+                <div className="flex flex-wrap gap-3">
+                  <input ref={imageInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  <button type="button" onClick={() => imageInputRef.current?.click()} className="cms-secondary-btn">
+                    <HiOutlineUpload className="w-4 h-4" />
+                    Upload to R2
+                  </button>
+                </div>
+                <input value={form.image} onChange={(event) => updateField('image', event.target.value)} className="cms-input mt-3" />
+                {form.image ? (
+                  <img
+                    src={form.image}
+                    alt=""
+                    className="w-full h-44 rounded-2xl object-cover border border-[var(--cms-border)] mt-3"
+                  />
+                ) : null}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-8">
+              <button onClick={closeModal} className="cms-secondary-btn">Cancel</button>
+              <button onClick={handleMetadataSave} disabled={saving} className="cms-primary-btn">
+                {saving ? 'Saving...' : form.id ? 'Save Changes' : 'Create Link'}
+              </button>
+            </div>
           </div>
         </div>
-      )}
-
-      {/* Filters */}
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-sm text-gray-500 dark:text-gray-400">{articles.length} articles</span>
-        <span className="text-sm text-gray-300">|</span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {articles.filter(a => a.isExternal).length} links, {articles.filter(a => !a.isExternal).length} custom
-        </span>
-      </div>
-
-      {/* Article List */}
-      <div className="space-y-2">
-        {articles.map((article) => (
-          <div key={article.id} className="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
-            <div className="flex items-center gap-3 min-w-0">
-              {article.image ? (
-                <img src={article.image} alt="" className="w-12 h-12 object-cover rounded flex-shrink-0" />
-              ) : (
-                <div className="w-12 h-12 rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
-                  {article.isExternal ? <HiLink className="w-5 h-5 text-gray-400" /> : <HiDocumentText className="w-5 h-5 text-gray-400" />}
-                </div>
-              )}
-              <div className="min-w-0">
-                <h3 className="font-medium truncate">{article.title}</h3>
-                <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
-                  <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(article.status)}`}>{article.status}</span>
-                  {getArticleTypeBadge(article)}
-                  <span>{article.category}</span>
-                  <span>{article.type}</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {!article.isExternal && (
-                <button
-                  onClick={() => router.push(`/cms/dashboard/articles/${article.id}`)}
-                  className="flex items-center gap-1 px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded"
-                  title="Edit content"
-                >
-                  <HiPencil className="w-3 h-3" /> Content
-                </button>
-              )}
-              {article.status !== 'published' && <button onClick={() => handlePublish(article.id)} className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded">Publish</button>}
-              {article.status === 'published' && <button onClick={() => handleArchive(article.id)} className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded">Archive</button>}
-              <button onClick={() => { setEditingId(article.id); setForm({ ...article, readingTime: article.readingTime ? String(article.readingTime) : '', isExternal: article.isExternal }); setShowForm(true); }} className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">Edit</button>
-              <button onClick={() => handleDelete(article.id)} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
+      ) : null}
     </div>
   );
 }

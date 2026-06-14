@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { HiClock, HiUser, HiArrowLeft, HiShare, HiSparkles, HiEye, HiHome, HiChevronRight, HiDocumentText } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
@@ -8,6 +7,7 @@ import { cn } from '../../../utils/cn';
 import Image from 'next/image';
 import RecommendedArticles from '../../../components/RecommendedArticles';
 import ArticleFooter from '../../../components/ArticleFooter';
+import { renderInlineContent } from '@/lib/article-content';
 
 // Breadcrumb Component
 const Breadcrumb = ({ article }) => {
@@ -71,7 +71,7 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
           className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg font-sans"
         >
-          {content.text}
+          {renderInlineContent(content.inline, `paragraph-${index}`)}
         </motion.p>
       );
 
@@ -92,7 +92,7 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
         >
           <HeadingTag className={cn(headingClasses[content.level || 2], "font-sans")}>
-            {content.text}
+            {renderInlineContent(content.inline, `heading-${index}`)}
           </HeadingTag>
         </motion.div>
       );
@@ -140,20 +140,45 @@ const ContentBlock = ({ block, index }) => {
           <ListTag className={listClasses}>
             {(content.items || []).map((item, itemIndex) => (
               <motion.li 
-                key={itemIndex}
+                key={item.id || itemIndex}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: itemIndex * 0.1 }}
                 viewport={{ once: true }}
                 className="text-gray-700 dark:text-gray-300 leading-relaxed font-sans"
               >
-                {item}
+                {renderInlineContent(item.inline, `list-${index}-${itemIndex}`)}
               </motion.li>
             ))}
           </ListTag>
         </motion.div>
       );
     }
+
+    case 'table':
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15, delay: index * 0.01 }}
+          viewport={{ once: true }}
+          className="overflow-x-auto my-8"
+        >
+          <table className="min-w-full border border-card-border dark:border-card-border rounded-2xl overflow-hidden">
+            <tbody>
+              {(content.rows || []).map((row, rowIndex) => (
+                <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-card-bg dark:bg-card-bg-dark' : ''}>
+                  {row.map((cell, cellIndex) => (
+                    <td key={cellIndex} className="px-4 py-3 border border-card-border dark:border-card-border text-gray-700 dark:text-gray-300 align-top">
+                      {renderInlineContent(cell, `table-${index}-${rowIndex}-${cellIndex}`)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
+      );
 
     case 'quote':
       return (
@@ -164,7 +189,7 @@ const ContentBlock = ({ block, index }) => {
           viewport={{ once: true }}
           className="border-l-4 border-purple-600 dark:border-purple-400 pl-6 py-4 my-8 bg-purple-50/50 dark:bg-purple-900/20 rounded-r-lg backdrop-blur-sm italic text-lg text-gray-700 dark:text-gray-300 font-sans"
         >
-          {content.text}
+          {renderInlineContent(content.inline, `quote-${index}`)}
         </motion.blockquote>
       );
 
@@ -327,7 +352,7 @@ export default function ArticleClient({ article }) {
 
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <HiClock className="w-3 h-3 md:w-4 md:h-4" />
-            <span>{article.readingTime} min read</span>
+            <span>{article.readingTime || 1} min read</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <HiEye className="w-3 h-3 md:w-4 md:h-4" />

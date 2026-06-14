@@ -36,14 +36,14 @@ export default async function Home() {
       <ResizableNavbarWrapper />
       
       {/* Hero Section */}
-      <AceternityHero profile={profile} />
-      
+      <AceternityHero profile={profile} contactInfo={contactInfo} />
+
       {/* Other sections */}
       <AboutSection skills={skills} differentiators={differentiators} brands={brands} />
       <ExperienceSection experiences={experiences} />
       <WorkSection articles={articles} />
       <ContactSection contactInfo={contactInfo} resources={resources} />
-      <Footer />
+      <Footer resources={resources} contactInfo={contactInfo} />
     </main>
   );
 }

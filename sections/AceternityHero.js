@@ -2,13 +2,25 @@
 
 import { motion } from 'framer-motion';
 import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
+import * as PhosphorIcons from '@phosphor-icons/react';
 import { cn } from '../utils/cn';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 
-const AceternityHero = ({ profile }) => {
+const AceternityHero = ({ profile, contactInfo = [] }) => {
+  const socialLinks = contactInfo.filter(
+    (c) =>
+      c.type === 'social' ||
+      c.label?.toLowerCase() === 'linkedin' ||
+      c.label?.toLowerCase() === 'muckrack'
+  );
   const targetCount = profile?.articleCount || 2434;
-  const [articleCount, setArticleCount] = useState(Math.max(0, targetCount - 100));
+  const [displayCount, setDisplayCount] = useState(targetCount);
+
+  // Set initial animation value before browser paint to avoid a flash
+  useLayoutEffect(() => {
+    setDisplayCount(Math.max(0, targetCount - 100));
+  }, [targetCount]);
 
   // Animate article counter
   useEffect(() => {
@@ -27,7 +39,7 @@ const AceternityHero = ({ profile }) => {
         const easeOutCubic = 1 - Math.pow(1 - progress, 3);
         const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutCubic);
         
-        setArticleCount(currentValue);
+        setDisplayCount(currentValue);
         
         if (progress < 1) {
           requestAnimationFrame(animateCount);
@@ -117,7 +129,7 @@ const AceternityHero = ({ profile }) => {
               >
                 <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 px-2 py-1 sm:px-4 sm:py-2 lg:px-4 lg:py-2 rounded-full shadow-xl border border-neutral-bg dark:border-neutral-bg-dark">
                   <span className="text-xs sm:text-sm lg:text-base font-bold text-gray-900 dark:text-gray-900 whitespace-nowrap">
-                    {articleCount}+ Articles
+                    {displayCount}+ Articles
                   </span>
                 </div>
               </motion.div>
@@ -204,6 +216,37 @@ const AceternityHero = ({ profile }) => {
               <span><span className='hidden sm:inline'>View</span>{" "}Portfolio</span>
             </motion.button>
           </motion.div>
+
+          {/* Social Links */}
+          {socialLinks.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1, duration: 0.8 }}
+              className="flex flex-wrap justify-center gap-3 pt-2"
+            >
+              {socialLinks.map((link, index) => {
+                const IconComponent = PhosphorIcons[link.icon] || PhosphorIcons.Globe;
+                return (
+                  <motion.a
+                    key={link.id}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2 + index * 0.1, duration: 0.4 }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card-bg dark:bg-card-bg-dark border border-card-border dark:border-white/20 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-300 dark:hover:border-purple-400 shadow-md transition-colors"
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    <span className="text-sm font-medium">{link.label}</span>
+                  </motion.a>
+                );
+              })}
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
