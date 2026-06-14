@@ -56,7 +56,9 @@ npm install
 cp .env.example .env
 ```
 
-Required env vars: `DATABASE_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_ENDPOINT`, `R2_PUBLIC_URL`, `NEON_AUTH_URL`, `NEON_AUTH_COOKIE_SECRET`
+Required env vars: `DATABASE_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_ENDPOINT`, `R2_PUBLIC_URL`, `NEON_AUTH_BASE_URL` (or legacy `NEON_AUTH_URL`), `NEON_AUTH_COOKIE_SECRET`
+
+Optional debug env var: `NEON_AUTH_LOG_LEVEL` (`error`, `warn`, `info`, `debug`, `silent`)
 
 3. Run database migrations:
 
