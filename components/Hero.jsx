@@ -47,7 +47,7 @@ export default function Hero({ onOpenCollaboration }) {
           content.
         </p>
 
-        <div className="relative z-10 row-start-4 mt-36 self-start md:col-start-2 md:row-start-3 md:mt-0">
+        <div className="relative z-10 row-start-4 mt-36 self-stretch md:col-start-2 md:row-start-3 md:mt-0">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <button
               type="button"

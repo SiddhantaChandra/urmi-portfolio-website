@@ -22,12 +22,33 @@ body {
 }
 
 .instagram-stats {
+  /* Match the topics section's margin plus top padding at each breakpoint. */
+  --stats-cards-gap: 8rem;
   /* Occupy the existing gap without contributing to the hero grid's height. */
   position: absolute;
-  top: calc(100% + 1rem);
+  top: calc(50% + 1.375rem + var(--stats-cards-gap) / 2);
   left: 0;
+  transform: translateY(-50%);
   container-type: inline-size;
   width: min(100%, 25rem);
+}
+
+@media (min-width: 40rem) {
+  .instagram-stats {
+    --stats-cards-gap: 9rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .instagram-stats {
+    --stats-cards-gap: 7.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .instagram-stats {
+    --stats-cards-gap: 8.5rem;
+  }
 }
 
 .instagram-stats-values {
