@@ -18,7 +18,7 @@ export default function Hero({ onOpenCollaboration }) {
           物語の奥深さを、言葉と映像で紡ぐ。
         </p>
 
-        <div className="flex items-start gap-4 md:col-start-2 md:row-start-1 md:self-end">
+        <div className="row-start-2 flex items-start gap-4 md:col-start-2 md:row-start-1 md:self-end">
           <h1
             id="hero-title"
             className="font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] leading-[0.95] tracking-[-0.03em]"
@@ -33,7 +33,7 @@ export default function Hero({ onOpenCollaboration }) {
           </span>
         </div>
 
-        <p className="max-w-[34ch] font-serif-editorial text-xl leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
+        <p className="row-start-3 max-w-[34ch] font-serif-editorial text-xl leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
           Hey! I&apos;m Urmi, the creator behind{" "}
           <a
             href="https://www.instagram.com/uwummie"
@@ -47,7 +47,7 @@ export default function Hero({ onOpenCollaboration }) {
           content.
         </p>
 
-        <div className="relative z-10 row-start-4 mt-36 self-stretch md:col-start-2 md:row-start-3 md:mt-0">
+        <div className="relative z-10 row-start-4 self-stretch md:col-start-2 md:row-start-3">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <button
               type="button"
@@ -83,7 +83,7 @@ export default function Hero({ onOpenCollaboration }) {
             </dl>
           </figure>
         </div>
-        <div className="row-start-3 w-full max-w-[22rem] md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">
+        <div className="row-start-1 mb-36 w-full max-w-[22rem] md:mb-0 md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">
           <div className="hero-portrait-frame relative">
             <div className="hero-portrait relative aspect-[6/5] w-full max-w-[22rem] overflow-hidden bg-[#e9dfd0]">
               <Image

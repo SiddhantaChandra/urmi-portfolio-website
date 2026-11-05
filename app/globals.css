@@ -173,6 +173,7 @@ body {
 
 @media (min-width: 40rem) {
   .hero-sakura {
+    --portrait-left: max(2.5rem, (100vw - 32rem) / 2);
     --sakura-width: min(125vw, 54rem);
     --sakura-crop: calc(var(--sakura-width) * 0.14);
   }
