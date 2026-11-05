@@ -1,50 +1,20 @@
-import ResizableNavbarWrapper from '../components/ResizableNavbarWrapper';
-import AceternityHero from '../sections/AceternityHero';
-import AboutSection from '../sections/AboutSection';
-import ExperienceSection from '../sections/ExperienceSection';
-import WorkSection from '../sections/WorkSection';
-import ContactSection from '../sections/ContactSection';
-import Footer from '../components/Footer';
-import prisma from '@/lib/prisma';
+"use client";
 
-export default async function Home() {
-  const profile = await prisma.profile.findFirst();
-  const skills = await prisma.skill.findMany({ orderBy: { displayOrder: 'asc' } });
-  const differentiators = await prisma.differentiator.findMany({ orderBy: { displayOrder: 'asc' } });
-  const brands = await prisma.brand.findMany({ orderBy: { displayOrder: 'asc' } });
-  const experiences = await prisma.experience.findMany({
-    orderBy: { displayOrder: 'asc' },
-    include: {
-      achievements: { orderBy: { displayOrder: 'asc' } },
-      skills: { orderBy: { displayOrder: 'asc' } },
-    },
-  });
-  const contactInfo = await prisma.contactInfo.findMany({ orderBy: { displayOrder: 'asc' } });
-  const resources = await prisma.resource.findMany({ orderBy: { displayOrder: 'asc' } });
-  const articles = await prisma.article.findMany({
-    where: { status: 'published' },
-    orderBy: { displayOrder: 'asc' },
-    include: {
-      tags: {
-        include: { tag: true },
-      },
-    },
-  });
+import { useState } from "react";
+import CollaborationModal from "../components/CollaborationModal";
+import Hero from "../components/Hero";
+
+export default function Home() {
+  const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen font-sans bg-neutral-bg dark:bg-neutral-bg-dark transition-colors duration-300">
-      <ResizableNavbarWrapper />
-      
-      {/* Hero Section */}
-      <AceternityHero profile={profile} contactInfo={contactInfo} />
+    <main className="min-h-screen w-full relative flex flex-col bg-[#f8f5ee] text-[#1c1917]">
+      <Hero onOpenCollaboration={() => setIsCollaborationOpen(true)} />
 
-      {/* Other sections */}
-
-      <ExperienceSection experiences={experiences} />
-      <WorkSection articles={articles} />
-      <AboutSection skills={skills} differentiators={differentiators} brands={brands} />
-      <ContactSection contactInfo={contactInfo} resources={resources} />
-      <Footer resources={resources} contactInfo={contactInfo} />
+      <CollaborationModal
+        isOpen={isCollaborationOpen}
+        onClose={() => setIsCollaborationOpen(false)}
+      />
     </main>
   );
 }

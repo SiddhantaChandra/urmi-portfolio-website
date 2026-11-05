@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "ContactInfo" ALTER COLUMN "icon" DROP NOT NULL,
-ALTER COLUMN "type" DROP NOT NULL;
