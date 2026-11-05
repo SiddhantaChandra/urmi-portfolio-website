@@ -21,6 +21,57 @@ body {
   font-family: var(--font-kanji);
 }
 
+.instagram-stats {
+  /* Occupy the existing gap without contributing to the hero grid's height. */
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 0;
+  container-type: inline-size;
+  width: min(100%, 25rem);
+}
+
+.instagram-stats-values {
+  position: absolute;
+  inset: 22% 15% 21% 25%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  font-style: italic;
+}
+
+.instagram-stats-values::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  height: 82%;
+  border-left: 1px solid #3d3830;
+  transform: skewX(-22deg);
+}
+
+.instagram-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.6cqw;
+  white-space: nowrap;
+}
+
+.instagram-stat dt {
+  font-size: 3.7cqw;
+  line-height: 1.05;
+}
+
+.instagram-stat dd {
+  color: #a42e40;
+  font-family: var(--font-sans);
+  font-size: 8cqw;
+  font-style: normal;
+  font-weight: 600;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 0.95;
+}
+
 .noise {
   position: fixed;
   inset: 0;

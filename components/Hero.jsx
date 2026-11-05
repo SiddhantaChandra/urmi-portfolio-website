@@ -47,17 +47,43 @@ export default function Hero({ onOpenCollaboration }) {
           content.
         </p>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 self-start md:col-start-2 md:row-start-3">
-          <button
-            type="button"
-            onClick={onOpenCollaboration}
-            className="min-h-11 cursor-pointer bg-[#a42e40] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#842434] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a42e40]"
-          >
-            Work with me
-          </button>
-          <p className="text-sm text-[#695e52]">Reel + Story · $85</p>
+        <div className="relative z-10 row-start-4 mt-36 self-start md:col-start-2 md:row-start-3 md:mt-0">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <button
+              type="button"
+              onClick={onOpenCollaboration}
+              className="min-h-11 cursor-pointer bg-[#a42e40] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#842434] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a42e40]"
+            >
+              Work with me
+            </button>
+            <p className="text-sm text-[#695e52]">Reel + Story · $85</p>
+          </div>
+          <figure className="instagram-stats" aria-label="Instagram statistics">
+            <Image
+              src="/images/instagram stats.webp"
+              alt=""
+              width={800}
+              height={176}
+              sizes="(min-width: 1024px) 400px, (min-width: 768px) 44vw, (min-width: 448px) 400px, calc(100vw - 3rem)"
+              className="block h-auto w-full"
+            />
+            <dl className="instagram-stats-values font-serif-editorial">
+              <div className="instagram-stat">
+                <dt>Followers</dt>
+                <dd>
+                  24.8<span>K</span>
+                </dd>
+              </div>
+              <div className="instagram-stat">
+                <dt>Views / month</dt>
+                <dd>
+                  1.2<span>M</span>
+                </dd>
+              </div>
+            </dl>
+          </figure>
         </div>
-        <div className="w-full max-w-[22rem] md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">
+        <div className="row-start-3 w-full max-w-[22rem] md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">
           <div className="hero-portrait-frame relative">
             <div className="hero-portrait relative aspect-[6/5] w-full max-w-[22rem] overflow-hidden bg-[#e9dfd0]">
               <Image
