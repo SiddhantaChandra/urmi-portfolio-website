@@ -56,7 +56,6 @@ export default function Hero({ onOpenCollaboration }) {
             >
               Work with me
             </button>
-            <p className="text-sm text-[#695e52]">Reel + Story · $85</p>
           </div>
           <figure className="instagram-stats" aria-label="Instagram statistics">
             <Image

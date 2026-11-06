@@ -21,6 +21,23 @@ body {
   font-family: var(--font-kanji);
 }
 
+.hanafuda-title {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.hanafuda-title::after {
+  content: "";
+  display: block;
+  margin-top: -0.125rem;
+  height: 0.75rem;
+  background-color: #a42e40;
+  /* Keep the stroke's proportions and align its visible ink with the text. */
+  mask:
+    url("/images/brush_stroke_transparent.svg") -1.5px center / auto 100%
+    no-repeat;
+}
+
 .instagram-stats {
   /* Match the topics section's margin plus top padding at each breakpoint. */
   --stats-cards-gap: 8rem;

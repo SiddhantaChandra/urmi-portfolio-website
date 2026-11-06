@@ -35,7 +35,7 @@ export default function About() {
           {topics.map((topic) => (
             <article
               key={topic.id}
-              className="group relative flex flex-col overflow-hidden rounded-xs border-[5px] border-[#181513] bg-[#fbf9f4] shadow-[0_8px_24px_rgba(24,21,19,0.08)]"
+              className="group relative flex flex-col overflow-hidden rounded-xs border-[3px] border-[#181513]/85 bg-[#fbf9f4] shadow-[0_8px_24px_rgba(24,21,19,0.08)]"
             >
               {/* Inner red lacquer hairline bezel */}
               <div
@@ -43,7 +43,7 @@ export default function About() {
                 className="pointer-events-none absolute inset-0 border border-[#a42e40]/30 z-20"
               />
 
-              <div className="relative h-44 w-full overflow-hidden border-b-[3px] border-[#181513] bg-[#f4ecdf]">
+              <div className="relative h-44 w-full overflow-hidden border-b-[3px] border-[#181513]/85 bg-[#f4ecdf]">
                 <Image
                   src={topic.image}
                   alt=""
@@ -54,7 +54,7 @@ export default function About() {
               </div>
 
               <div className="flex-1 p-6">
-                <h3 className="font-serif-editorial text-2xl font-normal tracking-tight text-[#181513]">
+                <h3 className="hanafuda-title font-serif-editorial text-2xl font-normal tracking-tight text-[#181513]">
                   {topic.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#544c41]">
