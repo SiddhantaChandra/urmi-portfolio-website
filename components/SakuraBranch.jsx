@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 const sprites = {
   branch: [0, 0, 1354, 656],
@@ -126,116 +126,178 @@ export default function SakuraBranch() {
   const id = useId();
   const stageRef = useRef(null);
   const artRef = useRef(null);
+  const branchRef = useRef(null);
+  const shakeRef = useRef(null);
+  const burstIdRef = useRef(0);
+  const [bursts, setBursts] = useState([]);
+
+  const shakeBranch = () => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    shakeRef.current?.cancel();
+    shakeRef.current = branchRef.current.animate(
+      reducedMotion
+        ? [{ opacity: 0.7 }, { opacity: 1 }]
+        : [0, -2.6, 2.1, -1.5, 0.9, -0.4, 0].map((angle) => ({
+            transform: `rotate(${angle}deg)`,
+          })),
+      { duration: reducedMotion ? 250 : 720, easing: "ease-out" },
+    );
+
+    const burst = {
+      id: ++burstIdRef.current,
+      petals: Array.from({ length: 18 }, (_, index) => {
+        const [x, y] = growth[Math.floor(Math.random() * growth.length)];
+        return {
+          x: 1354 - x,
+          y,
+          name: ["petal", "petalAngled", "petalSmall"][index % 3],
+          width: 14 + Math.random() * 12,
+          drift: (Math.random() - 0.65) * 260,
+          distance: 380 + Math.random() * 180,
+          angle: Math.random() * 360,
+          delay: index * 22,
+        };
+      }),
+    };
+    // Bound rapid clicking without restarting the ambient petals or blossom entrance.
+    setBursts((current) => [...current.slice(-2), burst]);
+  };
 
   useEffect(() => {
     const stage = stageRef.current;
     const art = artRef.current;
-    const hero = stage.closest("section");
-    const pointerMotion = window.matchMedia(
-      "(any-hover: hover) and (prefers-reduced-motion: no-preference)",
-    );
     let inView = true;
 
-    const resetTilt = () => art.style.removeProperty("--branch-tilt");
     const updatePlayback = () => {
       const paused = !inView || document.hidden;
       stage.toggleAttribute("data-paused", paused);
-      if (paused) resetTilt();
+      if (paused) shakeRef.current?.pause();
+      else if (shakeRef.current?.playState === "paused")
+        shakeRef.current.play();
     };
     const observer = new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;
       updatePlayback();
     });
 
-    const tiltBranch = (event) => {
-      if (!pointerMotion.matches || event.pointerType !== "mouse") return;
-
-      const { left, width } = hero.getBoundingClientRect();
-      const progress = (event.clientX - left) / width;
-      art.style.setProperty("--branch-tilt", `${(progress - 0.5) * 4}deg`);
-    };
-
     observer.observe(art);
     updatePlayback();
     document.addEventListener("visibilitychange", updatePlayback);
-    hero.addEventListener("pointermove", tiltBranch);
-    hero.addEventListener("pointerleave", resetTilt);
-    pointerMotion.addEventListener("change", resetTilt);
 
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", updatePlayback);
-      hero.removeEventListener("pointermove", tiltBranch);
-      hero.removeEventListener("pointerleave", resetTilt);
-      pointerMotion.removeEventListener("change", resetTilt);
+      shakeRef.current?.cancel();
     };
   }, []);
 
   return (
-    <div ref={stageRef} className="hero-sakura z-10" aria-hidden="true">
-      <svg
-        ref={artRef}
+    <div ref={stageRef} className="hero-sakura z-10">
+      <button
+        type="button"
         className="hero-sakura-art"
-        viewBox="0 0 1354 690"
-        aria-hidden="true"
-        focusable="false"
+        onClick={shakeBranch}
+        aria-label="Shake the sakura branch and shower petals"
+        title="Shake some petals loose"
       >
-        <defs>
-          <image
-            id={`${id}-atlas`}
-            href="/images/sakura-branch-spite.webp"
-            width="1354"
-            height="1254"
-          />
-          {Object.entries(sprites).map(([name, bounds]) => (
-            <symbol
-              key={name}
-              id={`${id}-${name}`}
-              viewBox={bounds.join(" ")}
-              overflow="hidden"
-            >
-              <use href={`#${id}-atlas`} />
-            </symbol>
-          ))}
-        </defs>
-
-        <g className="sakura-branch-tilt">
-          <g transform="translate(1354 0) scale(-1 1)">
-            <Sprite id={id} name="branch" />
-            {growth.map(([x, y, name, width, angle]) => (
-              <g
-                key={`${x},${y}`}
-                transform={`translate(${x} ${y}) rotate(${angle})`}
-                style={{ "--bloom-delay": `${Math.round(x * 0.36)}ms` }}
+        <svg
+          ref={artRef}
+          viewBox="0 0 1354 690"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <defs>
+            <image
+              id={`${id}-atlas`}
+              href="/images/sakura-branch-spite.webp"
+              width="1354"
+              height="1254"
+            />
+            {Object.entries(sprites).map(([name, bounds]) => (
+              <symbol
+                key={name}
+                id={`${id}-${name}`}
+                viewBox={bounds.join(" ")}
+                overflow="hidden"
               >
-                {name !== "bud" && (
-                  <g className="sakura-bud">
-                    <Sprite id={id} name="bud" width={width * 0.36} />
-                  </g>
-                )}
-                <g className="sakura-blossom">
-                  <Sprite id={id} name={name} width={width} />
-                </g>
-              </g>
+                <use href={`#${id}-atlas`} />
+              </symbol>
             ))}
-          </g>
-        </g>
+          </defs>
 
-        {petals.map(([x, y, name, width, duration, delay, drift]) => (
-          <g key={x} transform={`translate(${x} ${y})`}>
-            <g
-              className="sakura-petal"
-              style={{
-                "--petal-duration": `${duration}s`,
-                "--petal-delay": `${delay}s`,
-                "--petal-drift": `${drift}px`,
-              }}
-            >
-              <Sprite id={id} name={name} width={width} />
+          <g ref={branchRef} className="sakura-branch-shake">
+            <g transform="translate(1354 0) scale(-1 1)">
+              <Sprite id={id} name="branch" />
+              {growth.map(([x, y, name, width, angle]) => (
+                <g
+                  key={`${x},${y}`}
+                  transform={`translate(${x} ${y}) rotate(${angle})`}
+                  style={{ "--bloom-delay": `${Math.round(x * 0.36)}ms` }}
+                >
+                  {name !== "bud" && (
+                    <g className="sakura-bud">
+                      <Sprite id={id} name="bud" width={width * 0.36} />
+                    </g>
+                  )}
+                  <g className="sakura-blossom">
+                    <Sprite id={id} name={name} width={width} />
+                  </g>
+                </g>
+              ))}
             </g>
           </g>
-        ))}
-      </svg>
+
+          {petals.map(([x, y, name, width, duration, delay, drift]) => (
+            <g key={x} transform={`translate(${x} ${y})`}>
+              <g
+                className="sakura-petal"
+                style={{
+                  "--petal-duration": `${duration}s`,
+                  "--petal-delay": `${delay}s`,
+                  "--petal-drift": `${drift}px`,
+                }}
+              >
+                <Sprite id={id} name={name} width={width} />
+              </g>
+            </g>
+          ))}
+          {bursts.map((burst) => (
+            <g key={burst.id} className="sakura-click-burst">
+              {burst.petals.map((petal, index) => (
+                <g
+                  key={`${burst.id}-${index}`}
+                  transform={`translate(${petal.x} ${petal.y})`}
+                >
+                  <g
+                    className="sakura-click-petal"
+                    style={{
+                      "--fall-delay": `${petal.delay}ms`,
+                      "--fall-drift": `${petal.drift}px`,
+                      "--fall-distance": `${petal.distance}px`,
+                      "--fall-angle": `${petal.angle}deg`,
+                    }}
+                    onAnimationEnd={
+                      index === burst.petals.length - 1
+                        ? () => {
+                            setBursts((current) =>
+                              current.filter(
+                                ({ id: burstId }) => burstId !== burst.id,
+                              ),
+                            );
+                          }
+                        : undefined
+                    }
+                  >
+                    <Sprite id={id} name={petal.name} width={petal.width} />
+                  </g>
+                </g>
+              ))}
+            </g>
+          ))}
+        </svg>
+      </button>
     </div>
   );
 }
