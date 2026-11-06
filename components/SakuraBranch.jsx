@@ -132,17 +132,12 @@ export default function SakuraBranch() {
   const [bursts, setBursts] = useState([]);
 
   const shakeBranch = () => {
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
     shakeRef.current?.cancel();
     shakeRef.current = branchRef.current.animate(
-      reducedMotion
-        ? [{ opacity: 0.7 }, { opacity: 1 }]
-        : [0, -2.6, 2.1, -1.5, 0.9, -0.4, 0].map((angle) => ({
-            transform: `rotate(${angle}deg)`,
-          })),
-      { duration: reducedMotion ? 250 : 720, easing: "ease-out" },
+      [0, -2.6, 2.1, -1.5, 0.9, -0.4, 0].map((angle) => ({
+        transform: `rotate(${angle}deg)`,
+      })),
+      { duration: 720, easing: "ease-out" },
     );
 
     const burst = {

@@ -80,7 +80,6 @@ export default function SakuraTransition({ hero, audience }) {
     const previousOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
 
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const atlas = new window.Image();
     let frame = 0;
     let disposed = false;
@@ -124,9 +123,7 @@ export default function SakuraTransition({ hero, audience }) {
 
     const render = (now) => {
       frame = 0;
-      if (document.hidden || preference.matches || !animation) {
-        if (animation && preference.matches && !animation.switched)
-          switchScene(animation.direction);
+      if (document.hidden || !animation) {
         stop();
         return;
       }
@@ -256,12 +253,7 @@ export default function SakuraTransition({ hero, audience }) {
         stop();
       }
       // Scene navigation also works when the decorative animation is unavailable.
-      if (
-        preference.matches ||
-        !context ||
-        !atlas.complete ||
-        !atlas.naturalWidth
-      ) {
+      if (!context || !atlas.complete || !atlas.naturalWidth) {
         switchScene(direction);
         ignoreUntil = performance.now() + 350;
         return;
@@ -351,11 +343,6 @@ export default function SakuraTransition({ hero, audience }) {
         consume(delta, event);
       }
     };
-    const onPreferenceChange = () => {
-      if (animation && preference.matches && !animation.switched)
-        switchScene(animation.direction);
-      stop();
-    };
 
     const resize = () => {
       width = window.innerWidth;
@@ -376,7 +363,6 @@ export default function SakuraTransition({ hero, audience }) {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("resize", resize);
     document.addEventListener("visibilitychange", stop);
-    preference.addEventListener("change", onPreferenceChange);
 
     return () => {
       disposed = true;
@@ -390,7 +376,6 @@ export default function SakuraTransition({ hero, audience }) {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", stop);
-      preference.removeEventListener("change", onPreferenceChange);
     };
   }, []);
 

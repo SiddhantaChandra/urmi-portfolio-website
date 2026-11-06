@@ -140,7 +140,7 @@ body {
   }
 }
 
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) {
   .hero-portrait {
     /* Morph only the clipping outline; keep the photograph's geometry fixed. */
     --portrait-spring: linear(
@@ -220,7 +220,8 @@ body {
 
 .sakura-click-petal {
   pointer-events: none;
-  animation: sakura-petal-fade 550ms ease-out var(--fall-delay) both;
+  animation: sakura-petal-fall 2800ms cubic-bezier(0.3, 0, 0.65, 1)
+    var(--fall-delay) both;
 }
 
 @media (min-width: 40rem) {
@@ -259,39 +260,24 @@ body {
   opacity: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .sakura-click-petal {
-    animation: sakura-petal-fall 2800ms cubic-bezier(0.3, 0, 0.65, 1)
-      var(--fall-delay) both;
-  }
-
-  .sakura-bud {
-    animation: sakura-bud 440ms ease-out var(--bloom-delay) both;
-  }
-
-  .sakura-blossom {
-    animation: sakura-bloom 620ms cubic-bezier(0.16, 1, 0.3, 1)
-      calc(var(--bloom-delay) + 210ms) both;
-  }
-
-  .sakura-petal {
-    animation: sakura-drift var(--petal-duration) linear var(--petal-delay)
-      infinite;
-  }
-
-  .hero-sakura[data-paused]
-    :is(.sakura-bud, .sakura-blossom, .sakura-petal, .sakura-click-petal) {
-    animation-play-state: paused;
-  }
+/* Keep the authored motion consistent across device motion preferences. */
+.sakura-bud {
+  animation: sakura-bud 440ms ease-out var(--bloom-delay) both;
 }
 
-@keyframes sakura-petal-fade {
-  from {
-    opacity: 0.85;
-  }
-  to {
-    opacity: 0;
-  }
+.sakura-blossom {
+  animation: sakura-bloom 620ms cubic-bezier(0.16, 1, 0.3, 1)
+    calc(var(--bloom-delay) + 210ms) both;
+}
+
+.sakura-petal {
+  animation: sakura-drift var(--petal-duration) linear var(--petal-delay)
+    infinite;
+}
+
+.hero-sakura[data-paused]
+  :is(.sakura-bud, .sakura-blossom, .sakura-petal, .sakura-click-petal) {
+  animation-play-state: paused;
 }
 
 @keyframes sakura-petal-fall {

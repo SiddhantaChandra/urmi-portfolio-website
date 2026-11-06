@@ -38,9 +38,3 @@
 .sakura-scene > .audience-section {
   min-height: 100%;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .sakura-transition-petals {
-    display: none;
-  }
-}

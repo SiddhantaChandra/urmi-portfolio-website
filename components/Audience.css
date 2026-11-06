@@ -6,7 +6,9 @@
   --audience-rule: #dfd0c1;
   position: relative;
   isolation: isolate;
-  padding: clamp(4rem, 6.25vw, 7.5rem) 1.5rem clamp(4rem, 5.7vw, 6.875rem);
+  display: grid;
+  align-content: center;
+  padding: clamp(4rem, 6.25vw, 7.5rem) 1.5rem;
   background-color: #f8f5ee;
   color: var(--audience-ink);
 }
@@ -25,6 +27,7 @@
   display: grid;
   grid-template-columns: minmax(0, 31%) minmax(0, 1fr);
   gap: clamp(2.5rem, 4.16vw, 3.5rem);
+  width: 100%;
   max-width: 32rem;
   margin-inline: auto;
 }
