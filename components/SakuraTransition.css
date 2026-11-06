@@ -1,0 +1,46 @@
+.sakura-scenes {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100svh;
+  height: 100dvh;
+  overflow: clip;
+}
+
+.sakura-scene {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-behavior: auto;
+  background: #f8f5ee;
+}
+
+.sakura-scene[hidden] {
+  display: none;
+}
+
+.sakura-scene:focus-visible {
+  outline: 2px solid #a42e40;
+  outline-offset: -2px;
+}
+
+.sakura-transition-petals {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sakura-scene > .audience-section {
+  min-height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sakura-transition-petals {
+    display: none;
+  }
+}
