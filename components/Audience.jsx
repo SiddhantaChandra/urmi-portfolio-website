@@ -1,8 +1,10 @@
 import { scaleLinear } from "d3-scale";
 import { arc, pie } from "d3-shape";
 import Image from "next/image";
+import enmaKatana from "../public/enma-katana.webp";
 import "./Audience.css";
 
+const audienceTitle = "Audience";
 const snapshotDate = new Intl.DateTimeFormat("en-IN", {
   dateStyle: "medium",
   timeZone: "Asia/Kolkata",
@@ -162,13 +164,24 @@ export default function Audience({ stats }) {
             id="audience-title"
             className="audience-title font-serif-editorial"
           >
-            <span className="audience-title-top">Audience</span>
-            <span className="audience-title-bottom" aria-hidden="true">
-              Audience
+            <span className="audience-title-intact">{audienceTitle}</span>
+            <span
+              className="audience-title-cut"
+              data-title={audienceTitle}
+              aria-hidden="true"
+            />
+            <span className="audience-katana" aria-hidden="true">
+              <Image
+                src={enmaKatana}
+                alt=""
+                draggable={false}
+                loading="eager"
+                unoptimized
+              />
             </span>
           </h2>
           <p className="audience-description font-serif-editorial">
-            A shared love for anime.
+            A curiosity for the stories within
           </p>
         </div>
       </header>

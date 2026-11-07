@@ -26,12 +26,11 @@
   line-height: 0.94;
   letter-spacing: -0.04em;
 }
-.audience-title-top,
-.audience-title-bottom {
-  grid-area: 1 / 1;
+.audience-title-intact {
   padding-block: 0.08em;
 }
-.audience-title-bottom {
+.audience-title-cut,
+.audience-katana {
   display: none;
 }
 .audience-description {
@@ -308,14 +307,23 @@
   }
 }
 
-@supports (view-timeline-name: --audience-scroll) and
+@property --audience-cut-x {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@supports (animation-timeline: view()) and
+  (view-timeline-name: --audience-scroll) and
   (animation-range: contain 0% contain 50svh) {
   @media (prefers-reduced-motion: no-preference) {
     .audience-section {
-      --audience-screen-gap: 30svh;
       --audience-split-end: 56svh;
-      --audience-settle: 82svh;
+      --audience-katana-end: calc(var(--audience-split-end) + 8svh);
+      --audience-reveal-end: calc(var(--audience-split-end) + 10svh);
+      --audience-handoff: calc(var(--audience-reveal-end) + 4svh);
       --audience-split-distance: clamp(1.75rem, 4.3vw, 4.5rem);
+      overflow-x: clip;
       view-timeline: --audience-scroll block;
     }
     .audience-stage {
@@ -327,27 +335,74 @@
     .audience-title-card {
       animation: audience-title-recede linear both;
       animation-timeline: --audience-scroll;
-      animation-range: contain 42svh contain var(--audience-settle);
+      animation-range: contain var(--audience-handoff) contain
+        calc(var(--audience-handoff) + 60dvh);
     }
     .audience-title {
+      --audience-blade-width: clamp(9rem, 36vw, 29rem);
+      --audience-cut-front: clamp(-1rem, var(--audience-cut-x), 100% + 1rem);
       position: relative;
       z-index: 1;
+      animation: audience-sweep linear both;
+      animation-timeline: --audience-scroll;
+      animation-range: contain 0% contain var(--audience-katana-end);
     }
-    .audience-title-top,
-    .audience-title-bottom {
-      background-color: #f8f5ee;
-      animation: audience-title-part cubic-bezier(0.35, 0, 0.22, 1) both;
+    /* The intact word covers the clip boundary by one pixel at the blade tip. */
+    .audience-title-intact {
+      position: relative;
+      z-index: 1;
+      clip-path: inset(-1rem -1rem -1rem calc(var(--audience-cut-front) - 1px));
+    }
+    .audience-title-cut {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      clip-path: inset(
+        -6rem calc(100% - var(--audience-cut-front)) -6rem -1rem
+      );
+      pointer-events: none;
+      user-select: none;
+    }
+    .audience-title-cut::before,
+    .audience-title-cut::after {
+      content: attr(data-title);
+      grid-area: 1 / 1;
+      padding-block: 0.08em;
+      transform-origin: var(--audience-cut-front) 50%;
+      animation: audience-title-part linear both;
       animation-timeline: --audience-scroll;
       animation-range: contain 0% contain var(--audience-split-end);
     }
-    .audience-title-top {
+    .audience-title-cut::before {
+      --audience-part-tilt: 2.5deg;
       --audience-part-offset: calc(-1 * var(--audience-split-distance));
-      clip-path: inset(0 0 50% 0);
+      clip-path: inset(-1rem -1rem calc(50% - 1px));
     }
-    .audience-title-bottom {
+    .audience-title-cut::after {
+      --audience-part-tilt: -2.5deg;
       --audience-part-offset: var(--audience-split-distance);
+      clip-path: inset(calc(50% - 1px) -1rem -1rem);
+    }
+    .audience-katana {
+      position: absolute;
+      z-index: 2;
+      inset: 50% 0 auto;
       display: block;
-      clip-path: inset(50% 0 0 0);
+      transform: translateX(var(--audience-cut-x));
+      pointer-events: none;
+      animation: audience-katana-exit step-end both;
+      animation-timeline: --audience-scroll;
+      animation-range: contain 0% contain var(--audience-katana-end);
+    }
+    .audience-katana img {
+      position: absolute;
+      top: 0;
+      right: 100%;
+      width: var(--audience-blade-width);
+      max-width: none;
+      height: auto;
+      /* Align the blade edge in the source image with the cut line. */
+      transform: translateY(-51.5%) rotate(180deg) scaleX(-1);
     }
     .audience-description {
       position: absolute;
@@ -355,30 +410,67 @@
       display: grid;
       place-items: center;
       margin: 0;
+      animation: audience-description-reveal linear both;
+      animation-timeline: --audience-scroll;
+      animation-range: contain calc(var(--audience-split-end) * 0.67) contain
+        var(--audience-reveal-end);
     }
     .audience-screen {
       min-height: 100svh;
-      margin-top: var(--audience-screen-gap);
+      /* Give the subtitle a moment at full opacity before the charts enter. */
+      margin-top: calc(var(--audience-handoff) + 100dvh - 100svh);
     }
   }
   @media (prefers-reduced-motion: no-preference) and (width < 44rem) {
     .audience-section {
-      --audience-screen-gap: 19svh;
       --audience-split-end: 40svh;
-      --audience-settle: 65svh;
-    }
-    .audience-title-card {
-      animation-range: contain 32svh contain var(--audience-settle);
     }
   }
 }
 
-@keyframes audience-title-part {
+@keyframes audience-sweep {
+  /* The title is centered, so use its midpoint to reach both viewport edges. */
   from {
-    transform: translateY(0);
+    --audience-cut-x: calc(50% - 50vw - 1rem);
+  }
+  61% {
+    --audience-cut-x: calc(100% + 1rem);
+  }
+  88% {
+    /* The trailing tip clears the title before the katana leaves the viewport. */
+    --audience-cut-x: calc(100% + var(--audience-blade-width));
   }
   to {
-    transform: translateY(var(--audience-part-offset));
+    --audience-cut-x: calc(50% + 50vw + var(--audience-blade-width) + 1rem);
+  }
+}
+
+@keyframes audience-title-part {
+  from,
+  70% {
+    transform: translateY(0) skewY(var(--audience-part-tilt));
+    animation-timing-function: cubic-bezier(0.2, 0.65, 0.3, 1);
+  }
+  to {
+    transform: translateY(var(--audience-part-offset)) skewY(0deg);
+  }
+}
+
+@keyframes audience-katana-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes audience-description-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -386,6 +478,6 @@
   to {
     opacity: 0.24;
     filter: blur(3px);
-    transform: scale(0.92);
+    transform: scale(0.8);
   }
 }
