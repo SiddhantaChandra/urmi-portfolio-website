@@ -6,13 +6,50 @@
   --audience-rule: #dfd0c1;
   position: relative;
   isolation: isolate;
+  background-color: #f8f5ee;
+  color: var(--audience-ink);
+}
+.audience-stage {
+  display: grid;
+  place-items: center;
+  padding: clamp(3rem, 8vw, 6rem) 1rem;
+  text-align: center;
+}
+.audience-title-card {
+  position: relative;
+}
+.audience-title {
+  display: grid;
+  margin: 0;
+  font-size: clamp(2.75rem, 20vw, 19rem);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+}
+.audience-title-top,
+.audience-title-bottom {
+  grid-area: 1 / 1;
+  padding-block: 0.08em;
+}
+.audience-title-bottom {
+  display: none;
+}
+.audience-description {
+  margin-top: 0.5rem;
+  color: #842434;
+  font-size: clamp(1.125rem, 2vw, 1.75rem);
+  font-weight: 600;
+}
+.audience-screen {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
   display: grid;
   align-content: center;
   padding: clamp(4rem, 6.25vw, 7.5rem) 2.5rem;
   background-color: #f8f5ee;
-  color: var(--audience-ink);
 }
-.audience-section::before {
+.audience-screen::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -24,49 +61,24 @@
 }
 .audience-bamboo {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0 auto auto 0;
   width: auto;
   height: 75svh;
-  height: 75dvh;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: top left;
+  mask-image: linear-gradient(to right, #000 12%, #0004 38%, transparent 95%);
   pointer-events: none;
   user-select: none;
 }
-.audience-layout {
+.audience-charts {
   position: relative;
   container-type: inline-size;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(2rem, 2.5vw, 2.5rem);
   width: 100%;
   max-width: 58rem;
   margin-inline: auto;
-}
-.audience-title {
-  margin: 0;
-  font-size: clamp(3.25rem, 5.94cqw, 6.25rem);
-  font-weight: 500;
-  line-height: 0.9;
-  letter-spacing: -0.035em;
-}
-.audience-description {
-  max-width: 42ch;
-  margin-top: 1rem;
-  font-size: clamp(1.25rem, 1.81cqw, 1.9rem);
-  line-height: 1.08;
-  font-weight: 500;
-}
-.audience-brush {
-  width: clamp(7.5rem, 9.83cqw, 10.25rem);
-  height: 0.875rem;
-  margin-top: 1rem;
-  background: var(--audience-red);
-  mask:
-    url("/images/brush_stroke_transparent.svg") center / 100% 100% no-repeat;
-}
-.audience-charts {
   min-width: 0;
-  font-size: clamp(0.875rem, 1.31cqw, 1.375rem);
+  font-size: clamp(0.875rem, 1.15vw, 1.125rem);
   font-variant-numeric: lining-nums tabular-nums;
 }
 .audience-charts-top {
@@ -196,42 +208,17 @@
 .audience-countries .audience-bar-row {
   grid-template-columns: 8.2em minmax(0, 1fr) 4.5em;
 }
-@media (width >= 75rem) {
-  .audience-intro {
-    text-align: center;
-  }
-  .audience-description,
-  .audience-brush {
-    margin-inline: auto;
-  }
-}
 @media (width < 75rem) {
-  .audience-section {
-    padding-block: clamp(2rem, 4.5svh, 4rem);
-    padding-inline: clamp(1rem, 4.25vw, 2.5rem);
+  .audience-screen {
+    padding: clamp(2rem, 4.5svh, 4rem) clamp(1rem, 4.25vw, 2.5rem);
   }
   .audience-bamboo {
     width: 3rem;
     height: auto;
-  }
-  .audience-layout {
-    gap: 1.75rem;
-    max-width: 54rem;
-  }
-  .audience-intro {
-    padding: 0 0 1.5rem;
-    border-bottom: 1px solid var(--audience-red);
-  }
-  .audience-title {
-    font-size: clamp(3.5rem, 7vw, 4.5rem);
-  }
-  .audience-description {
-    max-width: 38ch;
-    font-size: clamp(1.375rem, 3vw, 1.625rem);
-    line-height: 1.2;
-    text-wrap: balance;
+    mask-image: none;
   }
   .audience-charts {
+    max-width: 54rem;
     font-size: 1rem;
   }
   .audience-charts-top {
@@ -269,55 +256,23 @@
     grid-template-columns: 7.25em minmax(0, 1fr) 3.5em;
   }
 }
-@media (width < 36rem) {
-  .audience-section {
-    align-content: start;
-    padding: clamp(3.5rem, 18vw, 6rem) clamp(2rem, 12vw, 3.875rem) 2rem;
-  }
-  .audience-bamboo {
-    left: -4vw;
-    width: 48vw;
-    mask-image: linear-gradient(#000 50%, transparent 78%);
-  }
-  .audience-layout {
-    gap: clamp(1rem, 4.5vw, 1.5rem);
-  }
-  .audience-intro {
-    padding: 0 0.375rem;
-    border-bottom: 0;
-  }
-  .audience-title {
-    max-width: min-content;
-    font-size: clamp(2rem, 8.6vw, 3rem);
-  }
-  .audience-description {
-    max-width: 28ch;
-    margin-top: 0.5rem;
-    font-size: clamp(1rem, 4vw, 1.25rem);
-    text-wrap: wrap;
-  }
-  .audience-brush {
-    width: clamp(4.5rem, 20vw, 6rem);
-    height: 0.5rem;
-    margin-top: 0.625rem;
-  }
+@media (width < 44rem) {
   .audience-charts {
-    display: grid;
-    gap: 0.75rem;
     font-size: clamp(0.8125rem, 2.8vw, 0.9375rem);
   }
   .audience-charts-top {
     grid-template-columns: minmax(0, 1fr);
-    gap: inherit;
     padding-bottom: 0;
     border-bottom: 0;
   }
-  .audience-gender,
   .audience-ages,
   .audience-countries {
-    padding: 0.625rem clamp(0.75rem, 4vw, 1.75rem) 0.875rem;
-    border: 1px solid var(--audience-rule);
-    border-radius: 0.875rem;
+    padding: 1.25rem 0 0;
+    border: 0;
+    border-top: 1px solid var(--audience-rule);
+  }
+  .audience-countries {
+    margin-top: 1.25rem;
   }
   .audience-chart-heading {
     margin-bottom: 0.625rem;
@@ -340,5 +295,97 @@
   .audience-bars,
   .audience-countries .audience-bars {
     gap: 0.375rem;
+  }
+}
+@media (width < 36rem) {
+  .audience-screen {
+    padding: clamp(3.5rem, 18vw, 6rem) clamp(1.5rem, 8vw, 3.875rem) 2rem;
+  }
+  .audience-bamboo {
+    left: -4vw;
+    width: 48vw;
+    mask-image: linear-gradient(#000 50%, transparent 78%);
+  }
+}
+
+@supports (view-timeline-name: --audience-scroll) and
+  (animation-range: contain 0% contain 50svh) {
+  @media (prefers-reduced-motion: no-preference) {
+    .audience-section {
+      --audience-screen-gap: 30svh;
+      --audience-split-end: 56svh;
+      --audience-settle: 82svh;
+      --audience-split-distance: clamp(1.75rem, 4.3vw, 4.5rem);
+      view-timeline: --audience-scroll block;
+    }
+    .audience-stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      padding-block: 0;
+    }
+    .audience-title-card {
+      animation: audience-title-recede linear both;
+      animation-timeline: --audience-scroll;
+      animation-range: contain 42svh contain var(--audience-settle);
+    }
+    .audience-title {
+      position: relative;
+      z-index: 1;
+    }
+    .audience-title-top,
+    .audience-title-bottom {
+      background-color: #f8f5ee;
+      animation: audience-title-part cubic-bezier(0.35, 0, 0.22, 1) both;
+      animation-timeline: --audience-scroll;
+      animation-range: contain 0% contain var(--audience-split-end);
+    }
+    .audience-title-top {
+      --audience-part-offset: calc(-1 * var(--audience-split-distance));
+      clip-path: inset(0 0 50% 0);
+    }
+    .audience-title-bottom {
+      --audience-part-offset: var(--audience-split-distance);
+      display: block;
+      clip-path: inset(50% 0 0 0);
+    }
+    .audience-description {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      margin: 0;
+    }
+    .audience-screen {
+      min-height: 100svh;
+      margin-top: var(--audience-screen-gap);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) and (width < 44rem) {
+    .audience-section {
+      --audience-screen-gap: 19svh;
+      --audience-split-end: 40svh;
+      --audience-settle: 65svh;
+    }
+    .audience-title-card {
+      animation-range: contain 32svh contain var(--audience-settle);
+    }
+  }
+}
+
+@keyframes audience-title-part {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--audience-part-offset));
+  }
+}
+
+@keyframes audience-title-recede {
+  to {
+    opacity: 0.24;
+    filter: blur(3px);
+    transform: scale(0.92);
   }
 }

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Audience from "../components/Audience";
 import CollaborationModal from "../components/CollaborationModal";
 import Hero from "../components/Hero";
-import SakuraTransition from "../components/SakuraTransition";
 import Summary from "../components/Summary";
 
 export default function Home() {
@@ -31,17 +30,13 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="h-dvh w-full relative flex flex-col overflow-hidden bg-[#f8f5ee] text-[#1c1917]">
-      <SakuraTransition
-        hero={
-          <Hero
-            onOpenCollaboration={() => setIsCollaborationOpen(true)}
-            stats={instagramStats}
-          />
-        }
-        audience={<Audience stats={instagramStats} />}
-        summary={<Summary />}
+    <main className="relative w-full bg-[#f8f5ee] text-[#1c1917]">
+      <Hero
+        onOpenCollaboration={() => setIsCollaborationOpen(true)}
+        stats={instagramStats}
       />
+      <Audience stats={instagramStats} />
+      <Summary />
 
       <CollaborationModal
         isOpen={isCollaborationOpen}

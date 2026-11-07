@@ -156,28 +156,31 @@ export default function Audience({ stats }) {
       className="audience-section"
       aria-labelledby="audience-title"
     >
-      <Image
-        className="audience-bamboo"
-        src="/bamboo-tree-left.webp"
-        alt=""
-        width={693}
-        height={800}
-        sizes="(width < 36rem) 48vw, (width < 75rem) 48px, 61vh"
-        aria-hidden="true"
-      />
-      <div className="audience-layout">
-        <div className="audience-intro">
+      <header className="audience-stage">
+        <div className="audience-title-card">
           <h2
             id="audience-title"
             className="audience-title font-serif-editorial"
           >
-            The Audience
+            <span className="audience-title-top">Audience</span>
+            <span className="audience-title-bottom" aria-hidden="true">
+              Audience
+            </span>
           </h2>
           <p className="audience-description font-serif-editorial">
-            A shared love for anime. A curiosity for the stories within.
+            A shared love for anime.
           </p>
-          <div className="audience-brush" aria-hidden="true" />
         </div>
+      </header>
+      <div className="audience-screen">
+        <Image
+          className="audience-bamboo"
+          src="/bamboo-tree-left.webp"
+          alt=""
+          width={693}
+          height={800}
+          sizes="(width < 36rem) 48vw, (width < 75rem) 48px, 65vh"
+        />
         <div className="audience-charts">
           {stats === undefined ? (
             <p className="audience-chart-note">
