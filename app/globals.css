@@ -21,6 +21,17 @@ body {
   font-family: var(--font-kanji);
 }
 
+.hero-paper::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: url("/background-hero-1.webp") center / cover;
+  opacity: 0.25;
+  mask-image: linear-gradient(black calc(100% - 3rem), transparent);
+}
+
 .hanafuda-title {
   width: fit-content;
   max-width: 100%;

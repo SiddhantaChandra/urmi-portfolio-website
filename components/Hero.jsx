@@ -29,7 +29,7 @@ export default function Hero({ onOpenCollaboration, stats }) {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate min-h-svh overflow-x-clip px-6 pt-12 text-[#1c1917] before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-[url('/background-hero-1.webp')] before:bg-cover before:bg-center before:opacity-25 before:[mask-image:linear-gradient(black_calc(100%_-_3rem),transparent)] sm:px-10 sm:pt-16"
+      className="hero-paper relative isolate min-h-svh overflow-x-clip px-6 pt-12 text-[#1c1917] sm:px-10 sm:pt-16"
     >
       <div className="relative mx-auto grid max-w-lg grid-cols-1 gap-y-6 md:max-w-6xl md:grid-cols-[2rem_minmax(0,1fr)_minmax(0,0.82fr)] md:grid-rows-[1fr_auto_1fr] md:gap-x-6 lg:gap-x-10">
         <p

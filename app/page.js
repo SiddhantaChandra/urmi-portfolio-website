@@ -5,6 +5,7 @@ import Audience from "../components/Audience";
 import CollaborationModal from "../components/CollaborationModal";
 import Hero from "../components/Hero";
 import SakuraTransition from "../components/SakuraTransition";
+import Summary from "../components/Summary";
 
 export default function Home() {
   const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
@@ -39,6 +40,7 @@ export default function Home() {
           />
         }
         audience={<Audience stats={instagramStats} />}
+        summary={<Summary />}
       />
 
       <CollaborationModal

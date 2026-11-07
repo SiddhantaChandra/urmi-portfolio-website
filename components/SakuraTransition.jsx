@@ -66,12 +66,17 @@ function smoothstep(from, to, value) {
   return t * t * (3 - 2 * t);
 }
 
-export default function SakuraTransition({ hero, audience }) {
+export default function SakuraTransition({ hero, audience, summary }) {
+  const panels = [
+    { label: "Introduction and Hanafuda", content: hero },
+    { label: "Audience", content: audience },
+    { label: "Summary", content: summary },
+  ];
+  const panelCount = panels.length;
   const stageRef = useRef(null);
-  const heroRef = useRef(null);
-  const audienceRef = useRef(null);
+  const panelRefs = useRef([]);
   const canvasRef = useRef(null);
-  const [scene, setScene] = useState("hero");
+  const [scene, setScene] = useState(0);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -86,18 +91,17 @@ export default function SakuraTransition({ hero, audience }) {
     let width = 0;
     let height = 0;
     let animation = null;
-    let currentScene = "hero";
+    let currentScene = 0;
     let accumulated = 0;
     let lastInput = 0;
     let ignoreUntil = 0;
     let touchY = null;
     let focusFrame = 0;
 
-    const activePanel = () =>
-      currentScene === "hero" ? heroRef.current : audienceRef.current;
+    const activePanel = () => panelRefs.current[currentScene];
 
     const switchScene = (direction) => {
-      currentScene = direction === 1 ? "audience" : "hero";
+      currentScene += direction;
       const nextPanel = activePanel();
       setScene(currentScene);
       cancelAnimationFrame(focusFrame);
@@ -282,7 +286,8 @@ export default function SakuraTransition({ hero, audience }) {
       const atEnd =
         panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 1;
       const leaving =
-        currentScene === "hero" ? delta > 0 && atEnd : delta < 0 && atStart;
+        (delta > 0 && atEnd && currentScene < panelCount - 1) ||
+        (delta < 0 && atStart && currentScene > 0);
       if (!leaving) {
         accumulated = 0;
         return;
@@ -377,30 +382,25 @@ export default function SakuraTransition({ hero, audience }) {
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", stop);
     };
-  }, []);
+  }, [panelCount]);
 
   return (
     <div ref={stageRef} className="sakura-scenes">
-      <section
-        ref={heroRef}
-        className="sakura-scene"
-        hidden={scene !== "hero"}
-        inert={scene !== "hero"}
-        aria-label="Introduction and Hanafuda"
-        tabIndex={-1}
-      >
-        {hero}
-      </section>
-      <section
-        ref={audienceRef}
-        className="sakura-scene"
-        hidden={scene !== "audience"}
-        inert={scene !== "audience"}
-        aria-label="Audience"
-        tabIndex={-1}
-      >
-        {audience}
-      </section>
+      {panels.map(({ label, content }, index) => (
+        <section
+          key={label}
+          ref={(panel) => {
+            panelRefs.current[index] = panel;
+          }}
+          className="sakura-scene"
+          hidden={scene !== index}
+          inert={scene !== index}
+          aria-label={label}
+          tabIndex={-1}
+        >
+          {content}
+        </section>
+      ))}
       <canvas
         ref={canvasRef}
         className="sakura-transition-petals"
