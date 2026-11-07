@@ -27,7 +27,6 @@ const audienceData = {
 };
 
 const percentage = (value) => `${value.toFixed(1)}%`;
-const barScale = scaleLinear().domain([0, 100]).range([0, 100]).clamp(true);
 const donutArc = arc().innerRadius(64).outerRadius(100);
 const donutLayout = pie()
   .value((item) => item.value)
@@ -91,7 +90,18 @@ function GenderChart({ data }) {
   );
 }
 
-function HorizontalBarChart({ id, title, data, className = "" }) {
+function HorizontalBarChart({
+  id,
+  title,
+  data,
+  className = "",
+  maxValue = 100,
+}) {
+  const barScale = scaleLinear()
+    .domain([0, maxValue])
+    .range([0, 100])
+    .clamp(true);
+
   return (
     <section className={className} aria-labelledby={`${id}-title`}>
       <ChartHeading id={`${id}-title`}>{title}</ChartHeading>
@@ -139,7 +149,7 @@ export default function Audience() {
         alt=""
         width={693}
         height={800}
-        sizes="(max-width: 1023px) 48px, 61vh"
+        sizes="(width < 36rem) 48vw, (width < 75rem) 48px, 61vh"
         aria-hidden="true"
       />
       <div className="audience-layout">
@@ -170,6 +180,12 @@ export default function Audience() {
             title="Top countries"
             data={audienceData.countries}
             className="audience-countries"
+            maxValue={
+              Math.max(
+                0,
+                ...audienceData.countries.map(({ value }) => value),
+              ) || 100
+            }
           />
           <p className="sr-only">
             Illustrative audience statistics using mock data.

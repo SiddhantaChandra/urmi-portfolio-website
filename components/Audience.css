@@ -8,7 +8,7 @@
   isolation: isolate;
   display: grid;
   align-content: center;
-  padding: clamp(4rem, 6.25vw, 7.5rem) 1.5rem;
+  padding: clamp(4rem, 6.25vw, 7.5rem) 2.5rem;
   background-color: #f8f5ee;
   color: var(--audience-ink);
 }
@@ -18,7 +18,7 @@
   z-index: -1;
   inset: 0;
   pointer-events: none;
-  background: url("/background-hero-1.webp") center / cover;
+  background: url("/background-audience.webp") 25% center / cover;
   opacity: 0.25;
   mask-image: linear-gradient(black calc(100% - 3rem), transparent);
 }
@@ -39,7 +39,7 @@
   grid-template-columns: minmax(0, 31%) minmax(0, 1fr);
   gap: clamp(2.5rem, 4.16vw, 3.5rem);
   width: 100%;
-  max-width: 32rem;
+  max-width: 72rem;
   margin-inline: auto;
 }
 .audience-intro {
@@ -186,6 +186,9 @@
   max-width: 53.125rem;
   padding-top: 1.5rem;
 }
+.audience-countries .audience-bar-track {
+  display: none;
+}
 .audience-countries .audience-bars {
   margin-top: 1.5rem;
   padding-left: 0.5rem;
@@ -194,90 +197,155 @@
 .audience-countries .audience-bar-row {
   grid-template-columns: 8.2em minmax(0, 1fr) 4.5em;
 }
-@media (min-width: 640px) {
-  .audience-section {
-    padding-inline: 2.5rem;
-  }
-}
-@media (min-width: 768px) {
-  .audience-layout {
-    max-width: 72rem;
-  }
-}
-@media (min-width: 1280px) {
+@media (min-width: 80rem) {
   .audience-layout {
     padding-left: 3.5rem;
   }
 }
-@media (max-width: 1023px) {
+@media (width < 75rem) {
+  .audience-section {
+    padding-block: clamp(2rem, 4.5svh, 4rem);
+    padding-inline: clamp(1rem, 4.25vw, 2.5rem);
+  }
   .audience-bamboo {
     width: 3rem;
     height: auto;
   }
   .audience-layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.5rem;
+    gap: 1.75rem;
+    max-width: 54rem;
   }
   .audience-intro {
-    padding: 0 0 2rem;
+    padding: 0 0 1.5rem;
     border-right: 0;
     border-bottom: 1px solid var(--audience-red);
   }
   .audience-title {
-    font-size: clamp(3.5rem, 8vw, 5rem);
+    font-size: clamp(3.5rem, 7vw, 4.5rem);
   }
   .audience-description {
-    font-size: 1.75rem;
+    max-width: 38ch;
+    margin-top: 1rem;
+    font-size: clamp(1.375rem, 3vw, 1.625rem);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .audience-brush {
+    margin-top: 1rem;
   }
   .audience-charts {
     padding-top: 0;
     font-size: 1rem;
   }
   .audience-charts-top {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  }
-}
-@media (max-width: 767px) {
-  .audience-section {
-    padding-block: 3.5rem;
-  }
-  .audience-charts-top {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
-    padding-bottom: 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
   }
   .audience-gender-content {
-    max-width: 25rem;
+    gap: clamp(0.75rem, 3vw, 1.25rem);
     padding-left: 0;
-    gap: 1.5rem;
+  }
+  .audience-donut {
+    flex-basis: clamp(5.75rem, 16vw, 9.5rem);
+  }
+  .audience-legend {
+    max-width: 9.5rem;
+  }
+  .audience-legend-row {
+    gap: 0.5rem;
   }
   .audience-ages {
-    padding-left: 0;
-    border-left: 0;
+    padding-left: 1.25rem;
   }
-  .audience-chart-heading {
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-  }
-  .audience-bars {
-    gap: 0.875rem;
+  .audience-bars,
+  .audience-countries .audience-bars {
+    gap: 0.625rem;
     margin-top: 0;
+    padding-left: 0;
   }
   .audience-bar-row {
     grid-template-columns: 3.5em minmax(0, 1fr) 3.5em;
-    column-gap: 0.75rem;
+    column-gap: 0.5rem;
   }
   .audience-countries {
-    padding-top: 2rem;
-  }
-  .audience-countries .audience-bars {
-    padding-left: 0;
-    margin-top: 0;
-    gap: 0.875rem;
+    max-width: none;
   }
   .audience-countries .audience-bar-row {
-    grid-template-columns: 7.5em minmax(0, 1fr) 3.5em;
-    column-gap: 0.5rem;
-    font-size: 0.875rem;
+    grid-template-columns: 7.25em minmax(0, 1fr) 3.5em;
+  }
+}
+@media (width < 36rem) {
+  .audience-section {
+    align-content: start;
+    padding: clamp(3.5rem, 18vw, 6rem) clamp(2rem, 12vw, 3.875rem) 2rem;
+  }
+  .audience-bamboo {
+    left: -4vw;
+    width: 48vw;
+    mask-image: linear-gradient(#000 50%, transparent 78%);
+  }
+  .audience-layout {
+    gap: clamp(1rem, 4.5vw, 1.5rem);
+  }
+  .audience-intro {
+    padding: 0 0.375rem;
+    border-bottom: 0;
+  }
+  .audience-title {
+    max-width: min-content;
+    font-size: clamp(2rem, 8.6vw, 3rem);
+  }
+  .audience-description {
+    max-width: 28ch;
+    margin-top: 0.5rem;
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    text-wrap: wrap;
+  }
+  .audience-brush {
+    width: clamp(4.5rem, 20vw, 6rem);
+    height: 0.5rem;
+    margin-top: 0.625rem;
+  }
+  .audience-charts {
+    display: grid;
+    gap: 0.75rem;
+    font-size: clamp(0.8125rem, 2.8vw, 0.9375rem);
+  }
+  .audience-charts-top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: inherit;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .audience-gender,
+  .audience-ages,
+  .audience-countries {
+    padding: 0.625rem clamp(0.75rem, 4vw, 1.75rem) 0.875rem;
+    border: 1px solid var(--audience-rule);
+    border-radius: 0.875rem;
+  }
+  .audience-chart-heading {
+    margin-bottom: 0.625rem;
+    font-size: clamp(1.125rem, 4.7vw, 1.375rem);
+  }
+  .audience-chart-heading::after {
+    display: none;
+  }
+  .audience-gender-content {
+    justify-content: center;
+    gap: clamp(0.75rem, 5vw, 1.75rem);
+    padding: 0;
+  }
+  .audience-donut {
+    flex-basis: clamp(4.75rem, 22vw, 7rem);
+  }
+  .audience-legend {
+    flex: 0 1 8.25rem;
+  }
+  .audience-bars,
+  .audience-countries .audience-bars {
+    gap: 0.375rem;
   }
 }
