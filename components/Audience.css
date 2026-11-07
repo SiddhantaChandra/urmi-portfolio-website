@@ -22,7 +22,18 @@
   opacity: 0.25;
   mask-image: linear-gradient(black calc(100% - 3rem), transparent);
 }
+.audience-bamboo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: 75svh;
+  height: 75dvh;
+  pointer-events: none;
+  user-select: none;
+}
 .audience-layout {
+  position: relative;
   container-type: inline-size;
   display: grid;
   grid-template-columns: minmax(0, 31%) minmax(0, 1fr);
@@ -199,6 +210,10 @@
   }
 }
 @media (max-width: 1023px) {
+  .audience-bamboo {
+    width: 3rem;
+    height: auto;
+  }
   .audience-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;

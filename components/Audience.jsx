@@ -1,5 +1,6 @@
 import { scaleLinear } from "d3-scale";
 import { arc, pie } from "d3-shape";
+import Image from "next/image";
 import "./Audience.css";
 
 // Placeholder statistics, separate from chart geometry for easy replacement.
@@ -132,6 +133,15 @@ export default function Audience() {
       className="audience-section"
       aria-labelledby="audience-title"
     >
+      <Image
+        className="audience-bamboo"
+        src="/bamboo-tree-left.webp"
+        alt=""
+        width={693}
+        height={800}
+        sizes="(max-width: 1023px) 48px, 61vh"
+        aria-hidden="true"
+      />
       <div className="audience-layout">
         <div className="audience-intro">
           <h2
