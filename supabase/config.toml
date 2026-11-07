@@ -1,0 +1,5 @@
+project_id = "urmi-mediakit"
+
+[functions.sync-instagram-stats]
+verify_jwt = false
+entrypoint = "./functions/sync-instagram-stats/index.mjs"

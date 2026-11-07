@@ -4,7 +4,28 @@ import Image from "next/image";
 import About from "./About";
 import SakuraBranch from "./SakuraBranch";
 
-export default function Hero({ onOpenCollaboration }) {
+const compactNumber = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+const exactNumber = new Intl.NumberFormat("en-US");
+
+function InstagramStat({ label, count }) {
+  const exact = count == null ? "Unavailable" : exactNumber.format(count);
+  return (
+    <div className="instagram-stat">
+      <dt>{label}</dt>
+      <dd title={exact}>
+        <span aria-hidden="true">
+          {count == null ? "—" : compactNumber.format(count)}
+        </span>
+        <span className="sr-only">{exact}</span>
+      </dd>
+    </div>
+  );
+}
+
+export default function Hero({ onOpenCollaboration, stats }) {
   return (
     <section
       aria-labelledby="hero-title"
@@ -67,18 +88,8 @@ export default function Hero({ onOpenCollaboration }) {
               className="block h-auto w-full"
             />
             <dl className="instagram-stats-values font-serif-editorial">
-              <div className="instagram-stat">
-                <dt>Followers</dt>
-                <dd>
-                  24.8<span>K</span>
-                </dd>
-              </div>
-              <div className="instagram-stat">
-                <dt>Views / month</dt>
-                <dd>
-                  1.2<span>M</span>
-                </dd>
-              </div>
+              <InstagramStat label="Followers" count={stats?.followers} />
+              <InstagramStat label="30-day views" count={stats?.views} />
             </dl>
           </figure>
         </div>

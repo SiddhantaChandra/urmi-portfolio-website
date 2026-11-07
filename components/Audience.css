@@ -152,6 +152,11 @@
   fill: var(--audience-blush);
   background: var(--audience-blush);
 }
+.audience-chart-note {
+  margin-top: 1rem;
+  color: #695e52;
+  font-size: 0.875rem;
+}
 .audience-ages {
   border-left: 1px solid var(--audience-rule);
   padding-left: clamp(1.5rem, 2.51cqw, 2.625rem);
@@ -163,7 +168,7 @@
 }
 .audience-bar-row {
   display: grid;
-  grid-template-columns: 3.65em minmax(0, 1fr) 3.35em;
+  grid-template-columns: 4.5em minmax(0, 1fr) 3.35em;
   align-items: center;
   column-gap: clamp(0.75rem, 1.43cqw, 1.5rem);
   line-height: 1.3;
