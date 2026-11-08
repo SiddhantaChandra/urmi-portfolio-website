@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Audience from "../components/Audience";
 import CollaborationModal from "../components/CollaborationModal";
 import Hero from "../components/Hero";
-import Summary from "../components/Summary";
+import AudienceInsights from "../components/insights/AudienceInsights";
+import InstagramPerformance from "../components/insights/InstagramPerformance";
 
 export default function Home() {
   const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
@@ -35,8 +36,10 @@ export default function Home() {
         onOpenCollaboration={() => setIsCollaborationOpen(true)}
         stats={instagramStats}
       />
-      <Audience stats={instagramStats} />
-      <Summary />
+      <Audience>
+        <AudienceInsights stats={instagramStats} />
+      </Audience>
+      <InstagramPerformance />
 
       <CollaborationModal
         isOpen={isCollaborationOpen}
