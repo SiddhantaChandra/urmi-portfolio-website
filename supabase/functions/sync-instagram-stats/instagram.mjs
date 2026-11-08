@@ -46,7 +46,7 @@ function isCount(value) {
   return Number.isSafeInteger(value) && value >= 0;
 }
 
-async function graphRequest(origin, path, params, token, operation) {
+export async function graphRequest(origin, path, params, token, operation) {
   const url = new URL(path, origin);
   url.search = new URLSearchParams({ ...params, access_token: token });
 
@@ -238,6 +238,146 @@ const unavailablePostAverages = {
   followerEngagement: null,
 };
 
+const unavailableReels = {
+  averageViews: null,
+  averageReach: null,
+  averageWatchTimeSeconds: null,
+  totalWatchTimeHours: null,
+};
+
+// Media insights are lifetime values. Keep reels independent of account periods.
+export async function fetchReelPerformance(origin, token, posts) {
+  if (posts.some((post) => typeof post.media_product_type !== "string"))
+    return { ...unavailableReels };
+  const reels = posts.filter((post) => post.media_product_type === "REELS");
+  const insights = [];
+  // Bound concurrency rather than opening one connection per published reel.
+  for (let offset = 0; offset < reels.length; offset += 6) {
+    insights.push(
+      ...(await Promise.all(
+        reels.slice(offset, offset + 6).map(async (reel) => {
+          try {
+            const body = await graphRequest(
+              origin,
+              `/v26.0/${reel.id}/insights`,
+              {
+                metric:
+                  "views,reach,ig_reels_avg_watch_time,ig_reels_video_view_total_time",
+                period: "lifetime",
+              },
+              token,
+              "Instagram reel insights",
+            );
+            const value = (name) => {
+              const metric = body?.data?.find((item) => item.name === name);
+              const count = metric?.values?.[0]?.value;
+              return Number.isFinite(count) && count >= 0 ? count : null;
+            };
+            return {
+              views: value("views"),
+              reach: value("reach"),
+              averageWatchTime: value("ig_reels_avg_watch_time"),
+              totalWatchTime: value("ig_reels_video_view_total_time"),
+            };
+          } catch {
+            return {
+              views: null,
+              reach: null,
+              averageWatchTime: null,
+              totalWatchTime: null,
+            };
+          }
+        }),
+      )),
+    );
+  }
+  // Missing insights must not produce a plausible but partial lifetime figure.
+  const sum = (key) =>
+    insights.every((item) => item[key] !== null)
+      ? insights.reduce((total, item) => total + item[key], 0)
+      : null;
+  const views = sum("views");
+  const reach = sum("reach");
+  const averageWatchTime = sum("averageWatchTime");
+  const totalWatchTime = sum("totalWatchTime");
+  return {
+    averageViews: reels.length && views !== null ? views / reels.length : null,
+    averageReach: reels.length && reach !== null ? reach / reels.length : null,
+    // Meta reports both watch-time insights in milliseconds.
+    averageWatchTimeSeconds:
+      reels.length && averageWatchTime !== null
+        ? averageWatchTime / reels.length / 1000
+        : null,
+    totalWatchTimeHours:
+      totalWatchTime === null ? null : totalWatchTime / 3_600_000,
+  };
+}
+
+// Stories expire after 24 hours; these are current views, never a lifetime total.
+export async function fetchStoryPerformance(origin, accountId, token) {
+  const stories = new Set();
+  const cursors = new Set();
+  let after;
+  let complete = false;
+  for (let page = 0; page < 100; page++) {
+    const body = await graphRequest(
+      origin,
+      `/v26.0/${accountId}/stories`,
+      { fields: "id", limit: 100, ...(after ? { after } : {}) },
+      token,
+      "Instagram active Stories",
+    );
+    if (!Array.isArray(body?.data))
+      throw new SyncError("Invalid Instagram Stories response");
+    for (const story of body.data) {
+      if (typeof story?.id !== "string" || !/^\d+$/.test(story.id))
+        throw new SyncError("Invalid Instagram Story ID");
+      stories.add(story.id);
+    }
+    if (!body.paging?.next) {
+      complete = true;
+      break;
+    }
+    after = body.paging?.cursors?.after;
+    if (typeof after !== "string" || !after || cursors.has(after))
+      throw new SyncError("Invalid Instagram Stories cursor");
+    cursors.add(after);
+  }
+  if (!complete) return { views: null, scope: "active" };
+  const ids = [...stories];
+  const values = [];
+  for (let offset = 0; offset < ids.length; offset += 6) {
+    values.push(
+      ...(await Promise.all(
+        ids.slice(offset, offset + 6).map(async (id) => {
+          try {
+            const body = await graphRequest(
+              origin,
+              `/v26.0/${id}/insights`,
+              { metric: "views", period: "lifetime" },
+              token,
+              "Instagram Story views",
+            );
+            const metric = body?.data?.find((item) => item.name === "views");
+            const value = metric?.values?.[0]?.value;
+            return isCount(value) ? value : null;
+          } catch {
+            // Expiry, privacy limits, and failures never turn into zero views.
+            return null;
+          }
+        }),
+      )),
+    );
+  }
+  return {
+    views: values.every((value) => value !== null)
+      ? values.reduce((sum, value) => sum + value, 0)
+      : null,
+    count: ids.length,
+    scope: "active",
+  };
+}
+
 // Traverse only our fixed media endpoint; never follow a token-bearing paging URL.
 export async function fetchPostAverages(
   origin,
@@ -245,8 +385,18 @@ export async function fetchPostAverages(
   token,
   followers,
   expectedPosts,
+  includeTotals = false,
+  window,
+  includeReels = false,
 ) {
-  if (expectedPosts === 0) return { ...unavailablePostAverages };
+  if (expectedPosts === 0)
+    return {
+      ...unavailablePostAverages,
+      ...(includeTotals ? { totalLikes: 0, totalComments: 0 } : {}),
+      ...(includeReels
+        ? { reels: { ...unavailableReels, totalWatchTimeHours: 0 } }
+        : {}),
+    };
   const posts = new Map();
   const cursors = new Set();
   let after;
@@ -255,7 +405,7 @@ export async function fetchPostAverages(
       origin,
       `/v26.0/${accountId}/media`,
       {
-        fields: "id,like_count,comments_count",
+        fields: `id,like_count,comments_count,timestamp${includeReels ? ",media_product_type" : ""}`,
         limit: 100,
         ...(after ? { after } : {}),
       },
@@ -279,9 +429,52 @@ export async function fetchPostAverages(
           : null;
       const averageLikes = average("like_count");
       const averageComments = average("comments_count");
+      let recentAverages = { ...unavailablePostAverages };
+      if (
+        window &&
+        values.every((post) => Number.isFinite(Date.parse(post.timestamp)))
+      ) {
+        const recent = values.filter((post) => {
+          const timestamp = Date.parse(post.timestamp);
+          return (
+            timestamp >= Date.parse(window.start) &&
+            timestamp < Date.parse(window.end)
+          );
+        });
+        const recentAverage = (field) =>
+          recent.length && recent.every((post) => isCount(post[field]))
+            ? recent.reduce((sum, post) => sum + post[field], 0) / recent.length
+            : null;
+        const likes = recentAverage("like_count");
+        const comments = recentAverage("comments_count");
+        recentAverages = {
+          averageLikes: likes,
+          averageComments: comments,
+          followerEngagement:
+            followers > 0 && likes !== null && comments !== null
+              ? ((likes + comments) / followers) * 100
+              : null,
+        };
+      }
       return {
         averageLikes,
         averageComments,
+        ...(includeReels
+          ? { reels: await fetchReelPerformance(origin, token, values) }
+          : {}),
+        ...(window ? { recentAverages } : {}),
+        ...(includeTotals
+          ? {
+              totalLikes:
+                averageLikes === null
+                  ? null
+                  : values.reduce((sum, post) => sum + post.like_count, 0),
+              totalComments:
+                averageComments === null
+                  ? null
+                  : values.reduce((sum, post) => sum + post.comments_count, 0),
+            }
+          : {}),
         followerEngagement:
           followers > 0 && averageLikes !== null && averageComments !== null
             ? ((averageLikes + averageComments) / followers) * 100
@@ -407,6 +600,160 @@ export function bioLinkHistoryTotal(history) {
   return isCount(value) ? value : null;
 }
 
+const additiveMetrics = {
+  likes: "likes",
+  comments: "comments",
+  views: "views",
+  interactions: "total_interactions",
+  saves: "saves",
+  shares: "shares",
+  profileLinkTaps: "profile_links_taps",
+};
+
+// Unique accounts cannot be added across windows. Archive only additive counts,
+// with fixed, disjoint boundaries so repeated syncs replace rather than inflate.
+export async function fetchPerformanceHistory(
+  origin,
+  accountId,
+  token,
+  observedAt,
+  previous,
+  current,
+) {
+  const end = new Date(observedAt);
+  end.setUTCHours(0, 0, 0, 0);
+  const endMs = end.getTime();
+  const earliest = endMs - 90 * day;
+  let start = earliest;
+  const saved = new Map();
+  if (previous?.accountId === accountId && Array.isArray(previous.windows)) {
+    let boundary = Date.parse(previous.start);
+    if (
+      !Number.isFinite(boundary) ||
+      boundary % day ||
+      boundary >= endMs ||
+      endMs - boundary > 1000 * 30 * day ||
+      previous.windows.length > 1000
+    )
+      throw new SyncError("Invalid saved performance history");
+    start = boundary;
+    for (const window of previous.windows) {
+      const windowEnd = Date.parse(window.end);
+      if (
+        Date.parse(window.start) !== boundary ||
+        !Number.isFinite(windowEnd) ||
+        windowEnd % day ||
+        windowEnd <= boundary ||
+        windowEnd - boundary > 30 * day ||
+        windowEnd > endMs ||
+        !window.values ||
+        typeof window.values !== "object" ||
+        Object.values(window.values).some(
+          (value) => value !== null && !isCount(value),
+        )
+      )
+        throw new SyncError("Invalid saved performance window");
+      saved.set(boundary, window);
+      boundary = windowEnd;
+    }
+  }
+  const windows = [];
+  for (let since = start; since < endMs; since += 30 * day) {
+    const until = Math.min(since + 30 * day, endMs);
+    const old = saved.get(since);
+    const matching = old && Date.parse(old.end) === until;
+    windows.push({
+      start: new Date(since).toISOString(),
+      end: new Date(until).toISOString(),
+      values: matching ? { ...old.values } : {},
+      stale: matching ? { ...old.stale } : {},
+    });
+  }
+  const fields = [...Object.keys(additiveMetrics), "profileViews"];
+  const pending = windows.filter(
+    (window) =>
+      Date.parse(window.start) >= earliest &&
+      (Date.parse(window.end) > endMs - 30 * day ||
+        fields.some(
+          (field) => !isCount(window.values[field]) || window.stale[field],
+        )),
+  );
+  for (let i = 0; i < pending.length; i += 3) {
+    await Promise.all(
+      pending.slice(i, i + 3).map(async (window) => {
+        if (
+          current?.window.start === window.start &&
+          current.window.end === window.end
+        ) {
+          for (const field of fields) {
+            window.stale[field] = !isCount(current[field]);
+            if (isCount(current[field])) window.values[field] = current[field];
+          }
+          return;
+        }
+        const range = {
+          period: "day",
+          metric_type: "total_value",
+          since: Date.parse(window.start) / 1000,
+          until: Date.parse(window.end) / 1000 - 1,
+        };
+        await Promise.all(
+          [{ ...additiveMetrics }, { profileViews: "profile_views" }].map(
+            async (metrics) => {
+              try {
+                const body = await graphRequest(
+                  origin,
+                  `/v26.0/${accountId}/insights`,
+                  {
+                    ...range,
+                    metric: Object.values(metrics).join(","),
+                  },
+                  token,
+                  "Instagram performance history",
+                );
+                for (const [field, metric] of Object.entries(metrics)) {
+                  const value = insightCount(body, metric);
+                  window.stale[field] = value === null;
+                  if (value !== null) window.values[field] = value;
+                }
+              } catch {
+                for (const field of Object.keys(metrics))
+                  window.stale[field] = true;
+              }
+            },
+          ),
+        );
+      }),
+    );
+  }
+  return {
+    accountId,
+    start: new Date(start).toISOString(),
+    end: end.toISOString(),
+    windows,
+  };
+}
+
+export function performanceHistoryTotals(history) {
+  return Object.fromEntries(
+    [...Object.keys(additiveMetrics), "profileViews"].map((field) => {
+      const windows = history?.windows;
+      if (
+        !windows?.length ||
+        windows.some(
+          (window) => window.stale?.[field] || !isCount(window.values[field]),
+        )
+      )
+        return [field, null];
+      const value = windows.reduce(
+        (sum, window) => sum + window.values[field],
+        0,
+      );
+      return [field, isCount(value) ? value : null];
+    }),
+  );
+}
+
 export async function fetchSnapshot(
   accessToken,
   observedAt,
@@ -446,8 +793,10 @@ export async function fetchSnapshot(
     throw new SyncError("Instagram token must authorize @uwummie");
   }
 
-  const previousHistory =
+  const previous =
     typeof historySource === "function" ? await historySource() : historySource;
+  // Accept the old bio-link-only callback during rollout.
+  const previousHistory = previous?.bioLinkHistory ?? previous;
 
   const end = new Date(observedAt);
   end.setUTCHours(0, 0, 0, 0);
@@ -461,10 +810,12 @@ export async function fetchSnapshot(
   };
   const [
     profileViews,
+    bioLinkClicks,
     bioLinkHistory,
     postAverages,
     totals,
     dailyReach,
+    stories,
     ...demographics
   ] = await Promise.all([
     graphRequest(
@@ -481,6 +832,20 @@ export async function fetchSnapshot(
     )
       .then((body) => insightCount(body, "profile_views"))
       .catch(() => null),
+    graphRequest(
+      origin,
+      insightsPath,
+      {
+        metric: "website_clicks",
+        period: "day",
+        metric_type: "total_value",
+        ...range,
+      },
+      accessToken,
+      "Instagram 30-day bio-link clicks",
+    )
+      .then((body) => insightCount(body, "website_clicks"))
+      .catch(() => null),
     fetchBioLinkHistory(
       origin,
       resolvedId,
@@ -494,6 +859,9 @@ export async function fetchSnapshot(
       accessToken,
       account.followers_count,
       account.media_count,
+      true,
+      { start: start.toISOString(), end: end.toISOString() },
+      true,
     ).catch(() => ({ ...unavailablePostAverages })),
     graphRequest(
       origin,
@@ -519,6 +887,10 @@ export async function fetchSnapshot(
       accessToken,
       "Instagram daily reach",
     ),
+    fetchStoryPerformance(origin, resolvedId, accessToken).catch(() => ({
+      views: null,
+      scope: "active",
+    })),
     ...dimensions.map((dimension) =>
       account.followers_count < 100
         ? { data: [] }
@@ -542,32 +914,63 @@ export async function fetchSnapshot(
     performanceMetrics.map((name) => [name, insightCount(totals, name)]),
   );
 
-  return {
-    followers: account.followers_count,
+  const { totalLikes, totalComments, recentAverages, reels, ...averages } =
+    postAverages;
+  const performance = {
+    window: { start: start.toISOString(), end: end.toISOString() },
+    reach: counts.reach,
+    accountsEngaged: counts.accounts_engaged,
+    engagementRate:
+      counts.accounts_engaged !== null && counts.reach > 0
+        ? (counts.accounts_engaged / counts.reach) * 100
+        : null,
+    ...(recentAverages ?? unavailablePostAverages),
+    profileViews,
+    bioLinkClicks,
+    bioLinkHistory,
+    bioLinkClicksTracked: bioLinkHistoryTotal(bioLinkHistory),
+    likes: counts.likes,
+    comments: counts.comments,
     views: counts.views,
-    viewWindow: { start: start.toISOString(), end: end.toISOString() },
-    performance: {
-      window: { start: start.toISOString(), end: end.toISOString() },
-      reach: counts.reach,
-      accountsEngaged: counts.accounts_engaged,
-      engagementRate:
-        counts.accounts_engaged !== null && counts.reach > 0
-          ? (counts.accounts_engaged / counts.reach) * 100
-          : null,
-      ...postAverages,
-      profileViews,
-      bioLinkHistory,
-      bioLinkClicksTracked: bioLinkHistoryTotal(bioLinkHistory),
-      likes: counts.likes,
-      comments: counts.comments,
-      views: counts.views,
-      interactions: counts.total_interactions,
-      saves: counts.saves,
-      shares: counts.shares,
-      profileLinkTaps: counts.profile_links_taps,
-      posts: account.media_count ?? null,
-      dailyReach: reachSeries(dailyReach),
-    },
+    interactions: counts.total_interactions,
+    saves: counts.saves,
+    shares: counts.shares,
+    profileLinkTaps: counts.profile_links_taps,
+    posts: account.media_count ?? null,
+    dailyReach: reachSeries(dailyReach),
+  };
+  const performanceHistory = await fetchPerformanceHistory(
+    origin,
+    resolvedId,
+    accessToken,
+    observedAt,
+    previous?.performanceHistory,
+    performance,
+  );
+  const lifetime = {
+    ...performanceHistoryTotals(performanceHistory),
+    ...averages,
+    likes: totalLikes ?? null,
+    comments: totalComments ?? null,
+    reach: null,
+    accountsEngaged: null,
+    engagementRate: null,
+    window: { start: performanceHistory.start, end: performanceHistory.end },
+    bioLinkClicks: performance.bioLinkClicksTracked,
+    bioLinkHistory,
+    posts: performance.posts,
+  };
+
+  return {
+    schemaVersion: 3,
+    defaultPerformancePeriod: "lifetime",
+    followers: account.followers_count,
+    reels: reels ?? { ...unavailableReels },
+    stories: { ...stories, observedAt },
+    views: counts.views,
+    viewWindow: performance.window,
+    performance: { ...performance, performanceHistory },
+    performancePeriods: { lifetime, last30Days: performance },
     audience: {
       gender: demographicChart(demographics[0], "gender"),
       ages: demographicChart(demographics[1], "age"),

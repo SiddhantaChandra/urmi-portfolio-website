@@ -8,17 +8,24 @@ const compactNumber = new Intl.NumberFormat("en-US", {
   notation: "compact",
   maximumFractionDigits: 1,
 });
+const millionNumber = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 const exactNumber = new Intl.NumberFormat("en-US");
 
 function InstagramStat({ label, count }) {
   const exact = count == null ? "Unavailable" : exactNumber.format(count);
+  const compact = count == null ? "—" : compactNumber.format(count);
+  const formatted = compact.endsWith("M")
+    ? millionNumber.format(count)
+    : compact;
   return (
     <div className="instagram-stat">
       <dt>{label}</dt>
       <dd title={exact}>
-        <span aria-hidden="true">
-          {count == null ? "—" : compactNumber.format(count)}
-        </span>
+        <span aria-hidden="true">{formatted}</span>
         <span className="sr-only">{exact}</span>
       </dd>
     </div>

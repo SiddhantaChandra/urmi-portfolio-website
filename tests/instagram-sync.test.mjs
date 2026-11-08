@@ -17,6 +17,7 @@ const profile = {
 test("fetches all Unified Login metrics for the configured Instagram account", async (t) => {
   const accountId = profile.user_id;
   const requests = t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/stories")) return Response.json({ data: [] });
     if (url.pathname.endsWith("/media")) return Response.json({ data: [] });
     assert.equal(url.origin, "https://graph.facebook.com");
     if (url.pathname === `/v26.0/${accountId}`) {
@@ -48,7 +49,10 @@ test("fetches all Unified Login metrics for the configured Instagram account", a
   assert.equal(snapshot.followers, 300);
   assert.equal(snapshot.views, 2700);
   assert.deepEqual(snapshot.audience.gender, []);
-  assert.equal(requests.mock.callCount(), 33);
+  assert.equal(requests.mock.callCount(), 39);
+  assert.equal(snapshot.stories.views, 0);
+  assert.equal(snapshot.stories.scope, "active");
+  assert.equal(snapshot.stories.observedAt, observedAt);
   assert.equal(snapshot.performance.posts, 23);
 });
 
@@ -247,7 +251,7 @@ test("represents empty views and privacy-limited demographics as unavailable", a
   const snapshot = await fetchSnapshot("fixture-token", observedAt);
   assert.equal(snapshot.views, null);
   assert.deepEqual(snapshot.audience, { gender: [], ages: [], countries: [] });
-  assert.equal(requests.mock.callCount(), 30);
+  assert.equal(requests.mock.callCount(), 36);
   assert.equal(snapshot.performance.reach, null);
   assert.equal(snapshot.performance.engagementRate, null);
   assert.deepEqual(snapshot.performance.dailyReach, []);
@@ -357,6 +361,18 @@ test("uses the winning credential when another run refreshes first", async (t) =
       { start: historyStart, end: historyEnd.toISOString(), value: 80 },
     ],
   };
+  const savedPerformanceHistory = {
+    accountId: profile.user_id,
+    start: historyStart,
+    end: historyEnd.toISOString(),
+    windows: [
+      {
+        start: historyStart,
+        end: historyEnd.toISOString(),
+        values: { views: 80 },
+      },
+    ],
+  };
   t.mock.method(globalThis, "fetch", async (url, options) => {
     const { pathname, searchParams } = new URL(url);
     switch (pathname) {
@@ -393,17 +409,37 @@ test("uses the winning credential when another run refreshes first", async (t) =
         return Response.json(profile);
       case "/rest/v1/instagram_mediakit_stats":
         return Response.json([
-          { snapshot: { performance: { bioLinkHistory: savedHistory } } },
+          {
+            snapshot: {
+              performance: {
+                bioLinkHistory: savedHistory,
+                performanceHistory: savedPerformanceHistory,
+              },
+            },
+          },
         ]);
       case `/v26.0/${profile.user_id}/insights`:
         if (searchParams.get("metric") === "website_clicks")
           return insight("website_clicks", { value: 123 });
         return Response.json({ data: [] });
       case "/rest/v1/rpc/publish_instagram_mediakit_stats": {
-        const performance = JSON.parse(options.body).new_snapshot.performance;
+        const snapshot = JSON.parse(options.body).new_snapshot;
+        const performance = snapshot.performance;
         assert.equal(performance.bioLinkHistory.start, historyStart);
         assert.equal(performance.bioLinkClicksTracked, 123);
         assert.equal(performance.bioLinkHistory.windows.length, 1);
+        assert.equal(performance.performanceHistory.start, historyStart);
+        assert.equal(
+          performance.performanceHistory.windows[0].values.views,
+          80,
+        );
+        assert.equal(
+          performance.performanceHistory.windows[0].stale.views,
+          true,
+        );
+        assert.equal(snapshot.performancePeriods.lifetime.views, null);
+        assert.equal(snapshot.defaultPerformancePeriod, "lifetime");
+        assert.equal(snapshot.schemaVersion, 3);
         published = true;
         return new Response(null, { status: 204 });
       }
@@ -431,7 +467,7 @@ test("averages all posts across pages, deduplicates media and uses the current f
     assert.equal(url.pathname, `/v26.0/${profile.user_id}/media`);
     assert.equal(
       url.searchParams.get("fields"),
-      "id,like_count,comments_count",
+      "id,like_count,comments_count,timestamp",
     );
     const first = { id: "1", like_count: 100, comments_count: 10 };
     return Response.json(

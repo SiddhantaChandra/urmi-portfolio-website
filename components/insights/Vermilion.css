@@ -57,11 +57,14 @@
   position: relative;
   padding: 72px max(32px, calc((100% - 1160px) / 2));
 }
+.vi-section-head,
+.vi-summary-head {
+  margin-bottom: 64px;
+}
 .vi-section-head {
   position: relative;
   max-width: 1040px;
   padding-right: 120px;
-  margin-bottom: 64px;
 }
 .vi-section-head h2 {
   font-family: var(--font-editorial-serif);
@@ -246,7 +249,6 @@
   font-size: 12px;
 }
 .vi-summary {
-  padding-top: 90px;
   background: var(--vi-field);
   margin-top: 38px;
 }
@@ -255,7 +257,6 @@
   justify-content: space-between;
   align-items: start;
   gap: 36px;
-  margin-bottom: 70px;
 }
 .vi-summary-head h2 {
   font-family: var(--font-editorial-serif);
@@ -272,17 +273,20 @@
 .vi-period {
   display: flex;
   flex-shrink: 0;
+  min-width: 0;
+  margin: 0;
+  border: 0;
   gap: 3px;
   padding: 4px;
-  background: var(--vi-paper);
+  background: var(--vi-field);
 }
 .vi-period button {
   border: none;
   background: transparent;
   color: inherit;
   padding: 12px 14px;
-  font-size: 11px;
-  min-height: 42px;
+  font-size: 13px;
+  min-height: 44px;
   transition:
     background 180ms,
     color 180ms;
@@ -290,6 +294,9 @@
 .vi-period button[aria-pressed="true"] {
   background: var(--vi-ink);
   color: var(--vi-paper);
+}
+.vi-period button:hover:not([aria-pressed="true"]) {
+  background: var(--vi-paper);
 }
 .vi-press-reach > span {
   display: block;
@@ -398,7 +405,8 @@
   max-width: none;
   padding-right: 90px;
 }
-.vi-press-audience .vi-section-head h2 {
+.vi-press-audience .vi-section-head h2,
+.vi-press-summary .vi-summary-head h2 {
   font-family: var(--font-sans);
   font-size: clamp(45px, 6.7vw, 94px);
   font-weight: 600;
@@ -623,15 +631,19 @@
     transform: scaleY(0);
   }
 }
-.vi-press-summary .vi-summary-head h2 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-}
 .vi-press-performance {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.6fr);
-  gap: 70px;
+  grid-template-areas: "reach metrics" "story period";
+  gap: 16px 70px;
   align-items: center;
+}
+.vi-press-reach {
+  grid-area: reach;
+}
+.vi-press-performance > .vi-period {
+  grid-area: period;
+  justify-self: end;
 }
 .vi-press-reach > strong {
   display: block;
@@ -642,17 +654,20 @@
   letter-spacing: -0.04em;
   color: var(--vi-accent);
 }
-.vi-press-reach > span:last-child {
+.vi-press-story {
+  grid-area: story;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-editorial-serif);
   font-size: 28px;
+  font-weight: 400;
 }
-.vi-press-reach svg {
+.vi-press-story svg {
   width: 36px;
 }
 .vi-press-performance > dl {
+  grid-area: metrics;
   display: grid;
   gap: 40px;
   justify-items: end;
@@ -662,14 +677,30 @@
   font-family: var(--font-sans);
   font-size: 50px;
 }
+@media (min-width: 1024px) {
+  .vi-press-reach,
+  .vi-press-performance > dl {
+    align-self: start;
+  }
+}
 .vi-press-summary .vi-more-metrics {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   padding: 32px;
   background: var(--vi-field);
 }
 .vi-press-summary dl.vi-total-metrics {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 28px !important;
+}
+.vi-reels {
+  margin-top: 58px;
+}
+.vi-press-summary dl.vi-reel-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 28px !important;
+}
+.vi-reel-metrics dd {
+  margin-top: auto;
 }
 @keyframes vi-grow {
   from {
@@ -739,8 +770,9 @@
 }
 @media (max-width: 1050px) {
   .vi-press-summary dl.vi-total-metrics,
+  .vi-press-summary dl.vi-reel-metrics,
   .vi-press-summary .vi-overall-metrics {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .vi-demographics,
   .vi-summary {
@@ -764,20 +796,61 @@
     gap: 10px;
   }
   .vi-press-performance {
-    gap: 32px;
+    column-gap: 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .vi-press-summary {
+    padding-block: 48px;
+  }
+  .vi-press-summary .vi-summary-head {
+    margin-bottom: 32px;
+  }
+  .vi-press-summary .vi-summary-head h2 {
+    font-size: clamp(48px, 4.4vw, 64px);
+  }
+  .vi-press-summary .vi-press-performance {
+    row-gap: 12px;
+  }
+  .vi-press-summary .vi-press-reach > strong {
+    font-size: clamp(104px, 10vw, 144px);
+    line-height: 1.05;
+  }
+  .vi-press-summary .vi-press-performance > dl {
+    gap: 20px;
+  }
+  .vi-press-summary .vi-press-performance > dl .vi-metric dd {
+    font-size: 42px;
+  }
+  .vi-press-summary dl.vi-more-metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 24px !important;
+    padding: 20px 24px;
+  }
+  .vi-press-summary .vi-reels {
+    margin-top: 28px;
+  }
+  .vi-press-summary dl.vi-reel-metrics {
+    margin-top: 16px !important;
+  }
+  .vi-press-summary .vi-summary-foot {
+    margin-top: 32px;
   }
 }
 @media (max-width: 760px) {
   .vi-press-summary dl.vi-total-metrics,
   .vi-press-summary .vi-overall-metrics {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .vi-demographics,
   .vi-summary {
     padding: 52px 24px;
   }
-  .vi-section-head {
+  .vi-section-head,
+  .vi-summary-head {
     margin-bottom: 46px;
+  }
+  .vi-section-head {
     padding-right: 48px;
   }
   .vi-section-head h2 {
@@ -818,7 +891,6 @@
   .vi-summary-head {
     flex-direction: column;
     gap: 28px;
-    margin-bottom: 44px;
   }
   .vi-summary-head h2 {
     font-size: 42px;
@@ -828,12 +900,15 @@
     margin-top: 18px;
   }
   .vi-period button {
-    font-size: 11px;
+    font-size: 13px;
   }
   .vi-more-metrics {
     grid-template-columns: repeat(3, 1fr);
     gap: 28px 24px;
     margin-top: 40px !important;
+  }
+  .vi-reels {
+    margin-top: 40px;
   }
   .vi-metric dt {
     font-size: 11px;
@@ -856,7 +931,8 @@
   .vi-summary-foot > span {
     text-align: left;
   }
-  .vi-press-audience .vi-section-head h2 {
+  .vi-press-audience .vi-section-head h2,
+  .vi-press-summary .vi-summary-head h2 {
     font-size: 58px;
   }
   .vi-press-spread {
@@ -879,15 +955,15 @@
   }
   .vi-press-performance {
     grid-template-columns: 1.7fr 0.8fr;
-    gap: 24px;
+    gap: 16px 24px;
   }
   .vi-press-reach > strong {
     font-size: 17vw;
   }
-  .vi-press-reach > span:last-child {
+  .vi-press-story {
     font-size: 22px;
   }
-  .vi-press-reach svg {
+  .vi-press-story svg {
     width: 23px;
   }
   .vi-press-performance > dl .vi-metric dd {
@@ -932,6 +1008,7 @@
   }
   .vi-summary-head h2 {
     font-size: 38px;
+    line-height: 1.02;
   }
   .vi-landscape figcaption {
     font-size: 10px;
@@ -959,7 +1036,8 @@
   .vi-more-metrics .vi-metric:last-child {
     grid-column: auto;
   }
-  .vi-press-audience .vi-section-head h2 {
+  .vi-press-audience .vi-section-head h2,
+  .vi-press-summary .vi-summary-head h2 {
     font-size: 44px;
   }
   .vi-split-figures b {
@@ -989,7 +1067,8 @@
   }
   .vi-press-performance {
     grid-template-columns: 1fr;
-    gap: 36px;
+    grid-template-areas: "reach" "story" "metrics" "period";
+    gap: 24px;
   }
   .vi-press-reach > strong {
     font-size: 26vw;
@@ -997,6 +1076,8 @@
   .vi-press-performance > dl {
     grid-template-columns: 1fr 1fr;
     gap: 24px;
+    justify-items: center;
+    text-align: center;
   }
   .vi-press-performance > dl .vi-metric dd {
     font-size: 42px;
@@ -1007,6 +1088,68 @@
   .vi-press-summary .vi-more-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 24px;
+  }
+  .vi-press-summary dl.vi-reel-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1023px) {
+  .vi-press-summary {
+    padding-block: 36px;
+  }
+  .vi-press-summary .vi-summary-head {
+    margin-bottom: 24px;
+  }
+  .vi-press-summary .vi-summary-head h2 {
+    font-size: clamp(38px, 8vw, 48px);
+  }
+  .vi-press-summary .vi-press-performance {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "reach" "story" "metrics" "period";
+    gap: 16px;
+  }
+  .vi-press-summary .vi-press-reach > strong {
+    font-size: clamp(76px, 25vw, 112px);
+    line-height: 1.05;
+  }
+  .vi-press-summary .vi-press-performance > dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    justify-items: stretch;
+    text-align: left;
+  }
+  .vi-press-summary .vi-press-performance > dl .vi-metric dd {
+    font-size: clamp(30px, 8.5vw, 40px);
+  }
+  .vi-press-summary .vi-metric {
+    gap: 4px;
+  }
+  .vi-press-summary .vi-period button {
+    min-height: 44px;
+  }
+  .vi-press-summary dl.vi-more-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 18px;
+    margin-top: 16px !important;
+    padding: 18px;
+  }
+  .vi-press-summary .vi-more-metrics .vi-metric dd {
+    margin-top: auto;
+  }
+  .vi-press-summary .vi-reels {
+    margin-top: 24px;
+  }
+  .vi-press-summary dl.vi-reel-metrics {
+    margin-top: 12px !important;
+  }
+  .vi-press-summary .vi-summary-foot {
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .vi-press-summary .vi-summary-foot > span {
+    text-align: left;
   }
 }
 .vi-data-note {

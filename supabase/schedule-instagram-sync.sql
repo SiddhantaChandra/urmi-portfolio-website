@@ -1,10 +1,11 @@
 -- Run after the deployed function has published its first verified snapshot.
+-- Supabase Cron uses UTC: 16:00 UTC is 21:30 (9:30 PM) Asia/Kolkata.
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
 select cron.schedule(
   'instagram-mediakit-sync',
-  '0 9 * * *',
+  '0 16 * * *',
   $$
   select net.http_post(
     url := (
