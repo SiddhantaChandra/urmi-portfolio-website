@@ -2,6 +2,7 @@ import { scaleLinear } from "d3-scale";
 import { arc, pie } from "d3-shape";
 import Image from "next/image";
 import enmaKatana from "../public/enma-katana.webp";
+import useAudienceEdge from "./useAudienceEdge";
 import "./Audience.css";
 
 const audienceTitle = "Audience";
@@ -135,6 +136,7 @@ function HorizontalBarChart({
 }
 
 export default function Audience({ stats }) {
+  const screenRef = useAudienceEdge();
   const { gender = [], ages = [], countries = [] } = stats?.audience ?? {};
   const updatedAt = stats?.updatedAt;
   const updatedDate = updatedAt ? new Date(updatedAt) : null;
@@ -185,7 +187,7 @@ export default function Audience({ stats }) {
           </p>
         </div>
       </header>
-      <div className="audience-screen">
+      <div ref={screenRef} className="audience-screen">
         <Image
           className="audience-bamboo"
           src="/bamboo-tree-left.webp"
