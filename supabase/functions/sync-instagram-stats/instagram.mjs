@@ -13,6 +13,35 @@ const genderLabels = {
 
 export class SyncError extends Error {}
 
+export async function resolveUnifiedAccountId(accessToken) {
+  let after;
+  do {
+    const body = await graphRequest(
+      unifiedOrigin,
+      "/v26.0/me/assigned_instagram_accounts",
+      { fields: "id,username", limit: 100, ...(after ? { after } : {}) },
+      accessToken,
+      "Instagram account lookup",
+    );
+    if (!Array.isArray(body?.data)) {
+      throw new SyncError("Invalid Instagram account lookup response");
+    }
+    const account = body.data.find(
+      (item) => item?.username?.toLowerCase() === username,
+    );
+    if (account && typeof account.id === "string" && /^\d+$/.test(account.id)) {
+      return account.id;
+    }
+    const next = body.paging?.next ? body.paging?.cursors?.after : undefined;
+    if (next && next === after)
+      throw new SyncError("Invalid Instagram account cursor");
+    after = next;
+  } while (after);
+  throw new SyncError(
+    "The Meta token has no assigned @uwummie account. Share @uwummie with this app in Meta's Unified Login setup.",
+  );
+}
+
 function isCount(value) {
   return Number.isSafeInteger(value) && value >= 0;
 }
@@ -71,11 +100,53 @@ function metricTotal(body, name) {
     throw new SyncError(`Invalid ${name} insight response`);
   }
   if (body.data.length === 0) return null;
-  const result = body.data.find((item) => item?.name === name)?.total_value;
+  const metric = body.data.find((item) => item?.name === name);
+  if (!metric) return null;
+  const result = metric.total_value;
   if (!result || typeof result !== "object" || Array.isArray(result)) {
     throw new SyncError(`Missing ${name} insight total`);
   }
   return result;
+}
+
+const performanceMetrics = [
+  "views",
+  "reach",
+  "accounts_engaged",
+  "likes",
+  "comments",
+  "total_interactions",
+  "saves",
+  "shares",
+  "profile_links_taps",
+];
+
+function insightCount(body, name) {
+  const total = metricTotal(body, name);
+  if (total === null) return null;
+  if (!isCount(total.value)) {
+    throw new SyncError(`Instagram returned an invalid ${name} count`);
+  }
+  return total.value;
+}
+
+function reachSeries(body) {
+  if (!Array.isArray(body?.data)) {
+    throw new SyncError("Invalid daily reach response");
+  }
+  const metric = body.data.find((item) => item?.name === "reach");
+  if (!metric) return [];
+  if (!Array.isArray(metric.values)) {
+    throw new SyncError("Missing daily reach values");
+  }
+  const points = metric.values.map((point) => {
+    const end = Date.parse(point?.end_time);
+    if (!Number.isFinite(end) || !isCount(point?.value)) {
+      throw new SyncError("Invalid daily reach value");
+    }
+    return { endTime: new Date(end).toISOString(), value: point.value };
+  });
+  return points.sort((a, b) => a.endTime.localeCompare(b.endTime));
 }
 
 function chartCategory(dimension, key) {
@@ -160,8 +231,8 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
     `/${version}/${unified ? accountId : "me"}`,
     {
       fields: unified
-        ? "id,username,followers_count"
-        : "user_id,username,followers_count",
+        ? "id,username,followers_count,media_count"
+        : "user_id,username,followers_count,media_count",
     },
     accessToken,
     "Instagram profile",
@@ -173,7 +244,8 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
     typeof resolvedId !== "string" ||
     !/^\d+$/.test(resolvedId) ||
     (unified && resolvedId !== accountId) ||
-    !isCount(account.followers_count)
+    !isCount(account.followers_count) ||
+    (account.media_count != null && !isCount(account.media_count))
   ) {
     throw new SyncError("Instagram returned an invalid profile");
   }
@@ -186,19 +258,35 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
   const start = new Date(end.getTime() - 30 * day);
   const insightsPath = `/${version}/${resolvedId}/insights`;
   const dimensions = ["gender", "age", "country"];
-  const [viewsResponse, ...demographics] = await Promise.all([
+  const range = {
+    since: start.getTime() / 1000,
+    // Meta's range is inclusive. Exclude the current, incomplete day.
+    until: end.getTime() / 1000 - 1,
+  };
+  const [totals, dailyReach, ...demographics] = await Promise.all([
     graphRequest(
       origin,
       insightsPath,
       {
-        metric: "views",
+        metric: performanceMetrics.join(","),
         period: "day",
         metric_type: "total_value",
-        since: start.getTime() / 1000,
-        until: end.getTime() / 1000,
+        ...range,
       },
       accessToken,
-      "Instagram views",
+      "Instagram performance",
+    ),
+    graphRequest(
+      origin,
+      insightsPath,
+      {
+        metric: "reach",
+        period: "day",
+        metric_type: "time_series",
+        ...range,
+      },
+      accessToken,
+      "Instagram daily reach",
     ),
     ...dimensions.map((dimension) =>
       account.followers_count < 100
@@ -219,15 +307,32 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
     ),
   ]);
 
-  const views = metricTotal(viewsResponse, "views");
-  if (views !== null && !isCount(views.value)) {
-    throw new SyncError("Instagram returned an invalid views count");
-  }
+  const counts = Object.fromEntries(
+    performanceMetrics.map((name) => [name, insightCount(totals, name)]),
+  );
 
   return {
     followers: account.followers_count,
-    views: views?.value ?? null,
+    views: counts.views,
     viewWindow: { start: start.toISOString(), end: end.toISOString() },
+    performance: {
+      window: { start: start.toISOString(), end: end.toISOString() },
+      reach: counts.reach,
+      accountsEngaged: counts.accounts_engaged,
+      engagementRate:
+        counts.accounts_engaged !== null && counts.reach > 0
+          ? (counts.accounts_engaged / counts.reach) * 100
+          : null,
+      likes: counts.likes,
+      comments: counts.comments,
+      views: counts.views,
+      interactions: counts.total_interactions,
+      saves: counts.saves,
+      shares: counts.shares,
+      profileLinkTaps: counts.profile_links_taps,
+      posts: account.media_count ?? null,
+      dailyReach: reachSeries(dailyReach),
+    },
     audience: {
       gender: demographicChart(demographics[0], "gender"),
       ages: demographicChart(demographics[1], "age"),

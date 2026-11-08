@@ -1,12 +1,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fetchSnapshot } from "../supabase/functions/sync-instagram-stats/instagram.mjs";
+import {
+  fetchSnapshot,
+  resolveUnifiedAccountId,
+} from "../supabase/functions/sync-instagram-stats/instagram.mjs";
 
 const observedAt = "2026-11-07T09:00:00.000Z";
 const profile = {
   user_id: "17841401130346306",
   username: "uwummie",
   followers_count: 300,
+  media_count: 23,
 };
 
 test("fetches all Unified Login metrics for the configured Instagram account", async (t) => {
@@ -16,16 +20,20 @@ test("fetches all Unified Login metrics for the configured Instagram account", a
     if (url.pathname === `/v26.0/${accountId}`) {
       assert.equal(
         url.searchParams.get("fields"),
-        "id,username,followers_count",
+        "id,username,followers_count,media_count",
       );
       return Response.json({
         id: accountId,
         username: "uwummie",
         followers_count: 300,
+        media_count: 23,
       });
     }
     assert.equal(url.pathname, `/v26.0/${accountId}/insights`);
-    if (url.searchParams.get("metric") === "views") {
+    if (
+      url.searchParams.get("metric_type") === "total_value" &&
+      !url.searchParams.has("breakdown")
+    ) {
       return insight("views", { value: 2700 });
     }
     if (url.searchParams.get("breakdown") === "gender") {
@@ -38,7 +46,8 @@ test("fetches all Unified Login metrics for the configured Instagram account", a
   assert.equal(snapshot.followers, 300);
   assert.equal(snapshot.views, 2700);
   assert.deepEqual(snapshot.audience.gender, []);
-  assert.equal(requests.mock.callCount(), 5);
+  assert.equal(requests.mock.callCount(), 6);
+  assert.equal(snapshot.performance.posts, 23);
 });
 
 function insight(name, total_value) {
@@ -59,18 +68,119 @@ function demographics(dimension, entries) {
   });
 }
 
+test("uses Meta's unique reach total and real daily points, preserving zero and unavailable metrics", async (t) => {
+  t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/me")) return Response.json(profile);
+    if (url.searchParams.get("metric_type") === "time_series") {
+      assert.equal(url.searchParams.get("metric"), "reach");
+      return Response.json({
+        data: [
+          {
+            name: "reach",
+            values: [
+              { value: 140, end_time: "2026-11-06T08:00:00+0000" },
+              { value: 100, end_time: "2026-11-05T08:00:00+0000" },
+              { value: 0, end_time: "2026-11-07T08:00:00+0000" },
+            ],
+          },
+        ],
+      });
+    }
+    if (url.searchParams.has("breakdown")) return Response.json({ data: [] });
+    assert.equal(url.searchParams.get("period"), "day");
+    assert.ok(url.searchParams.get("metric").includes("total_interactions"));
+    assert.ok(!url.searchParams.get("metric").includes("impressions"));
+    return Response.json({
+      data: Object.entries({
+        reach: 200,
+        accounts_engaged: 10,
+        views: 600,
+        likes: 0,
+        comments: 2,
+        total_interactions: 20,
+        saves: 3,
+        shares: 5,
+      }).map(([name, value]) => ({ name, total_value: { value } })),
+    });
+  });
+  const { performance } = await fetchSnapshot("fixture-token", observedAt);
+  assert.equal(performance.reach, 200); // Not the sum of daily unique accounts.
+  assert.equal(performance.engagementRate, 5);
+  assert.equal(performance.likes, 0);
+  assert.equal(performance.profileLinkTaps, null);
+  assert.equal(performance.interactions, 20);
+  assert.deepEqual(
+    performance.dailyReach.map((point) => point.value),
+    [100, 140, 0],
+  );
+  assert.equal(performance.dailyReach[0].endTime, "2026-11-05T08:00:00.000Z");
+});
+
+test("rejects malformed performance totals and daily points", async (t) => {
+  for (const invalid of ["total", "series"]) {
+    const mock = t.mock.method(globalThis, "fetch", async (url) => {
+      if (url.pathname.endsWith("/me")) return Response.json(profile);
+      if (url.searchParams.has("breakdown")) return Response.json({ data: [] });
+      if (url.searchParams.get("metric_type") === "time_series") {
+        return Response.json({
+          data:
+            invalid === "series"
+              ? [{ name: "reach", values: [{ end_time: "invalid", value: 1 }] }]
+              : [],
+        });
+      }
+      return insight("reach", { value: invalid === "total" ? "200" : 200 });
+    });
+    await assert.rejects(
+      fetchSnapshot("fixture-token", observedAt),
+      /invalid reach count|Invalid daily reach value/,
+    );
+    mock.mock.restore();
+  }
+});
+
+test("finds @uwummie among paginated Unified Login assets", async (t) => {
+  const requests = t.mock.method(globalThis, "fetch", async (url) => {
+    assert.equal(url.origin, "https://graph.facebook.com");
+    assert.equal(url.pathname, "/v26.0/me/assigned_instagram_accounts");
+    return Response.json(
+      url.searchParams.has("after")
+        ? { data: [{ username: "uwummie", id: profile.user_id }] }
+        : {
+            data: [{ username: "other", id: "123" }],
+            paging: {
+              next: "https://untrusted.example",
+              cursors: { after: "next-cursor" },
+            },
+          },
+    );
+  });
+  assert.equal(await resolveUnifiedAccountId("fixture-token"), profile.user_id);
+  assert.equal(requests.mock.callCount(), 2);
+});
+
+test("reports when a valid token has no assigned @uwummie account", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => Response.json({ data: [] }));
+  await assert.rejects(
+    resolveUnifiedAccountId("fixture-token"),
+    /no assigned @uwummie/,
+  );
+});
+
 test("builds one snapshot with a 30-day UTC window and a true zero count", async (t) => {
   t.mock.method(globalThis, "fetch", async (url) => {
     if (url.pathname.endsWith("/me")) return Response.json({ data: [profile] });
     assert.ok(url.pathname.endsWith(`/${profile.user_id}/insights`));
-    if (url.searchParams.get("metric") === "views") {
+    if (url.searchParams.get("metric_type") === "time_series")
+      return Response.json({ data: [] });
+    if (!url.searchParams.has("breakdown")) {
       assert.equal(
         url.searchParams.get("since"),
         String(Date.parse("2026-10-08") / 1000),
       );
       assert.equal(
         url.searchParams.get("until"),
-        String(Date.parse("2026-11-07") / 1000),
+        String(Date.parse("2026-11-07") / 1000 - 1),
       );
       return insight("views", { value: 0 });
     }
@@ -116,7 +226,10 @@ test("represents empty views and privacy-limited demographics as unavailable", a
   const snapshot = await fetchSnapshot("fixture-token", observedAt);
   assert.equal(snapshot.views, null);
   assert.deepEqual(snapshot.audience, { gender: [], ages: [], countries: [] });
-  assert.equal(requests.mock.callCount(), 2);
+  assert.equal(requests.mock.callCount(), 3);
+  assert.equal(snapshot.performance.reach, null);
+  assert.equal(snapshot.performance.engagementRate, null);
+  assert.deepEqual(snapshot.performance.dailyReach, []);
 });
 
 test("rejects tokens for a different account before requesting insights", async (t) => {

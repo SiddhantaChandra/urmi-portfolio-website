@@ -39,7 +39,7 @@ export default function Home() {
       <Audience>
         <AudienceInsights stats={instagramStats} />
       </Audience>
-      <InstagramPerformance />
+      <InstagramPerformance stats={instagramStats} />
 
       <CollaborationModal
         isOpen={isCollaborationOpen}

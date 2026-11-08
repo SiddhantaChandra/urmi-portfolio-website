@@ -529,6 +529,35 @@
   margin-top: 0;
   background: var(--vi-paper);
 }
+.vi-press-summary > .vi-summary-curve {
+  position: absolute;
+  inset: -1px 0 auto;
+  width: 100%;
+  height: clamp(32px, 9vw, 128px);
+  fill: var(--vi-accent);
+  pointer-events: none;
+  transform-origin: center top;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .vi-press-summary {
+      view-timeline: --performance-entry block;
+    }
+    .vi-summary-curve {
+      animation: vi-summary-curve-settle linear both;
+      animation-timeline: --performance-entry;
+      animation-range: entry 35% entry 100%;
+    }
+  }
+}
+@keyframes vi-summary-curve-settle {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
 .vi-press-summary .vi-summary-head h2 {
   font-family: var(--font-sans);
   font-weight: 600;
