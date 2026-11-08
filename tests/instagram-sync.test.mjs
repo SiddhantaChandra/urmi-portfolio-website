@@ -208,7 +208,23 @@ test("builds one snapshot with a 30-day UTC window and a true zero count", async
       ["female", "30.8"],
     ],
   );
-  assert.equal(snapshot.audience.countries.length, 6);
+  assert.equal(snapshot.audience.countries.length, 5);
+  assert.deepEqual(
+    snapshot.audience.countries.map(({ id, value }) => [id, value]),
+    [
+      ["IN", 70],
+      ["US", 15],
+      ["PH", 5],
+      ["PK", 4],
+      ["others", 6],
+    ],
+  );
+  assert.equal(snapshot.audience.countries[4].label, "Others");
+  assert.deepEqual(snapshot.audience.countries[4].countries, [
+    { id: "BD", label: "Bangladesh", value: 3 },
+    { id: "CA", label: "Canada", value: 2 },
+    { id: "JP", label: "Japan", value: 1 },
+  ]);
   assert.deepEqual(snapshot.audience.countries[0], {
     id: "IN",
     label: "India",

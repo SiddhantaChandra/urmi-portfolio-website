@@ -420,6 +420,7 @@
 }
 .vi-split-figures {
   display: flex;
+  justify-content: space-between;
   gap: 32px;
 }
 .vi-split-figures > span {
@@ -430,7 +431,7 @@
 }
 .vi-split-figures b {
   font-family: var(--font-editorial-serif);
-  font-size: clamp(55px, 7.5vw, 110px);
+  font-size: clamp(50px, 6.8vw, 100px);
   line-height: 1.1;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -514,6 +515,70 @@
 }
 .vi-countries-editorial .vi-country-code {
   color: var(--vi-soft);
+}
+.vi-country-code .vi-country-toggle {
+  width: 24px;
+  height: 24px;
+}
+.vi-countries-editorial .vi-country[aria-expanded] {
+  min-height: 49px;
+}
+.vi-other-countries[hidden] {
+  display: none;
+}
+.vi-other-countries {
+  grid-column: 3 / -1;
+  grid-row: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.vi-other-countries > span {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.vi-other-countries b {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+.vi-other-country-name {
+  color: var(--vi-paper);
+}
+@keyframes vi-country-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .vi-country-expanded .vi-other-countries,
+  .vi-country[aria-expanded="false"] .vi-country-mark {
+    animation: vi-country-reveal 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@media (max-width: 500px) {
+  .vi-countries-editorial .vi-country[aria-expanded] {
+    grid-template-columns: 24px 40px minmax(0, 1fr) 55px;
+    gap: 8px;
+    min-height: 46px;
+  }
+  .vi-other-countries {
+    gap: 8px;
+  }
+  .vi-other-countries > span {
+    font-size: 12px;
+  }
+  .vi-other-countries b {
+    font-size: 20px;
+  }
 }
 .vi-countries-editorial .vi-country-mark {
   height: 8px;
@@ -804,11 +869,8 @@
     grid-template-columns: 1fr;
     gap: 52px;
   }
-  .vi-split-figures {
-    justify-content: space-between;
-  }
   .vi-split-figures b {
-    font-size: 104px;
+    font-size: 94px;
   }
   .vi-press-countries {
     margin-top: 60px;
@@ -920,7 +982,7 @@
     font-size: 44px;
   }
   .vi-split-figures b {
-    font-size: 80px;
+    font-size: 72px;
   }
   .vi-split-figures small {
     font-size: 14px;

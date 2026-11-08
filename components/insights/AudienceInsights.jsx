@@ -91,6 +91,7 @@ function AgeRibbons({ data }) {
 
 function Countries({ data }) {
   const [selected, setSelected] = useState(null);
+  const [othersExpanded, setOthersExpanded] = useState(false);
   if (!data.length)
     return <p className="vi-empty">Country data is currently unavailable.</p>;
   const current = data.find((item) => item.id === selected) ?? data[0];
@@ -99,31 +100,76 @@ function Countries({ data }) {
       <div className="vi-country-list">
         {data.map((item) => (
           <button
-            className="vi-country"
+            className={`vi-country${item.id === "others" && othersExpanded ? " vi-country-expanded" : ""}`}
             type="button"
             key={item.id}
             aria-pressed={current.id === item.id}
-            onClick={() => setSelected(item.id)}
+            aria-expanded={item.id === "others" ? othersExpanded : undefined}
+            aria-controls={
+              item.id === "others" ? "vi-other-countries" : undefined
+            }
+            onClick={() => {
+              setSelected(item.id);
+              if (item.id === "others")
+                setOthersExpanded((expanded) => !expanded);
+            }}
             style={{ "--value": `${item.value}%` }}
           >
-            <span className="vi-country-code">{item.id}</span>
-            <span className="vi-country-name">{item.label}</span>
-            <span className="vi-country-mark" aria-hidden="true">
-              <i />
+            <span className="vi-country-code">
+              {item.id === "others" ? (
+                <svg
+                  className="vi-country-toggle"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14" />
+                  {!othersExpanded && <path d="M12 5v14" />}
+                </svg>
+              ) : (
+                item.id
+              )}
             </span>
-            <strong>
-              {item.value.toFixed(1)}
-              <small>%</small>
-            </strong>
+            <span className="vi-country-name">{item.label}</span>
+            {item.id === "others" ? (
+              <span
+                id="vi-other-countries"
+                className="vi-other-countries"
+                hidden={!othersExpanded}
+              >
+                {item.countries?.length ? (
+                  item.countries.map((country) => (
+                    <span key={country.id}>
+                      <span className="vi-other-country-name">
+                        {country.id === "GB" ? "UK" : country.label}
+                      </span>
+                      <b>
+                        {country.value.toFixed(1)}
+                        <small>%</small>
+                      </b>
+                    </span>
+                  ))
+                ) : (
+                  <span>Country breakdown is currently unavailable.</span>
+                )}
+              </span>
+            ) : null}
+            {!(item.id === "others" && othersExpanded) && (
+              <span className="vi-country-mark" aria-hidden="true">
+                <i />
+              </span>
+            )}
+            {!(item.id === "others" && othersExpanded) && (
+              <strong>
+                {item.value.toFixed(1)}
+                <small>%</small>
+              </strong>
+            )}
           </button>
         ))}
       </div>
-      <figcaption>
-        Top countries{" "}
-        <span aria-live="polite">
-          {current.label} · {percent(current.value)} of audience
-        </span>
-      </figcaption>
     </figure>
   );
 }
@@ -164,7 +210,6 @@ export default function AudienceInsights({ stats }) {
     >
       <header className="vi-section-head">
         <h2 id="audience-insights-title">Audience Insights</h2>
-        <p>Anime is the starting point. The community is the story.</p>
         <span className="vi-seal" aria-hidden="true" lang="ja">
           文化
         </span>
@@ -179,7 +224,7 @@ export default function AudienceInsights({ stats }) {
             <ChartPanel title="People, not just numbers." aside="Gender">
               <GenderSplit data={gender} />
             </ChartPanel>
-            <ChartPanel title="Coming of age." aside="Audience ages">
+            <ChartPanel title="Across generations." aside="Audience ages">
               <AgeRibbons data={ageGroups} />
             </ChartPanel>
           </div>

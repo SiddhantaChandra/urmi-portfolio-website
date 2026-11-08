@@ -210,13 +210,26 @@ function demographicChart(body, dimension) {
     buckets.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   }
 
-  return (dimension === "country" ? buckets.slice(0, 6) : buckets).map(
-    ({ id, label, count }) => ({
-      id,
-      label,
-      value: (count / population) * 100,
-    }),
-  );
+  const chartBuckets = dimension === "country" ? buckets.slice(0, 4) : buckets;
+  if (dimension === "country" && buckets.length > 4) {
+    chartBuckets.push({
+      id: "others",
+      label: "Others",
+      count: buckets.slice(4).reduce((sum, bucket) => sum + bucket.count, 0),
+      countries: buckets.slice(4, 7).map(({ id, label, count }) => ({
+        id,
+        label,
+        value: (count / population) * 100,
+      })),
+    });
+  }
+
+  return chartBuckets.map(({ id, label, count, countries }) => ({
+    id,
+    label,
+    value: (count / population) * 100,
+    ...(countries ? { countries } : {}),
+  }));
 }
 
 export async function fetchSnapshot(accessToken, observedAt, accountId) {
