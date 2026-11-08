@@ -78,6 +78,32 @@ async function credentialForSync() {
   return saved ? replacement : await readCredential();
 }
 
+async function readBioLinkHistory() {
+  const url = new URL(
+    "/rest/v1/instagram_mediakit_stats",
+    Deno.env.get("SUPABASE_URL"),
+  );
+  url.search = new URLSearchParams({
+    select: "snapshot",
+    username: "eq.uwummie",
+  });
+  const secret = JSON.parse(
+    Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}",
+  ).default;
+  const key = secret ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const response = await fetch(url, {
+    headers: {
+      apikey: key,
+      ...(!secret ? { Authorization: `Bearer ${key}` } : {}),
+    },
+    redirect: "error",
+    signal: AbortSignal.timeout(6000),
+  });
+  if (!response.ok) throw new SyncError("Saved bio-link history query failed");
+  const [row] = await response.json();
+  return row?.snapshot?.performance?.bioLinkHistory;
+}
+
 Deno.serve(async (request) => {
   if (request.method !== "POST") {
     return new Response(null, { status: 405, headers: { Allow: "POST" } });
@@ -95,7 +121,12 @@ Deno.serve(async (request) => {
   const observedAt = new Date().toISOString();
   try {
     const { accessToken, accountId } = await credentialForSync();
-    const snapshot = await fetchSnapshot(accessToken, observedAt, accountId);
+    const snapshot = await fetchSnapshot(
+      accessToken,
+      observedAt,
+      accountId,
+      readBioLinkHistory,
+    );
     await callDatabase("publish_instagram_mediakit_stats", {
       new_snapshot: snapshot,
       new_observed_at: observedAt,

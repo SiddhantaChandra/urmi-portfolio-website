@@ -232,7 +232,187 @@ function demographicChart(body, dimension) {
   }));
 }
 
-export async function fetchSnapshot(accessToken, observedAt, accountId) {
+const unavailablePostAverages = {
+  averageLikes: null,
+  averageComments: null,
+  followerEngagement: null,
+};
+
+// Traverse only our fixed media endpoint; never follow a token-bearing paging URL.
+export async function fetchPostAverages(
+  origin,
+  accountId,
+  token,
+  followers,
+  expectedPosts,
+) {
+  if (expectedPosts === 0) return { ...unavailablePostAverages };
+  const posts = new Map();
+  const cursors = new Set();
+  let after;
+  for (let page = 0; page < 100; page++) {
+    const body = await graphRequest(
+      origin,
+      `/v26.0/${accountId}/media`,
+      {
+        fields: "id,like_count,comments_count",
+        limit: 100,
+        ...(after ? { after } : {}),
+      },
+      token,
+      "Instagram all-post averages",
+    );
+    if (!Array.isArray(body?.data))
+      throw new SyncError("Invalid Instagram media response");
+    for (const post of body.data) {
+      if (typeof post?.id !== "string" || !post.id)
+        throw new SyncError("Invalid Instagram media ID");
+      posts.set(post.id, post);
+    }
+    if (!body.paging?.next) {
+      if (!posts.size || (isCount(expectedPosts) && posts.size < expectedPosts))
+        return { ...unavailablePostAverages };
+      const values = [...posts.values()];
+      const average = (field) =>
+        values.every((post) => isCount(post[field]))
+          ? values.reduce((sum, post) => sum + post[field], 0) / posts.size
+          : null;
+      const averageLikes = average("like_count");
+      const averageComments = average("comments_count");
+      return {
+        averageLikes,
+        averageComments,
+        followerEngagement:
+          followers > 0 && averageLikes !== null && averageComments !== null
+            ? ((averageLikes + averageComments) / followers) * 100
+            : null,
+      };
+    }
+    after = body.paging?.cursors?.after;
+    if (typeof after !== "string" || !after || cursors.has(after))
+      throw new SyncError("Invalid Instagram media cursor");
+    cursors.add(after);
+  }
+  // A capped or incomplete traversal must not be reported as an all-post average.
+  return { ...unavailablePostAverages };
+}
+
+// Website clicks are additive. Keep disjoint UTC windows so later syncs replace
+// recent totals rather than adding overlapping rolling 30-day counts.
+export async function fetchBioLinkHistory(
+  origin,
+  accountId,
+  token,
+  observedAt,
+  previous,
+) {
+  const end = new Date(observedAt);
+  end.setUTCHours(0, 0, 0, 0);
+  const earliest = new Date(end);
+  earliest.setUTCFullYear(earliest.getUTCFullYear() - 2);
+  earliest.setUTCDate(earliest.getUTCDate() + 1);
+  const endMs = end.getTime();
+  const earliestMs = earliest.getTime();
+  let start = earliestMs;
+  const saved = new Map();
+  if (previous?.accountId === accountId && Array.isArray(previous.windows)) {
+    let boundary = Date.parse(previous.start);
+    if (
+      !Number.isFinite(boundary) ||
+      boundary % day ||
+      boundary >= endMs ||
+      endMs - boundary > 1000 * 30 * day ||
+      previous.windows.length > 1000
+    )
+      throw new SyncError("Invalid saved bio-link history");
+    start = boundary;
+    for (const window of previous.windows) {
+      const windowEnd = Date.parse(window.end);
+      if (
+        Date.parse(window.start) !== boundary ||
+        !Number.isFinite(windowEnd) ||
+        windowEnd % day ||
+        windowEnd <= boundary ||
+        windowEnd - boundary > 30 * day ||
+        windowEnd > endMs ||
+        (window.value !== null && !isCount(window.value))
+      )
+        throw new SyncError("Invalid saved bio-link window");
+      saved.set(boundary, window);
+      boundary = windowEnd;
+    }
+  }
+  const windows = [];
+  for (let since = start; since < endMs; since += 30 * day) {
+    const until = Math.min(since + 30 * day, endMs);
+    const old = saved.get(since);
+    windows.push({
+      start: new Date(since).toISOString(),
+      end: new Date(until).toISOString(),
+      value: old && Date.parse(old.end) === until ? old.value : null,
+      stale: old && Date.parse(old.end) === until ? old.stale === true : false,
+    });
+  }
+  // Three concurrent requests bound the initial backfill's API load. Subsequent
+  // syncs refresh recent windows (including delayed insights) and retry gaps.
+  const pending = windows.filter(
+    (window) =>
+      Date.parse(window.start) >= earliestMs &&
+      (window.value === null ||
+        window.stale ||
+        Date.parse(window.end) > endMs - 30 * day),
+  );
+  for (let i = 0; i < pending.length; i += 3) {
+    await Promise.all(
+      pending.slice(i, i + 3).map(async (window) => {
+        try {
+          const body = await graphRequest(
+            origin,
+            `/v26.0/${accountId}/insights`,
+            {
+              metric: "website_clicks",
+              period: "day",
+              metric_type: "total_value",
+              since: Date.parse(window.start) / 1000,
+              until: Date.parse(window.end) / 1000 - 1,
+            },
+            token,
+            "Instagram bio-link clicks",
+          );
+          const value = insightCount(body, "website_clicks");
+          window.stale = value === null;
+          if (value !== null) window.value = value;
+        } catch {
+          // Retain already saved windows; never count an unavailable response as 0.
+          window.stale = true;
+        }
+      }),
+    );
+  }
+  return {
+    accountId,
+    start: new Date(start).toISOString(),
+    end: end.toISOString(),
+    windows,
+  };
+}
+
+export function bioLinkHistoryTotal(history) {
+  if (
+    !history?.windows?.length ||
+    history.windows.some((window) => window.stale || !isCount(window.value))
+  )
+    return null;
+  const value = history.windows.reduce((sum, window) => sum + window.value, 0);
+  return isCount(value) ? value : null;
+}
+
+export async function fetchSnapshot(
+  accessToken,
+  observedAt,
+  accountId,
+  historySource,
+) {
   const version = "v26.0";
   const unified = accountId != null;
   if (unified && (typeof accountId !== "string" || !/^\d+$/.test(accountId))) {
@@ -266,6 +446,9 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
     throw new SyncError("Instagram token must authorize @uwummie");
   }
 
+  const previousHistory =
+    typeof historySource === "function" ? await historySource() : historySource;
+
   const end = new Date(observedAt);
   end.setUTCHours(0, 0, 0, 0);
   const start = new Date(end.getTime() - 30 * day);
@@ -276,7 +459,42 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
     // Meta's range is inclusive. Exclude the current, incomplete day.
     until: end.getTime() / 1000 - 1,
   };
-  const [totals, dailyReach, ...demographics] = await Promise.all([
+  const [
+    profileViews,
+    bioLinkHistory,
+    postAverages,
+    totals,
+    dailyReach,
+    ...demographics
+  ] = await Promise.all([
+    graphRequest(
+      origin,
+      insightsPath,
+      {
+        metric: "profile_views",
+        period: "day",
+        metric_type: "total_value",
+        ...range,
+      },
+      accessToken,
+      "Instagram profile visits",
+    )
+      .then((body) => insightCount(body, "profile_views"))
+      .catch(() => null),
+    fetchBioLinkHistory(
+      origin,
+      resolvedId,
+      accessToken,
+      observedAt,
+      previousHistory,
+    ),
+    fetchPostAverages(
+      origin,
+      resolvedId,
+      accessToken,
+      account.followers_count,
+      account.media_count,
+    ).catch(() => ({ ...unavailablePostAverages })),
     graphRequest(
       origin,
       insightsPath,
@@ -336,6 +554,10 @@ export async function fetchSnapshot(accessToken, observedAt, accountId) {
         counts.accounts_engaged !== null && counts.reach > 0
           ? (counts.accounts_engaged / counts.reach) * 100
           : null,
+      ...postAverages,
+      profileViews,
+      bioLinkHistory,
+      bioLinkClicksTracked: bioLinkHistoryTotal(bioLinkHistory),
       likes: counts.likes,
       comments: counts.comments,
       views: counts.views,

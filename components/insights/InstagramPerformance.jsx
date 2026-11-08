@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./Vermilion.css";
 
 const countFormat = new Intl.NumberFormat("en", {
@@ -27,87 +27,6 @@ function Metric({ label, value, title }) {
   );
 }
 
-function ReachLandscape({ points }) {
-  const id = useId();
-  if (!points?.length) {
-    return <p className="vi-empty">Daily reach is currently unavailable.</p>;
-  }
-  const peak = Math.max(...points.map((point) => point.value));
-  const max = Math.max(1, peak);
-  const start = Date.parse(points[0].endTime);
-  const duration = Date.parse(points.at(-1).endTime) - start;
-  const coords = points.map((point) => [
-    duration ? ((Date.parse(point.endTime) - start) / duration) * 960 : 480,
-    310 - (point.value / max) * 270,
-  ]);
-  const line = coords
-    .map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`)
-    .join(" ");
-  return (
-    <figure className="vi-landscape">
-      <svg
-        viewBox="0 0 960 330"
-        role="img"
-        aria-label={`Daily accounts reached, from ${dateFormat.format(new Date(points[0].endTime))} to ${dateFormat.format(new Date(points.at(-1).endTime))}. Highest daily reach: ${peak}.`}
-      >
-        <defs>
-          <clipPath id={id}>
-            <path d={`${line} L960 310 H0Z`} />
-          </clipPath>
-        </defs>
-        <path d={`${line} L960 310 H0Z`} className="vi-landscape-fill" />
-        <g clipPath={`url(#${id})`} className="vi-landscape-hatching">
-          {Array.from({ length: 42 }, (_, i) => (
-            <path key={`hatch-${i * 28}`} d={`M${i * 28 - 200} 330 l260-310`} />
-          ))}
-        </g>
-        <path
-          className="vi-draw"
-          d={line}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          pathLength="1"
-        />
-        {coords
-          .filter((_, i) => i % 3 === 0 || i === points.length - 1)
-          .map(([x, y]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r="4" fill="currentColor" />
-          ))}
-        <text x="0" y="327" className="vi-svg-label">
-          {dateFormat.format(new Date(points[0].endTime))}
-        </text>
-        <text x="960" y="327" textAnchor="end" className="vi-svg-label">
-          {dateFormat.format(new Date(points.at(-1).endTime))}
-        </text>
-      </svg>
-      <figcaption>
-        Daily accounts reached <strong>Peak {formatCount(peak)}</strong>
-        <span>Daily reach is not additive</span>
-      </figcaption>
-      <details>
-        <summary>View daily reach values</summary>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Period ending</th>
-              <th scope="col">Accounts reached</th>
-            </tr>
-          </thead>
-          <tbody>
-            {points.map((point) => (
-              <tr key={point.endTime}>
-                <td>{dateFormat.format(new Date(point.endTime))}</td>
-                <td>{point.value.toLocaleString("en")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </details>
-    </figure>
-  );
-}
-
 export default function InstagramPerformance({ stats }) {
   const metrics = stats?.performance;
   const ref = useRef(null);
@@ -124,9 +43,7 @@ export default function InstagramPerformance({ stats }) {
       },
       { threshold: 0.12 },
     );
-    for (const node of ref.current.querySelectorAll(
-      ".vi-landscape,.vi-more-metrics",
-    ))
+    for (const node of ref.current.querySelectorAll(".vi-more-metrics"))
       observer.observe(node);
     return () => observer.disconnect();
   }, [metrics]);
@@ -149,9 +66,7 @@ export default function InstagramPerformance({ stats }) {
       <header className="vi-summary-head">
         <div>
           <h2 id="performance-title">Instagram Performance</h2>
-          <p>The story. The response. The impact.</p>
         </div>
-        <span className="vi-period">Last 30 days</span>
       </header>
       <div className="vi-period-content" aria-live="polite" aria-atomic="true">
         {stats === undefined ? (
@@ -195,37 +110,56 @@ export default function InstagramPerformance({ stats }) {
                 />
               </dl>
             </div>
-            <div className="vi-press-chart">
-              <ReachLandscape points={metrics.dailyReach} />
-              <dl>
-                <Metric
-                  label="Total likes"
-                  value={formatCount(metrics.likes)}
-                />
-                <Metric
-                  label="Total comments"
-                  value={formatCount(metrics.comments)}
-                />
-                <Metric
-                  label="Total views"
-                  value={formatCount(metrics.views)}
-                />
-              </dl>
-            </div>
-            <dl className="vi-more-metrics">
+            <dl className="vi-more-metrics vi-total-metrics">
+              <Metric label="Total likes" value={formatCount(metrics.likes)} />
+              <Metric
+                label="Total comments"
+                value={formatCount(metrics.comments)}
+              />
+              <Metric label="Total views" value={formatCount(metrics.views)} />
               <Metric label="Saves" value={formatCount(metrics.saves)} />
               <Metric label="Shares" value={formatCount(metrics.shares)} />
-              <Metric
-                label="Profile link taps"
-                value={formatCount(metrics.profileLinkTaps)}
-              />
               <Metric
                 label="Total interactions"
                 value={formatCount(metrics.interactions)}
               />
+            </dl>
+            <dl
+              className="vi-more-metrics vi-overall-metrics"
+              aria-label="Overall account performance"
+            >
               <Metric
-                label="Total posts · lifetime"
-                value={formatCount(metrics.posts)}
+                label="Profile views"
+                title="Profile visits during the last 30 complete UTC days"
+                value={formatCount(metrics.profileViews)}
+              />
+              <Metric
+                label="Avg Likes"
+                title="Average likes per post across all published posts"
+                value={formatCount(metrics.averageLikes)}
+              />
+              <Metric
+                label="Avg Comments"
+                title="Average comments per post across all published posts"
+                value={formatCount(metrics.averageComments)}
+              />
+              <Metric
+                label="Follower Engagement"
+                title="(Average likes + average comments) ÷ current followers × 100, across all published posts"
+                value={
+                  Number.isFinite(metrics.followerEngagement)
+                    ? `${metrics.followerEngagement.toFixed(1)}%`
+                    : "—"
+                }
+              />
+              <Metric
+                label="Bio link clicks (tracked total)"
+                title={
+                  metrics.bioLinkHistory
+                    ? `Instagram website-link taps tracked from ${dateFormat.format(new Date(metrics.bioLinkHistory.start))} to ${dateFormat.format(new Date(Date.parse(metrics.bioLinkHistory.end) - 1))} UTC`
+                    : "Instagram website-link taps across the available tracked history"
+                }
+                value={formatCount(metrics.bioLinkClicksTracked)}
               />
             </dl>
           </>
@@ -240,14 +174,6 @@ export default function InstagramPerformance({ stats }) {
               {dateFormat.format(new Date(metrics.window.start))}–
               {dateFormat.format(new Date(Date.parse(metrics.window.end) - 1))}{" "}
               UTC
-              <br />
-              Engagement rate = accounts engaged ÷ reach × 100.
-              <br />
-              Updated{" "}
-              <time dateTime={stats.updatedAt}>
-                {dateFormat.format(new Date(stats.updatedAt))}
-              </time>
-              . Meta data may be delayed up to 48 hours.
             </>
           ) : (
             "Awaiting Instagram insights"

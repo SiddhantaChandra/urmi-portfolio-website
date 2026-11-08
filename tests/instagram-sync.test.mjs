@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  fetchPostAverages,
   fetchSnapshot,
   resolveUnifiedAccountId,
 } from "../supabase/functions/sync-instagram-stats/instagram.mjs";
@@ -16,6 +17,7 @@ const profile = {
 test("fetches all Unified Login metrics for the configured Instagram account", async (t) => {
   const accountId = profile.user_id;
   const requests = t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/media")) return Response.json({ data: [] });
     assert.equal(url.origin, "https://graph.facebook.com");
     if (url.pathname === `/v26.0/${accountId}`) {
       assert.equal(
@@ -46,7 +48,7 @@ test("fetches all Unified Login metrics for the configured Instagram account", a
   assert.equal(snapshot.followers, 300);
   assert.equal(snapshot.views, 2700);
   assert.deepEqual(snapshot.audience.gender, []);
-  assert.equal(requests.mock.callCount(), 6);
+  assert.equal(requests.mock.callCount(), 33);
   assert.equal(snapshot.performance.posts, 23);
 });
 
@@ -70,6 +72,7 @@ function demographics(dimension, entries) {
 
 test("uses Meta's unique reach total and real daily points, preserving zero and unavailable metrics", async (t) => {
   t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/media")) return Response.json({ data: [] });
     if (url.pathname.endsWith("/me")) return Response.json(profile);
     if (url.searchParams.get("metric_type") === "time_series") {
       assert.equal(url.searchParams.get("metric"), "reach");
@@ -119,6 +122,7 @@ test("uses Meta's unique reach total and real daily points, preserving zero and 
 test("rejects malformed performance totals and daily points", async (t) => {
   for (const invalid of ["total", "series"]) {
     const mock = t.mock.method(globalThis, "fetch", async (url) => {
+      if (url.pathname.endsWith("/media")) return Response.json({ data: [] });
       if (url.pathname.endsWith("/me")) return Response.json(profile);
       if (url.searchParams.has("breakdown")) return Response.json({ data: [] });
       if (url.searchParams.get("metric_type") === "time_series") {
@@ -169,6 +173,7 @@ test("reports when a valid token has no assigned @uwummie account", async (t) =>
 
 test("builds one snapshot with a 30-day UTC window and a true zero count", async (t) => {
   t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/media")) return Response.json({ data: [] });
     if (url.pathname.endsWith("/me")) return Response.json({ data: [profile] });
     assert.ok(url.pathname.endsWith(`/${profile.user_id}/insights`));
     if (url.searchParams.get("metric_type") === "time_series")
@@ -242,7 +247,7 @@ test("represents empty views and privacy-limited demographics as unavailable", a
   const snapshot = await fetchSnapshot("fixture-token", observedAt);
   assert.equal(snapshot.views, null);
   assert.deepEqual(snapshot.audience, { gender: [], ages: [], countries: [] });
-  assert.equal(requests.mock.callCount(), 3);
+  assert.equal(requests.mock.callCount(), 30);
   assert.equal(snapshot.performance.reach, null);
   assert.equal(snapshot.performance.engagementRate, null);
   assert.deepEqual(snapshot.performance.dailyReach, []);
@@ -339,6 +344,19 @@ test("uses the winning credential when another run refreshes first", async (t) =
   const oldExpiry = new Date(Date.now() + 10 * 86_400_000).toISOString();
   let credentialReads = 0;
   let published = false;
+  const historyEnd = new Date();
+  historyEnd.setUTCHours(0, 0, 0, 0);
+  const historyStart = new Date(
+    historyEnd.getTime() - 5 * 86_400_000,
+  ).toISOString();
+  const savedHistory = {
+    accountId: profile.user_id,
+    start: historyStart,
+    end: historyEnd.toISOString(),
+    windows: [
+      { start: historyStart, end: historyEnd.toISOString(), value: 80 },
+    ],
+  };
   t.mock.method(globalThis, "fetch", async (url, options) => {
     const { pathname, searchParams } = new URL(url);
     switch (pathname) {
@@ -373,9 +391,22 @@ test("uses the winning credential when another run refreshes first", async (t) =
       case "/v26.0/me":
         assert.equal(searchParams.get("access_token"), "winning-token");
         return Response.json(profile);
-      case "/rest/v1/rpc/publish_instagram_mediakit_stats":
+      case "/rest/v1/instagram_mediakit_stats":
+        return Response.json([
+          { snapshot: { performance: { bioLinkHistory: savedHistory } } },
+        ]);
+      case `/v26.0/${profile.user_id}/insights`:
+        if (searchParams.get("metric") === "website_clicks")
+          return insight("website_clicks", { value: 123 });
+        return Response.json({ data: [] });
+      case "/rest/v1/rpc/publish_instagram_mediakit_stats": {
+        const performance = JSON.parse(options.body).new_snapshot.performance;
+        assert.equal(performance.bioLinkHistory.start, historyStart);
+        assert.equal(performance.bioLinkClicksTracked, 123);
+        assert.equal(performance.bioLinkHistory.windows.length, 1);
         published = true;
         return new Response(null, { status: 204 });
+      }
       default:
         return Response.json({ data: [] });
     }
@@ -390,4 +421,121 @@ test("uses the winning credential when another run refreshes first", async (t) =
   assert.equal(response.status, 200);
   assert.equal(credentialReads, 2);
   assert.equal(published, true);
+});
+
+test("averages all posts across pages, deduplicates media and uses the current follower count", async (t) => {
+  const seen = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    seen.push(url);
+    assert.equal(url.origin, "https://graph.facebook.com");
+    assert.equal(url.pathname, `/v26.0/${profile.user_id}/media`);
+    assert.equal(
+      url.searchParams.get("fields"),
+      "id,like_count,comments_count",
+    );
+    const first = { id: "1", like_count: 100, comments_count: 10 };
+    return Response.json(
+      url.searchParams.has("after")
+        ? { data: [first, { id: "2", like_count: 0, comments_count: 0 }] }
+        : {
+            data: [first],
+            paging: {
+              next: "https://untrusted.example/ignored",
+              cursors: { after: "page-two" },
+            },
+          },
+    );
+  });
+  const result = await fetchPostAverages(
+    "https://graph.facebook.com",
+    profile.user_id,
+    "fixture",
+    1000,
+    2,
+  );
+  assert.deepEqual(result, {
+    averageLikes: 50,
+    averageComments: 5,
+    followerEngagement: 5.5,
+  });
+  assert.equal(seen.length, 2);
+  assert.equal(seen[1].searchParams.get("after"), "page-two");
+});
+
+test("does not convert hidden counts into zero, or publish partial all-post averages", async (t) => {
+  t.mock.method(globalThis, "fetch", async () =>
+    Response.json({ data: [{ id: "1", comments_count: 0 }] }),
+  );
+  const run = (followers, expected) =>
+    fetchPostAverages(
+      "https://graph.instagram.com",
+      profile.user_id,
+      "fixture",
+      followers,
+      expected,
+    );
+  assert.deepEqual(await run(100, 1), {
+    averageLikes: null,
+    averageComments: 0,
+    followerEngagement: null,
+  });
+  assert.deepEqual(await run(100, 2), {
+    averageLikes: null,
+    averageComments: null,
+    followerEngagement: null,
+  });
+});
+
+test("avoids zero follower division and rejects repeated media cursors", async (t) => {
+  const mock = t.mock.method(globalThis, "fetch", async () =>
+    Response.json({ data: [{ id: "1", like_count: 10, comments_count: 2 }] }),
+  );
+  assert.deepEqual(
+    await fetchPostAverages(
+      "https://graph.instagram.com",
+      profile.user_id,
+      "fixture",
+      0,
+      1,
+    ),
+    {
+      averageLikes: 10,
+      averageComments: 2,
+      followerEngagement: null,
+    },
+  );
+  mock.mock.mockImplementation(async () =>
+    Response.json({
+      data: [],
+      paging: { next: "ignored", cursors: { after: "same" } },
+    }),
+  );
+  await assert.rejects(
+    fetchPostAverages(
+      "https://graph.instagram.com",
+      profile.user_id,
+      "fixture",
+      100,
+      1,
+    ),
+    /Invalid Instagram media cursor/,
+  );
+});
+
+test("keeps core performance available when the optional media query is denied", async (t) => {
+  t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.pathname.endsWith("/me")) return Response.json(profile);
+    if (url.pathname.endsWith("/media"))
+      return Response.json({ error: { code: 10 } }, { status: 403 });
+    if (
+      url.searchParams.get("metric_type") === "total_value" &&
+      !url.searchParams.has("breakdown")
+    )
+      return insight("reach", { value: 250 });
+    return Response.json({ data: [] });
+  });
+  const { performance } = await fetchSnapshot("fixture", observedAt);
+  assert.equal(performance.reach, 250);
+  assert.equal(performance.averageLikes, null);
+  assert.equal(performance.bioLinkClicksTracked, null);
 });
