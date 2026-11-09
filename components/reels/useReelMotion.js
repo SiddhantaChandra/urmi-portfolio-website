@@ -39,31 +39,7 @@ export default function useReelMotion(ref) {
           observer.unobserve(target);
           target.dataset.entered = "true";
           if (preference.matches) continue;
-          if (target.dataset.reveal === "wave") {
-            const covers = [
-              ...target.querySelectorAll(".wave-entrance"),
-            ].filter((node) => node.getClientRects().length);
-            const centre = (covers.length - 1) / 2;
-            covers.forEach((node, index) => {
-              play(
-                node,
-                [
-                  {
-                    opacity: 0.2,
-                    transform: "translateY(38px) scale(.975)",
-                    clipPath: "inset(10% 0 0 0)",
-                  },
-                  {
-                    opacity: 1,
-                    transform: "translateY(0) scale(1)",
-                    clipPath: "inset(0)",
-                  },
-                ],
-                Math.abs(index - centre) * 75,
-                900,
-              );
-            });
-          } else if (target.dataset.reveal === "wall") {
+          if (target.dataset.reveal === "wall") {
             rise(target.querySelector("[data-enter='heading']"));
           } else {
             rise(target);
@@ -72,8 +48,11 @@ export default function useReelMotion(ref) {
       },
       { threshold: 0.1, rootMargin: "0px 0px -3% 0px" },
     );
-    for (const node of root.querySelectorAll("[data-reveal]"))
+    for (const node of root.querySelectorAll(
+      "[data-reveal]:not([data-entered])",
+    )) {
       observer.observe(node);
+    }
     function finishMotion() {
       if (preference.matches)
         for (const animation of animations) animation.finish();

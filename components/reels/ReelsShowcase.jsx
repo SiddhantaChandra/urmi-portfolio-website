@@ -16,10 +16,6 @@ export default function ReelsShowcase({ showcase, loading = false }) {
     <div className="reels-showcase" ref={root}>
       <StoryWall onPreview={setPreview} />
       <Waves showcase={showcase} loading={loading} />
-      <p className="reels-preview-note">
-        Featured Works uses sample covers · Stories in motion features published
-        Instagram reels
-      </p>
       <PreviewDialog reel={preview} onClose={() => setPreview(null)} />
     </div>
   );
