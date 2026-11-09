@@ -1,7 +1,17 @@
 import { cacheLife } from "next/cache";
 import { connection } from "next/server";
+import { selectRecentReels } from "../../../supabase/functions/sync-instagram-stats/reel-showcase.mjs";
 import { readSavedStats } from "./saved-stats.mjs";
 import { readStoryAverage } from "./story-average.mjs";
+
+function hasCompleteShowcase(stats) {
+  const showcase = stats?.reels?.showcase;
+  const recent = showcase?.recent ?? [];
+  return (
+    showcase?.popular?.length > 0 &&
+    selectRecentReels(recent).length === recent.length
+  );
+}
 
 async function fetchSavedStoryAverage() {
   "use cache";
@@ -20,10 +30,9 @@ async function fetchSavedStats() {
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
-  // Retry an incomplete showcase promptly after a successful scheduled sync.
-  const hasPopular = stats?.reels?.showcase?.popular?.length > 0;
+  // Retry missing rankings and legacy duplicate selections after the next sync.
   cacheLife(
-    hasPopular
+    hasCompleteShowcase(stats)
       ? { stale: 300, revalidate: 300, expire: 3600 }
       : { stale: 30, revalidate: 30, expire: 60 },
   );
@@ -45,7 +54,7 @@ export async function GET() {
     stats || average ? { ...stats, storyAverage: average } : null,
     {
       headers: {
-        "Cache-Control": stats?.reels?.showcase?.popular?.length
+        "Cache-Control": hasCompleteShowcase(stats)
           ? "public, max-age=300, s-maxage=300"
           : "public, max-age=30, s-maxage=30",
       },

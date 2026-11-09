@@ -17,13 +17,17 @@ function safeUrl(value, acceptsHost) {
 const newestFirst = (a, b) =>
   Date.parse(b.timestamp) - Date.parse(a.timestamp) || a.id.localeCompare(b.id);
 
-// Meta does not expose a readable trial-status flag. For identical long-form
+// Meta does not expose a readable trial-status flag. For matching long-form
 // captions prefer a feed-shared version, then the newer publication. Repeated
 // short/generic captions are not enough evidence that two reels are duplicates.
 export function selectRecentReels(reels) {
   const selected = new Map();
   for (const reel of [...reels].sort(newestFirst)) {
-    const caption = reel.caption?.normalize("NFKC").trim().replace(/\s+/g, " ");
+    const caption = reel.caption
+      ?.normalize("NFKC")
+      .replace(/(^|\s)#[\p{L}\p{N}_]+/gu, " ")
+      .trim()
+      .replace(/\s+/g, " ");
     const key = caption?.length >= 80 ? `caption:${caption}` : `id:${reel.id}`;
     const existing = selected.get(key);
     if (

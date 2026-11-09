@@ -90,6 +90,29 @@ test("prefers a feed-shared version of a duplicate and preserves distinct generi
   assert.equal(result.recent[1].sharedToFeed, false);
 });
 
+test("hashtag changes do not let a trial copy occupy a second recent slot", () => {
+  const caption =
+    "On-Gaku is a refreshing film about making music simply because you enjoy it. ".repeat(
+      3,
+    );
+  const result = selectReelShowcase(
+    posts.map((post, index) => ({
+      ...post,
+      caption:
+        index === 7
+          ? `${caption}\n#animereel #音楽`
+          : index === 6
+            ? `${caption}\n#indieanime`
+            : post.caption,
+    })),
+    insights,
+  );
+  assert.deepEqual(
+    result.recent.map((reel) => reel.id),
+    ["8", "6", "5", "4", "3"],
+  );
+});
+
 test("rejects unsafe links, preserves absent thumbnails and captions, and handles empty accounts", () => {
   const result = selectReelShowcase(
     [
@@ -134,6 +157,7 @@ test("reuses paginated deduplicated media and reel insights without adding Meta 
         "permalink",
         "timestamp",
         "media_product_type",
+        "is_shared_to_feed",
       ])
         assert.ok(url.searchParams.get("fields").split(",").includes(field));
       return Response.json(
