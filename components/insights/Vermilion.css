@@ -460,6 +460,9 @@
   font-weight: 400;
   letter-spacing: -0.04em;
 }
+.vi-split-figures > [data-gender="male"] {
+  transform: translateY(36px);
+}
 .vi-split-figures small {
   font-family: var(--font-sans);
   font-size: 18px;
@@ -470,7 +473,7 @@
   height: 76px;
   display: flex;
   gap: 5px;
-  clip-path: polygon(0 56%, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 100%);
   transform: skewY(-3deg);
 }
 .vi-split-strip span {
@@ -590,13 +593,12 @@
 }
 
 @media (max-width: 500px) {
-  .vi-countries-editorial .vi-country[aria-expanded] {
-    grid-template-columns: 24px 40px minmax(0, 1fr) 55px;
-    gap: 8px;
-    min-height: 46px;
-  }
   .vi-other-countries {
-    gap: 8px;
+    grid-column: 2 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 4px 16px;
   }
   .vi-other-countries > span {
     font-size: 12px;
@@ -614,6 +616,14 @@
 }
 .vi-countries-editorial .vi-country[aria-pressed="true"] .vi-country-mark i {
   background: var(--vi-paper);
+}
+@media (min-width: 1024px) {
+  .vi-press-spread .vi-split-gender {
+    margin-top: -20px;
+  }
+  .vi-press-countries > .vi-countries-editorial {
+    margin-top: -8px;
+  }
 }
 .vi-press-summary {
   margin-top: 0;

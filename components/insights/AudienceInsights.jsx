@@ -26,7 +26,7 @@ function GenderSplit({ data }) {
     <figure className="vi-split-gender">
       <div className="vi-split-figures">
         {data.map((item) => (
-          <span key={item.id}>
+          <span key={item.id} data-gender={item.id}>
             <b>
               {item.value.toFixed(1)}
               <small>%</small>
