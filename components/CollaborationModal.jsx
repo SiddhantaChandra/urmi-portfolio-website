@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useLenis } from "lenis/react";
+import { useEffect, useId, useState } from "react";
 
 export default function CollaborationModal({ isOpen, onClose }) {
   const formId = useId();
@@ -12,6 +13,13 @@ export default function CollaborationModal({ isOpen, onClose }) {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (!isOpen || !lenis) return;
+    lenis.stop();
+    return () => lenis.start();
+  }, [isOpen, lenis]);
 
   if (!isOpen) return null;
 
@@ -21,8 +29,11 @@ export default function CollaborationModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-xl bg-[#f8f5ee] border border-[#d6cbba] rounded-sm shadow-2xl p-6 sm:p-8 text-[#1c1917] overflow-hidden">
+    <div
+      data-lenis-prevent
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    >
+      <div className="relative w-full max-w-xl max-h-[calc(100dvh-2rem)] bg-[#f8f5ee] border border-[#d6cbba] rounded-sm shadow-2xl p-6 sm:p-8 text-[#1c1917] overflow-y-auto overscroll-contain">
         {/* Subtle decorative Hanko watermark */}
         <div className="absolute top-4 right-14 w-12 h-12 border border-[#b83b4b]/20 rounded-sm flex items-center justify-center text-[#b83b4b]/20 font-kanji font-bold text-2xl select-none pointer-events-none">
           麗

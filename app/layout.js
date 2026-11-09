@@ -1,4 +1,6 @@
+import "lenis/dist/lenis.css";
 import "./globals.css";
+import SmoothScroll from "../components/SmoothScroll";
 
 export const metadata = {
   title: "URMI (uwummie) — Japanese Anime Editorial Creator Portfolio",
@@ -18,10 +20,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="h-full scroll-smooth antialiased">
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-[#f8f5ee] text-[#1c1917] relative">
         <div className="noise" aria-hidden="true" />
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

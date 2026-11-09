@@ -51,7 +51,6 @@ export default function useAudienceEdge() {
       return;
     }
 
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let lastPaint = 0;
     let phase = 0;
@@ -72,7 +71,7 @@ export default function useAudienceEdge() {
       const viewport = window.innerHeight;
 
       // The finished panel is completely unclipped; no idle loop at or above the top.
-      if (motion.matches || document.hidden || top <= 0 || top >= viewport) {
+      if (document.hidden || top <= 0 || top >= viewport) {
         stop();
         return;
       }
@@ -94,12 +93,7 @@ export default function useAudienceEdge() {
 
     function update() {
       const top = screen.getBoundingClientRect().top;
-      if (
-        motion.matches ||
-        document.hidden ||
-        top <= 0 ||
-        top >= window.innerHeight
-      ) {
+      if (document.hidden || top <= 0 || top >= window.innerHeight) {
         stop();
       } else if (!frame) {
         frame = requestAnimationFrame(draw);
@@ -121,7 +115,6 @@ export default function useAudienceEdge() {
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", measure);
     document.addEventListener("visibilitychange", update);
-    motion.addEventListener("change", update);
     measure();
 
     return () => {
@@ -130,7 +123,6 @@ export default function useAudienceEdge() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", measure);
       document.removeEventListener("visibilitychange", update);
-      motion.removeEventListener("change", update);
     };
   }, []);
 

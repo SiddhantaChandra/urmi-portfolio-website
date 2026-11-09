@@ -53,115 +53,144 @@
 @supports (animation-timeline: view()) and
   (view-timeline-name: --audience-scroll) and
   (animation-range: contain 0% contain 50svh) {
-  @media (prefers-reduced-motion: no-preference) {
+  .audience-section {
+    /* Two centered, text-only scroll beats before the blade enters. */
+    --audience-beat: 12svh;
+    --audience-cut-start: calc(var(--audience-beat) * 2);
+    --audience-cut-travel: 112svh;
+    --audience-split-end: calc(
+      var(--audience-cut-start) +
+      var(--audience-cut-travel)
+    );
+    --audience-katana-end: calc(var(--audience-split-end) + 14svh);
+    --audience-reveal-start: calc(
+      var(--audience-cut-start) +
+      var(--audience-cut-travel) *
+      0.74
+    );
+    --audience-reveal-end: calc(var(--audience-split-end) + 12svh);
+    --audience-handoff: calc(var(--audience-reveal-end) + 8svh);
+    --audience-split-distance: clamp(1.75rem, 4.3vw, 4.5rem);
+    overflow-x: clip;
+    view-timeline: --audience-scroll block;
+  }
+  .audience-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    padding-block: 0;
+  }
+  .audience-title-card {
+    animation: audience-title-recede linear both;
+    animation-timeline: --audience-scroll;
+    animation-range: contain var(--audience-handoff) contain
+      calc(var(--audience-handoff) + 60dvh);
+  }
+  .audience-title {
+    --audience-blade-width: clamp(9rem, 36vw, 29rem);
+    --audience-cut-front: clamp(-1rem, var(--audience-cut-x), 100% + 1rem);
+    position: relative;
+    z-index: 1;
+    animation: audience-sweep linear both;
+    animation-timeline: --audience-scroll;
+    animation-range: contain var(--audience-cut-start) contain
+      var(--audience-katana-end);
+  }
+  /* The intact word covers the clip boundary by one pixel at the blade tip. */
+  .audience-title-intact {
+    position: relative;
+    z-index: 1;
+    clip-path: inset(-1rem -1rem -1rem calc(var(--audience-cut-front) - 1px));
+    transform-origin: 50% 100%;
+    animation: audience-arrive linear both;
+    animation-timeline: --audience-scroll;
+    animation-range: entry 20% entry 100%;
+  }
+  .audience-title-cut {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    clip-path: inset(-6rem calc(100% - var(--audience-cut-front)) -6rem -1rem);
+    pointer-events: none;
+    user-select: none;
+  }
+  .audience-title-cut::before,
+  .audience-title-cut::after {
+    content: attr(data-title);
+    grid-area: 1 / 1;
+    padding-block: 0.08em;
+    transform-origin: var(--audience-cut-front) 50%;
+    animation: audience-title-part linear both;
+    animation-timeline: --audience-scroll;
+    animation-range: contain var(--audience-cut-start) contain
+      var(--audience-split-end);
+  }
+  .audience-title-cut::before {
+    --audience-part-tilt: 2.5deg;
+    --audience-part-offset: calc(-1 * var(--audience-split-distance));
+    clip-path: inset(-1rem -1rem calc(50% - 1px));
+  }
+  .audience-title-cut::after {
+    --audience-part-tilt: -2.5deg;
+    --audience-part-offset: var(--audience-split-distance);
+    clip-path: inset(calc(50% - 1px) -1rem -1rem);
+  }
+  .audience-katana {
+    position: absolute;
+    z-index: 2;
+    inset: 50% 0 auto;
+    display: block;
+    transform: translateX(var(--audience-cut-x));
+    pointer-events: none;
+    opacity: 0;
+    /* No backwards fill: the katana stays hidden through both hold beats. */
+    animation: audience-katana-exit step-end forwards;
+    animation-timeline: --audience-scroll;
+    animation-range: contain var(--audience-cut-start) contain
+      var(--audience-katana-end);
+  }
+  .audience-katana img {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: var(--audience-blade-width);
+    max-width: none;
+    height: auto;
+    /* Align the blade edge in the source image with the cut line. */
+    transform: translateY(-51.5%) rotate(180deg) scaleX(-1);
+  }
+  .audience-description {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    animation: audience-description-reveal linear both;
+    animation-timeline: --audience-scroll;
+    animation-range: contain var(--audience-reveal-start) contain
+      var(--audience-reveal-end);
+  }
+  .audience-screen {
+    min-height: 100svh;
+    /* Give the subtitle a moment at full opacity before the charts enter. */
+    margin-top: calc(var(--audience-handoff) + 100dvh - 100svh);
+  }
+
+  @media (width < 44rem) {
     .audience-section {
-      --audience-split-end: 56svh;
-      --audience-katana-end: calc(var(--audience-split-end) + 8svh);
-      --audience-reveal-end: calc(var(--audience-split-end) + 10svh);
-      --audience-handoff: calc(var(--audience-reveal-end) + 4svh);
-      --audience-split-distance: clamp(1.75rem, 4.3vw, 4.5rem);
-      overflow-x: clip;
-      view-timeline: --audience-scroll block;
-    }
-    .audience-stage {
-      position: sticky;
-      top: 0;
-      height: 100svh;
-      padding-block: 0;
-    }
-    .audience-title-card {
-      animation: audience-title-recede linear both;
-      animation-timeline: --audience-scroll;
-      animation-range: contain var(--audience-handoff) contain
-        calc(var(--audience-handoff) + 60dvh);
-    }
-    .audience-title {
-      --audience-blade-width: clamp(9rem, 36vw, 29rem);
-      --audience-cut-front: clamp(-1rem, var(--audience-cut-x), 100% + 1rem);
-      position: relative;
-      z-index: 1;
-      animation: audience-sweep linear both;
-      animation-timeline: --audience-scroll;
-      animation-range: contain 0% contain var(--audience-katana-end);
-    }
-    /* The intact word covers the clip boundary by one pixel at the blade tip. */
-    .audience-title-intact {
-      position: relative;
-      z-index: 1;
-      clip-path: inset(-1rem -1rem -1rem calc(var(--audience-cut-front) - 1px));
-    }
-    .audience-title-cut {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      clip-path: inset(
-        -6rem calc(100% - var(--audience-cut-front)) -6rem -1rem
-      );
-      pointer-events: none;
-      user-select: none;
-    }
-    .audience-title-cut::before,
-    .audience-title-cut::after {
-      content: attr(data-title);
-      grid-area: 1 / 1;
-      padding-block: 0.08em;
-      transform-origin: var(--audience-cut-front) 50%;
-      animation: audience-title-part linear both;
-      animation-timeline: --audience-scroll;
-      animation-range: contain 0% contain var(--audience-split-end);
-    }
-    .audience-title-cut::before {
-      --audience-part-tilt: 2.5deg;
-      --audience-part-offset: calc(-1 * var(--audience-split-distance));
-      clip-path: inset(-1rem -1rem calc(50% - 1px));
-    }
-    .audience-title-cut::after {
-      --audience-part-tilt: -2.5deg;
-      --audience-part-offset: var(--audience-split-distance);
-      clip-path: inset(calc(50% - 1px) -1rem -1rem);
-    }
-    .audience-katana {
-      position: absolute;
-      z-index: 2;
-      inset: 50% 0 auto;
-      display: block;
-      transform: translateX(var(--audience-cut-x));
-      pointer-events: none;
-      animation: audience-katana-exit step-end both;
-      animation-timeline: --audience-scroll;
-      animation-range: contain 0% contain var(--audience-katana-end);
-    }
-    .audience-katana img {
-      position: absolute;
-      top: 0;
-      right: 100%;
-      width: var(--audience-blade-width);
-      max-width: none;
-      height: auto;
-      /* Align the blade edge in the source image with the cut line. */
-      transform: translateY(-51.5%) rotate(180deg) scaleX(-1);
-    }
-    .audience-description {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      margin: 0;
-      animation: audience-description-reveal linear both;
-      animation-timeline: --audience-scroll;
-      animation-range: contain calc(var(--audience-split-end) * 0.67) contain
-        var(--audience-reveal-end);
-    }
-    .audience-screen {
-      min-height: 100svh;
-      /* Give the subtitle a moment at full opacity before the charts enter. */
-      margin-top: calc(var(--audience-handoff) + 100dvh - 100svh);
+      --audience-beat: 8svh;
+      --audience-cut-travel: 48svh;
     }
   }
-  @media (prefers-reduced-motion: no-preference) and (width < 44rem) {
-    .audience-section {
-      --audience-split-end: 40svh;
-    }
+}
+
+@keyframes audience-arrive {
+  from {
+    /* Bottom edge stays wide; the top recedes as the word rises into view. */
+    transform: translateY(45svh) perspective(2.6em) rotateX(55deg) scale(1.06);
+  }
+  to {
+    transform: translateY(0) perspective(2.6em) rotateX(0deg) scale(1);
   }
 }
 
