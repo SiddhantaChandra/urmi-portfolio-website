@@ -103,7 +103,7 @@ export function Cover({ reel, onPreview, className = "", compact = false }) {
         loading="lazy"
         decoding="async"
         fill
-        sizes="(max-width: 540px) 46vw, (max-width: 900px) 28vw, 400px"
+        sizes="(max-width: 540px) 76vw, (max-width: 900px) 260px, (max-width: 1310px) 29vw, 380px"
         style={{ objectPosition: reel.position }}
       />
       <span className="reel-shade" />

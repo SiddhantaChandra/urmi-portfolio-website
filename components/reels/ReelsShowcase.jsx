@@ -14,8 +14,8 @@ export default function ReelsShowcase({ showcase, loading = false }) {
 
   return (
     <div className="reels-showcase" ref={root}>
-      <StoryWall onPreview={setPreview} />
       <Waves showcase={showcase} loading={loading} />
+      <StoryWall onPreview={setPreview} />
       <PreviewDialog reel={preview} onClose={() => setPreview(null)} />
     </div>
   );
