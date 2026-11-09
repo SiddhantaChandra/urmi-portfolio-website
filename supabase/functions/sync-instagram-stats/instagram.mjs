@@ -1,3 +1,5 @@
+import { selectReelShowcase } from "./reel-showcase.mjs";
+
 const instagramOrigin = "https://graph.instagram.com";
 const unifiedOrigin = "https://graph.facebook.com";
 const day = 86_400_000;
@@ -246,7 +248,12 @@ const unavailableReels = {
 };
 
 // Media insights are lifetime values. Keep reels independent of account periods.
-export async function fetchReelPerformance(origin, token, posts) {
+export async function fetchReelPerformance(
+  origin,
+  token,
+  posts,
+  includeShowcase = false,
+) {
   if (posts.some((post) => typeof post.media_product_type !== "string"))
     return { ...unavailableReels };
   const reels = posts.filter((post) => post.media_product_type === "REELS");
@@ -256,6 +263,13 @@ export async function fetchReelPerformance(origin, token, posts) {
     insights.push(
       ...(await Promise.all(
         reels.slice(offset, offset + 6).map(async (reel) => {
+          let metrics = {
+            id: reel.id,
+            views: null,
+            reach: null,
+            averageWatchTime: null,
+            totalWatchTime: null,
+          };
           try {
             const body = await graphRequest(
               origin,
@@ -273,20 +287,33 @@ export async function fetchReelPerformance(origin, token, posts) {
               const count = metric?.values?.[0]?.value;
               return Number.isFinite(count) && count >= 0 ? count : null;
             };
-            return {
+            metrics = {
+              id: reel.id,
               views: value("views"),
               reach: value("reach"),
               averageWatchTime: value("ig_reels_avg_watch_time"),
               totalWatchTime: value("ig_reels_video_view_total_time"),
             };
           } catch {
-            return {
-              views: null,
-              reach: null,
-              averageWatchTime: null,
-              totalWatchTime: null,
-            };
+            // Optional watch-time failures must not prevent a views-only retry.
           }
+          if (includeShowcase && metrics.views === null) {
+            try {
+              const body = await graphRequest(
+                origin,
+                `/v26.0/${reel.id}/insights`,
+                { metric: "views", period: "lifetime" },
+                token,
+                "Instagram reel ranking views",
+              );
+              const count = body?.data?.find((item) => item.name === "views")
+                ?.values?.[0]?.value;
+              metrics.views = isCount(count) ? count : null;
+            } catch {
+              // Unknown views remain unavailable; never rank them as zero.
+            }
+          }
+          return metrics;
         }),
       )),
     );
@@ -301,6 +328,14 @@ export async function fetchReelPerformance(origin, token, posts) {
   const averageWatchTime = sum("averageWatchTime");
   const totalWatchTime = sum("totalWatchTime");
   return {
+    ...(includeShowcase
+      ? {
+          showcase: selectReelShowcase(
+            posts,
+            new Map(insights.map((item) => [item.id, item])),
+          ),
+        }
+      : {}),
     averageViews: reels.length && views !== null ? views / reels.length : null,
     averageReach: reels.length && reach !== null ? reach / reels.length : null,
     // Meta reports both watch-time insights in milliseconds.
@@ -388,13 +423,22 @@ export async function fetchPostAverages(
   includeTotals = false,
   window,
   includeReels = false,
+  includeShowcase = false,
 ) {
   if (expectedPosts === 0)
     return {
       ...unavailablePostAverages,
       ...(includeTotals ? { totalLikes: 0, totalComments: 0 } : {}),
       ...(includeReels
-        ? { reels: { ...unavailableReels, totalWatchTimeHours: 0 } }
+        ? {
+            reels: {
+              ...unavailableReels,
+              totalWatchTimeHours: 0,
+              ...(includeShowcase
+                ? { showcase: selectReelShowcase([], new Map()) }
+                : {}),
+            },
+          }
         : {}),
     };
   const posts = new Map();
@@ -405,7 +449,7 @@ export async function fetchPostAverages(
       origin,
       `/v26.0/${accountId}/media`,
       {
-        fields: `id,like_count,comments_count,timestamp${includeReels ? ",media_product_type" : ""}`,
+        fields: `id,like_count,comments_count,timestamp${includeReels ? ",media_product_type" : ""}${includeShowcase ? ",caption,thumbnail_url,permalink,is_shared_to_feed" : ""}`,
         limit: 100,
         ...(after ? { after } : {}),
       },
@@ -460,7 +504,14 @@ export async function fetchPostAverages(
         averageLikes,
         averageComments,
         ...(includeReels
-          ? { reels: await fetchReelPerformance(origin, token, values) }
+          ? {
+              reels: await fetchReelPerformance(
+                origin,
+                token,
+                values,
+                includeShowcase,
+              ),
+            }
           : {}),
         ...(window ? { recentAverages } : {}),
         ...(includeTotals
@@ -861,6 +912,7 @@ export async function fetchSnapshot(
       account.media_count,
       true,
       { start: start.toISOString(), end: end.toISOString() },
+      true,
       true,
     ).catch(() => ({ ...unavailablePostAverages })),
     graphRequest(

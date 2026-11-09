@@ -6,6 +6,7 @@ import CollaborationModal from "../components/CollaborationModal";
 import Hero from "../components/Hero";
 import AudienceInsights from "../components/insights/AudienceInsights";
 import InstagramPerformance from "../components/insights/InstagramPerformance";
+import ReelsShowcase from "../components/reels/ReelsShowcase";
 
 export default function Home() {
   const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function Home() {
       try {
         const response = await fetch("/api/instagram-stats", {
           signal: controller.signal,
+          cache: "no-store",
         });
         const stats = response.ok ? await response.json() : null;
         if (!controller.signal.aborted) setInstagramStats(stats);
@@ -40,6 +42,10 @@ export default function Home() {
         <AudienceInsights stats={instagramStats} />
       </Audience>
       <InstagramPerformance stats={instagramStats} />
+      <ReelsShowcase
+        showcase={instagramStats?.reels?.showcase}
+        loading={instagramStats === undefined}
+      />
 
       <CollaborationModal
         isOpen={isCollaborationOpen}

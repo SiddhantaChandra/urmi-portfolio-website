@@ -2,6 +2,8 @@
 @import "tailwindcss";
 
 :root {
+  --portfolio-red: #ad283d;
+  --portfolio-paper: #f4f0e6;
   --font-editorial-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, sans-serif;
   --font-kanji: "Noto Serif JP", serif;

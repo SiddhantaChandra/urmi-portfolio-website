@@ -405,9 +405,9 @@
   text-align: right;
 }
 .vermilion-theme {
-  --vi-paper: #f4f0e6;
+  --vi-paper: var(--portfolio-paper);
   --vi-ink: #341e20;
-  --vi-accent: #ad283d;
+  --vi-accent: var(--portfolio-red);
   --vi-soft: #dba6a1;
   --vi-field: #e9e1d3;
   --vi-muted: #715456;

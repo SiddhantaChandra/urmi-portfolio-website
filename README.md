@@ -73,4 +73,6 @@ The worker uses the configured Unified Login token until Meta expires or revokes
 
 A token can have `instagram_manage_insights` granted while still having no Instagram account assigned to it. In that case `/me/assigned_instagram_accounts?fields=id,username` returns an empty `data` array. Check the Instagram asset shared through the Unified Login configuration and its business portfolio. The account ID is not the system user's `/me` ID. If you already have the Instagram professional account ID, set `INSTAGRAM_ACCOUNT_ID` to query it directly; the worker still validates that the returned username is `uwummie` before requesting insights.
 
-Run `node --test tests/*.test.mjs` to check parsing, rolling date windows, and the worker's authorization and failure paths.
+Stories in motion uses `reels.showcase` from the saved snapshot: five most recent reels above the heading and five most popular by lifetime views below it. Published thumbnails and permalinks come from Meta's media endpoint, using the existing media traversal and reel-insight requests. Redeploy `sync-instagram-stats` and invoke it once to populate this field; no database migration or new credential is required. Daily syncs refresh the selections and signed thumbnail URLs. Featured Works remains a separate sample gallery.
+
+Run `node --test tests/*.test.mjs` to check parsing, rolling date windows, reel selections, and the worker's authorization and failure paths.
