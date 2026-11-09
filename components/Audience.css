@@ -54,7 +54,7 @@
   (view-timeline-name: --audience-scroll) and
   (animation-range: contain 0% contain 50svh) {
   .audience-section {
-    /* Two centered, text-only scroll beats before the blade enters. */
+    /* Share the extended hold and cut timing across every viewport size. */
     --audience-beat: 12svh;
     --audience-cut-start: calc(var(--audience-beat) * 2);
     --audience-cut-travel: 112svh;
@@ -88,6 +88,8 @@
   }
   .audience-title {
     --audience-blade-width: clamp(9rem, 36vw, 29rem);
+    /* Keep the cut outside the word while its scroll timeline initializes. */
+    --audience-cut-x: calc(50% - 50vw - 1rem);
     --audience-cut-front: clamp(-1rem, var(--audience-cut-x), 100% + 1rem);
     position: relative;
     z-index: 1;
@@ -143,8 +145,8 @@
     transform: translateX(var(--audience-cut-x));
     pointer-events: none;
     opacity: 0;
-    /* No backwards fill: the katana stays hidden through both hold beats. */
-    animation: audience-katana-exit step-end forwards;
+    /* The backwards-filled sweep holds the visible blade offscreen at entry. */
+    animation: audience-katana-exit step-end both;
     animation-timeline: --audience-scroll;
     animation-range: contain var(--audience-cut-start) contain
       var(--audience-katana-end);
@@ -175,13 +177,6 @@
     /* Give the subtitle a moment at full opacity before the charts enter. */
     margin-top: calc(var(--audience-handoff) + 100dvh - 100svh);
   }
-
-  @media (width < 44rem) {
-    .audience-section {
-      --audience-beat: 8svh;
-      --audience-cut-travel: 48svh;
-    }
-  }
 }
 
 @keyframes audience-arrive {
@@ -195,17 +190,14 @@
 }
 
 @keyframes audience-sweep {
-  /* The title is centered, so use its midpoint to reach both viewport edges. */
+  /* Preserve the cutting pass, then carry the whole blade offscreen promptly. */
   from {
     --audience-cut-x: calc(50% - 50vw - 1rem);
   }
   61% {
     --audience-cut-x: calc(100% + 1rem);
   }
-  88% {
-    /* The trailing tip clears the title before the katana leaves the viewport. */
-    --audience-cut-x: calc(100% + var(--audience-blade-width));
-  }
+  78%,
   to {
     --audience-cut-x: calc(50% + 50vw + var(--audience-blade-width) + 1rem);
   }
