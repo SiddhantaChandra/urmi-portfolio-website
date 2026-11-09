@@ -18,6 +18,12 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
   timeZone: "UTC",
 });
+const updatedFormat = new Intl.DateTimeFormat("en-IN", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  hour12: false,
+  timeZone: "Asia/Kolkata",
+});
 
 function formatCount(value) {
   if (!Number.isFinite(value)) return "—";
@@ -25,11 +31,20 @@ function formatCount(value) {
   return formatted.endsWith("M") ? millionFormat.format(value) : formatted;
 }
 
-function Metric({ label, value, title }) {
+function Metric({ label, value, title, period }) {
   return (
     <div className="vi-metric">
       <dt title={title}>{label}</dt>
-      <dd>{value}</dd>
+      <dd>
+        {period ? (
+          <span className="vi-metric-value">
+            {value}
+            <span className="vi-metric-period">{period}</span>
+          </span>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   );
 }
@@ -94,25 +109,14 @@ export default function InstagramPerformance({ stats }) {
                   : "Total views during the last 30 complete UTC days"
               }
             >
-              Total views
+              Total Views
             </span>
             <strong aria-live="polite">{formatCount(metrics.views)}</strong>
           </div>
-          <p className="vi-press-story">
-            Stories worth stopping for.
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              <path d="M4 20 20 4M4 4h16v16" />
-            </svg>
-          </p>
+          <p className="vi-press-story">Stories worth stopping for.</p>
           <dl aria-live="polite" aria-atomic="true">
             <Metric
-              label="Engagement rate"
+              label="Engagement Rate"
               title="Accounts engaged ÷ accounts reached × 100, during the last 30 complete UTC days"
               value={
                 Number.isFinite(accountMetrics.engagementRate)
@@ -121,7 +125,7 @@ export default function InstagramPerformance({ stats }) {
               }
             />
             <Metric
-              label="Accounts engaged"
+              label="Accounts Engaged"
               title="Accounts engaged during the last 30 complete UTC days"
               value={formatCount(accountMetrics.accountsEngaged)}
             />
@@ -129,7 +133,7 @@ export default function InstagramPerformance({ stats }) {
           <fieldset className="vi-period" aria-label="Performance period">
             {[
               ["lifetime", "Lifetime"],
-              ["last30Days", "30 days"],
+              ["last30Days", "30 Days"],
             ].map(([value, label]) => (
               <button
                 key={value}
@@ -155,7 +159,7 @@ export default function InstagramPerformance({ stats }) {
             <>
               <dl className="vi-more-metrics vi-total-metrics">
                 <Metric
-                  label="Total likes"
+                  label="Total Likes"
                   title={
                     isLifetime
                       ? "Lifetime likes across all currently published posts"
@@ -164,7 +168,8 @@ export default function InstagramPerformance({ stats }) {
                   value={formatCount(metrics.likes)}
                 />
                 <Metric
-                  label="Accounts reached (30 days)"
+                  label="Account Reached"
+                  period="30 Days"
                   title="Unique accounts reached during the last 30 complete UTC days, regardless of the selected period. Adding shorter date ranges would double-count accounts."
                   value={formatCount(accountMetrics.reach)}
                 />
@@ -176,11 +181,11 @@ export default function InstagramPerformance({ stats }) {
                 aria-label="Overall account performance"
               >
                 <Metric
-                  label="Total interactions"
+                  label="Total Interactions"
                   value={formatCount(metrics.interactions)}
                 />
                 <Metric
-                  label="Profile views"
+                  label="Profile Views"
                   title={
                     isLifetime
                       ? "Profile visits across the saved history shown below"
@@ -235,7 +240,8 @@ export default function InstagramPerformance({ stats }) {
               value={formatCount(stats?.storyAverage?.views)}
             />
             <Metric
-              label="Total Reels Watch Time (hrs.)"
+              label="Reels Watch Time"
+              period="Hours"
               title="Total lifetime watch time across all published reels, including replays, in hours"
               value={formatCount(reelMetrics.totalWatchTimeHours)}
             />
@@ -245,13 +251,12 @@ export default function InstagramPerformance({ stats }) {
       <footer className="vi-summary-foot">
         <p>Behind every number, someone who stayed for the story.</p>
         <span>
-          {selectedMetrics?.window ? (
+          {stats?.updatedAt ? (
             <>
-              Meta Instagram Insights ·{" "}
-              {isLifetime ? "Tracked history" : "30 days"} ·{" "}
-              {dateFormat.format(new Date(metrics.window.start))}–
-              {dateFormat.format(new Date(Date.parse(metrics.window.end) - 1))}{" "}
-              UTC
+              Meta Instagram Insights · Updated on{" "}
+              <time dateTime={stats.updatedAt}>
+                {updatedFormat.format(new Date(stats.updatedAt))} IST
+              </time>
             </>
           ) : (
             "Awaiting Instagram insights"

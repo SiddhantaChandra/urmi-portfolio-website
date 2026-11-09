@@ -5,11 +5,6 @@ import "./Vermilion.css";
 
 const percent = (value) => `${value.toFixed(1)}%`;
 const olderGroups = new Set(["45-54", "55-64", "65+"]);
-const dateFormat = new Intl.DateTimeFormat("en-IN", {
-  dateStyle: "medium",
-  timeStyle: "short",
-  timeZone: "Asia/Kolkata",
-});
 
 function ChartPanel({ title, aside, children }) {
   return (
@@ -233,14 +228,6 @@ export default function AudienceInsights({ stats }) {
             <Countries data={countries} />
           </div>
         </>
-      )}
-      {stats?.updatedAt && (
-        <p className="vi-data-note">
-          Instagram audience · Updated{" "}
-          <time dateTime={stats.updatedAt}>
-            {dateFormat.format(new Date(stats.updatedAt))} IST
-          </time>
-        </p>
       )}
     </section>
   );
