@@ -2,13 +2,13 @@
 
 import { useRef } from "react";
 import { InstagramLink, PublishedCover } from "./ReelUI";
-import useOrbitRotation from "./useOrbitRotation";
+import useWaveMotion from "./useWaveMotion";
 
 export default function Waves({ showcase, loading }) {
   const recent = (showcase?.recent ?? []).slice(0, 5);
   const popular = (showcase?.popular ?? []).slice(0, 5);
   const orbit = useRef(null);
-  useOrbitRotation(
+  useWaveMotion(
     orbit,
     recent.length || popular.length
       ? `${recent.map((reel) => reel.id)}|${popular.map((reel) => reel.id)}`

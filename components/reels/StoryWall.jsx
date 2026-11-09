@@ -2,11 +2,11 @@
 
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Cover } from "./ReelUI";
-import { wallReels } from "./reels";
+import { articles } from "./articles";
 
-export default function StoryWall({ onPreview }) {
+export default function StoryWall() {
   const gallery = useRef(null);
   const destination = useRef(null);
   const [edges, setEdges] = useState({ previous: false, next: true });
@@ -116,7 +116,9 @@ export default function StoryWall({ onPreview }) {
               key={direction}
               className="wall-scroll-button"
               type="button"
-              aria-label={direction === -1 ? "Previous covers" : "Next covers"}
+              aria-label={
+                direction === -1 ? "Previous articles" : "Next articles"
+              }
               aria-controls="wall-gallery"
               disabled={direction === -1 ? !edges.previous : !edges.next}
               onClick={() => move(direction)}
@@ -146,7 +148,7 @@ export default function StoryWall({ onPreview }) {
           id="wall-gallery"
           ref={gallery}
           aria-roledescription="carousel"
-          aria-label="Scrollable cover gallery"
+          aria-label="Articles by Urmi Chakraborty for The Telegraph Online"
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onPointerDown={() => {
@@ -157,27 +159,47 @@ export default function StoryWall({ onPreview }) {
           }}
           data-lenis-prevent-horizontal=""
         >
-          {wallReels.map((reel, index) => (
-            <figure
+          {articles.map((article, index) => (
+            <article
               className="wall-piece"
-              data-reel={reel.id}
-              key={reel.id}
-              aria-label={`${index + 1} of ${wallReels.length}: ${reel.film}`}
+              key={article.id}
+              aria-label={`${index + 1} of ${articles.length}`}
             >
               <div className="wall-card-entry">
-                <div className="wall-mount">
-                  <Cover reel={reel} onPreview={onPreview} compact />
-                  <figcaption>
-                    <span>
-                      {reel.collection === "Recent"
-                        ? "Recent reel"
-                        : "Popular work"}
+                <a
+                  className="wall-mount"
+                  href={article.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="wall-article-image">
+                    <Image
+                      src={article.image}
+                      width={article.width}
+                      height={article.height}
+                      alt={article.alt}
+                      sizes="(max-width: 540px) 76vw, (max-width: 1100px) 42vw, 380px"
+                    />
+                  </div>
+                  <div className="wall-article-copy">
+                    <p className="wall-article-title">{article.title}</p>
+                    <span className="wall-article-source">
+                      <span>The Telegraph Online</span>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        aria-hidden="true"
+                      >
+                        <path d="M6 18 18 6M6 6h12v12" />
+                      </svg>
                     </span>
-                    <span>{reel.film}</span>
-                  </figcaption>
-                </div>
+                  </div>
+                  <span className="wall-link-note"> (opens in a new tab)</span>
+                </a>
               </div>
-            </figure>
+            </article>
           ))}
         </section>
       </div>
