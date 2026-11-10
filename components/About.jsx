@@ -57,7 +57,7 @@ export default function About() {
               </div>
 
               <div className="flex-1 p-6">
-                <h3 className="hanafuda-title font-serif-editorial text-2xl font-normal tracking-tight text-[#181513]">
+                <h3 className="hanafuda-title font-serif-editorial text-2xl font-medium tracking-tight text-[#181513]">
                   {topic.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#544c41]">

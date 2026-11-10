@@ -51,7 +51,7 @@ export default function Hero({ stats }) {
         <div className="row-start-2 flex items-baseline gap-2 md:col-start-2 md:row-start-1 md:self-end">
           <h1
             id="hero-title"
-            className="mr-2 font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] leading-[0.95] tracking-[-0.03em]"
+            className="mr-2 font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] font-semibold leading-[0.95] tracking-[-0.03em]"
           >
             Urmi
             <span className="sr-only">
@@ -66,13 +66,13 @@ export default function Hero({ stats }) {
             >
               海
             </span>
-            <span className="whitespace-nowrap font-serif-editorial text-sm leading-none text-[#1c1917] sm:text-lg">
+            <span className="whitespace-nowrap font-serif-editorial text-sm font-medium leading-none text-[#1c1917] sm:text-lg">
               : うみ (waves)
             </span>
           </div>
         </div>
 
-        <p className="row-start-3 max-w-[34ch] font-serif-editorial text-xl leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
+        <p className="row-start-3 max-w-[34ch] font-serif-editorial text-xl font-medium leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
           I’m Urmi Chakraborty, the anime and manga creator behind{" "}
           <a
             href="https://www.instagram.com/uwummie"
@@ -95,7 +95,7 @@ export default function Hero({ stats }) {
             </a>
           </div>
           <figure className="instagram-stats" aria-label="Instagram statistics">
-            <dl className="instagram-stats-values font-serif-editorial">
+            <dl className="instagram-stats-values font-serif-editorial font-medium">
               <InstagramStat label="Followers" count={stats?.followers} />
               <InstagramStat label="30-day views" count={stats?.views} />
             </dl>
