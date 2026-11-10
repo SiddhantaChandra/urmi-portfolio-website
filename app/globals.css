@@ -232,15 +232,24 @@ body {
 }
 
 .hero-sakura-art > svg {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   overflow: visible;
 }
 
 .sakura-branch-shake {
-  transform-origin: 1354px 90px;
+  display: block;
+  transform-origin: 100% 13.04%;
   pointer-events: visiblePainted;
   cursor: pointer;
+}
+
+.sakura-branch-shake img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .hero-sakura-art:focus-visible {
