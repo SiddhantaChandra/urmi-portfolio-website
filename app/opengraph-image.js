@@ -8,7 +8,7 @@ export const contentType = "image/png";
 
 export default async function OpenGraphImage() {
   const portrait = await readFile(
-    join(process.cwd(), "public/images/profile.png"),
+    join(process.cwd(), "public/images/profile-social.jpg"),
   );
   return new ImageResponse(
     <div

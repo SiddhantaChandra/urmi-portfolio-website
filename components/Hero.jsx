@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import instagramStatsArtwork from "../public/images/instagram stats.webp";
+import portrait from "../public/images/profile.webp";
 import About from "./About";
 import SakuraBranch from "./SakuraBranch";
 
@@ -106,7 +107,7 @@ export default function Hero({ stats }) {
           <div className="hero-portrait-frame relative">
             <div className="hero-portrait relative aspect-[6/5] w-full max-w-[22rem] overflow-hidden bg-[#e9dfd0]">
               <Image
-                src="/images/profile.png"
+                src={portrait}
                 alt="Urmi standing among greenery"
                 fill
                 sizes="(max-width: 400px) calc(100vw - 3rem), (min-width: 768px) and (max-width: 960px) 37vw, 352px"

@@ -5,6 +5,15 @@ const contact = await sharp("public/contact-torii-watercolor.png")
   .toFile("public/images/contact-torii-watercolor.webp");
 console.log(`Contact illustration: ${contact.size} bytes`);
 
+const portrait = await sharp("public/images/profile.png")
+  .webp({ quality: 80, effort: 6 })
+  .toFile("public/images/profile.webp");
+const socialPortrait = await sharp("public/images/profile.png")
+  .resize(300, 360, { fit: "cover" })
+  .jpeg({ quality: 82, mozjpeg: true })
+  .toFile("public/images/profile-social.jpg");
+console.log(`Portrait: ${portrait.size}; social: ${socialPortrait.size} bytes`);
+
 // Keep originals intact. Run from the repository root to regenerate delivery assets.
 for (const [source, destination, format] of [
   [
