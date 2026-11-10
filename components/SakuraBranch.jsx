@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { preload } from "react-dom";
 import { growth, petals, spriteAnchors, sprites } from "../lib/sakura-art.mjs";
-import sakuraBranch from "../public/images/sakura-branch.avif";
-import sakuraAtlas from "../public/images/sakura-branch-atlas.avif";
+import sakuraBranch from "../public/images/sakura-branch.webp";
+import sakuraAtlas from "../public/images/sakura-branch-atlas.webp";
 
 const sakuraAtlasUrl = sakuraAtlas.src;
 
@@ -136,16 +136,18 @@ export default function SakuraBranch() {
                 width="1354"
                 height="1254"
               />
-              {Object.entries(sprites).map(([name, bounds]) => (
-                <symbol
-                  key={name}
-                  id={`${id}-${name}`}
-                  viewBox={bounds.join(" ")}
-                  overflow="hidden"
-                >
-                  <use href={`#${id}-atlas`} />
-                </symbol>
-              ))}
+              {Object.entries(sprites)
+                .filter(([name]) => name.startsWith("petal"))
+                .map(([name, bounds]) => (
+                  <symbol
+                    key={name}
+                    id={`${id}-${name}`}
+                    viewBox={bounds.join(" ")}
+                    overflow="hidden"
+                  >
+                    <use href={`#${id}-atlas`} />
+                  </symbol>
+                ))}
             </defs>
           )}
 
