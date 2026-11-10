@@ -1,0 +1,17 @@
+{
+  "measuredAt": "2026-11-10T18:18:05.230Z",
+  "url": "https://www.urmichakraborty.com/",
+  "lighthouseVersion": "13.6.0",
+  "scores": {
+    "performance": 88,
+    "accessibility": 95,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "largest-contentful-paint": "3.8 s",
+    "total-blocking-time": "50 ms",
+    "cumulative-layout-shift": "0"
+  },
+  "notes": "Older deployed revision, recorded separately from the local before/after comparison. Current production robots.txt and sitemap.xml return 404; apex redirects to www. Changes in this workspace are not deployed."
+}

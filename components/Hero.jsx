@@ -68,7 +68,7 @@ export default function Hero({ stats }) {
         </div>
 
         <p className="row-start-3 max-w-[34ch] font-serif-editorial text-xl leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
-          Hey! I’m the creator behind{" "}
+          I’m Urmi Chakraborty, the anime and manga creator behind{" "}
           <a
             href="https://www.instagram.com/uwummie"
             target="_blank"
@@ -77,8 +77,7 @@ export default function Hero({ stats }) {
           >
             @uwummie
           </a>
-          , my little corner on the internet dedicated to celebrating anime and
-          manga through meaningful storytelling and a genuine love for the medium
+          . I share video essays and thoughtful recommendations.
         </p>
 
         <div className="relative z-10 row-start-4 self-stretch md:col-start-2 md:row-start-3">

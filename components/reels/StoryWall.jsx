@@ -105,8 +105,11 @@ export default function StoryWall() {
           <span className="wall-current-role">Full-time storyteller.</span>
         </h2>
         <p className="wall-story-note">
-          <span>The medium changed.</span>
-          <span>The love for stories never did.</span>
+          <span>Anime reviews and culture features by Urmi Chakraborty</span>
+          <span>
+            for The Telegraph Online. The medium changed; the love for stories
+            never did.
+          </span>
         </p>
       </header>
       <div className="wall-toolbar">

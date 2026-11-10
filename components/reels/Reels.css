@@ -1,24 +1,3 @@
-@font-face {
-  font-family: "Reels Serif";
-  src: url("./assets/serif-roman.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 300 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Reels Serif";
-  src: url("./assets/serif-italic.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 300 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Reels Sans";
-  src: url("./assets/sans-roman.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 200 800;
-  font-display: swap;
-}
 .reels-showcase {
   --reels-paper: #f8f5ee;
   --reels-ink: #292a25;
@@ -32,8 +11,8 @@
   );
   --reels-line: #cfc9bd;
   --reels-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-editorial-serif: "Reels Serif", Georgia, serif;
-  --font-sans: "Reels Sans", sans-serif;
+  --font-editorial-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jakarta), sans-serif;
   --reels-gutter: max(40px, calc((100vw - 1240px) / 2));
   background: var(--reels-paper);
   color: var(--reels-ink);

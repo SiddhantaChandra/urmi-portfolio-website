@@ -27,13 +27,7 @@ export default function Audience({ children }) {
               aria-hidden="true"
             />
             <span className="audience-katana" aria-hidden="true">
-              <Image
-                src={enmaKatana}
-                alt=""
-                draggable={false}
-                loading="eager"
-                unoptimized
-              />
+              <Image src={enmaKatana} alt="" draggable={false} sizes="260px" />
             </span>
           </h2>
           <p className="audience-description font-serif-editorial">

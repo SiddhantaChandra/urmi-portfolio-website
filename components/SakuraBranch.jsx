@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { preload } from "react-dom";
+
+const sakuraAtlasUrl = "/images/sakura-branch-atlas.avif";
 
 const sprites = {
   branch: [0, 0, 1354, 656],
@@ -123,6 +126,7 @@ function Sprite({ id, name, width = sprites[name][2] }) {
 }
 
 export default function SakuraBranch() {
+  preload(sakuraAtlasUrl, { as: "image", fetchPriority: "high" });
   const id = useId();
   const stageRef = useRef(null);
   const artRef = useRef(null);
@@ -206,7 +210,7 @@ export default function SakuraBranch() {
           <defs>
             <image
               id={`${id}-atlas`}
-              href="/images/sakura-branch-spite.webp"
+              href={sakuraAtlasUrl}
               width="1354"
               height="1254"
             />

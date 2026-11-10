@@ -54,7 +54,7 @@ export function PublishedCover({ reel, collection }) {
       href={reel.permalink}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${collection} reel: ${title}. Open on Instagram`}
+      aria-label={`${collection}${collection === "Popular" && views ? ` ${views}` : ""} reel: ${title}. Watch on Instagram`}
     >
       {reel.thumbnailUrl && failedImage !== reel.thumbnailUrl ? (
         <Image
@@ -76,7 +76,10 @@ export function PublishedCover({ reel, collection }) {
         <span>
           {collection}
           {collection === "Popular" && views && (
-            <span className="reel-published-views">{views}</span>
+            <>
+              {" "}
+              <span className="reel-published-views">{views}</span>
+            </>
           )}
         </span>
         <Icon name="play" />

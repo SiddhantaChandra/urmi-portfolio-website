@@ -172,6 +172,8 @@ function Countries({ data }) {
 export default function AudienceInsights({ stats }) {
   const ref = useRef(null);
   useEffect(() => {
+    // The panels mount after the saved audience data replaces the loading state.
+    if (stats === undefined) return;
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -210,9 +212,9 @@ export default function AudienceInsights({ stats }) {
         </span>
       </header>
       {stats === undefined ? (
-        <p className="vi-empty" role="status">
+        <output className="vi-empty block">
           Loading Instagram audience data…
-        </p>
+        </output>
       ) : (
         <>
           <div className="vi-press-spread">

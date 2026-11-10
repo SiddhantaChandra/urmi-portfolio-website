@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import { reportSuccessfulEnquiry } from "../lib/analytics.mjs";
 import crunchyrollLogo from "../public/images/brands/Crunchyroll.webp";
 import fanzaiLogo from "../public/images/brands/Fanzai.webp";
 import funikidoLogo from "../public/images/brands/Funikido.webp";
@@ -98,11 +99,13 @@ function ContactForm() {
         signal: AbortSignal.timeout(25000),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Please try again.");
+      if (!response.ok || result.received !== true)
+        throw new Error(result.error || "Please try again.");
       setStatus(
         "Thank you! Your message has been received. I’ll be in touch soon.",
       );
       form.reset();
+      reportSuccessfulEnquiry();
     } catch (error) {
       setDraft(`To: uwummie@gmail.com\nSubject: ${subject}\n\n${body}`);
       setEmailLink(
@@ -264,7 +267,10 @@ function Bloom() {
       >
         <div className="bc-bloom-title">
           <h2 id="brands-title">Beyond the byline</h2>
-          <p>A glimpse of the brands I’ve partnered with</p>
+          <p>
+            Anime and pop culture storytelling, with brand partners including
+            Crunchyroll, Fanzai and Funikido.
+          </p>
         </div>
         <Blossom />
         <ul className="bc-bloom-grid" aria-label="Brands I’ve worked with">
@@ -291,9 +297,9 @@ function Bloom() {
             could be <em>ours.</em>
           </h2>
           <p>
-            A little curiosity. A good conversation.
-            <br />
-            Something wonderful starts there.
+            Let’s talk anime and manga brand collaborations, sponsored
+            storytelling or editorial projects. Share your brief, format and
+            timeline below.
           </p>
           <Image
             src="/contact-torii-watercolor.png"

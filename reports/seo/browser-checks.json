@@ -1,0 +1,13 @@
+{
+  "measuredAt": "2026-11-10T18:17:38.394Z",
+  "requestMode": "All contact requests fulfilled by CDP fixtures; no real enquiry or email sent.",
+  "checks": {
+    "successEventOnce": true,
+    "failureDoesNotTrackLead": true,
+    "emailFallbackRetained": true,
+    "horizontalOverflow": 0,
+    "consoleErrors": [],
+    "accessibilityNodes": 1090
+  },
+  "analyticsRequests": 0
+}

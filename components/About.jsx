@@ -27,10 +27,13 @@ export default function About() {
   return (
     <section
       id="about"
-      aria-label="Topics — Hanafuda Poetry Cards"
+      aria-labelledby="topics-title"
       className="relative z-0 mt-20 py-12 sm:py-16 md:mt-14 lg:pt-20"
     >
       <div className="mx-auto max-w-lg md:max-w-6xl xl:pl-14">
+        <h2 id="topics-title" className="sr-only">
+          Anime, manga and brand storytelling
+        </h2>
         <div className="grid gap-8 md:grid-cols-3">
           {topics.map((topic) => (
             <article
