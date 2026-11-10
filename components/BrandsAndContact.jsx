@@ -7,6 +7,7 @@ import { reportSuccessfulEnquiry } from "../lib/analytics.mjs";
 import crunchyrollLogo from "../public/images/brands/Crunchyroll.webp";
 import fanzaiLogo from "../public/images/brands/Fanzai.webp";
 import funikidoLogo from "../public/images/brands/Funikido.webp";
+import contactTorii from "../public/images/contact-torii-watercolor.webp";
 import "./BrandsAndContact.css";
 
 const brands = [
@@ -302,7 +303,7 @@ function Bloom() {
             timeline below.
           </p>
           <Image
-            src="/contact-torii-watercolor.png"
+            src={contactTorii}
             width={1536}
             height={1024}
             sizes="(max-width: 760px) calc(100vw - 48px), 440px"

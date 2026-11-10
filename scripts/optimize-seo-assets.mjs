@@ -1,5 +1,10 @@
 import sharp from "sharp";
 
+const contact = await sharp("public/contact-torii-watercolor.png")
+  .webp({ quality: 75, effort: 6 })
+  .toFile("public/images/contact-torii-watercolor.webp");
+console.log(`Contact illustration: ${contact.size} bytes`);
+
 // Keep originals intact. Run from the repository root to regenerate delivery assets.
 for (const [source, destination, format] of [
   [
