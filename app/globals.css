@@ -6,7 +6,7 @@
   --portfolio-paper: #f4f0e6;
   --font-editorial-serif: var(--font-cormorant), Georgia, serif;
   --font-sans: var(--font-jakarta), -apple-system, sans-serif;
-  --font-kanji: "Noto Serif JP", "Yu Mincho", serif;
+  --font-kanji: var(--font-noto-serif-jp), "Yu Mincho", serif;
 }
 
 body {

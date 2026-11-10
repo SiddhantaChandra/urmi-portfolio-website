@@ -32,6 +32,14 @@ const sans = localFont({
   display: "swap",
   fallback: ["Arial"],
 });
+const japanese = localFont({
+  src: "./fonts/noto-serif-jp-subset.woff2",
+  weight: "400",
+  variable: "--font-noto-serif-jp",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+});
 
 export const metadata = {
   title: creator.title,
@@ -83,7 +91,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${editorial.variable} ${sans.variable} h-full antialiased`}
+      className={`${editorial.variable} ${sans.variable} ${japanese.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#f8f5ee] text-[#1c1917] relative">
         <div className="noise" aria-hidden="true" />
