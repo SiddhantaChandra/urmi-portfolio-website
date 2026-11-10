@@ -1,11 +1,13 @@
 import Portfolio from "../components/Portfolio";
+import { getInstagramStats } from "../lib/instagram-stats";
 import {
   getSeoConfig,
   profileStructuredData,
   serializeJsonLd,
 } from "../lib/seo.mjs";
 
-export default function Home() {
+export default async function Home() {
+  const { stats } = await getInstagramStats();
   const { siteUrl } = getSeoConfig();
   const profile = profileStructuredData(siteUrl);
   return (
@@ -17,7 +19,7 @@ export default function Home() {
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(profile) }}
         />
       )}
-      <Portfolio />
+      <Portfolio initialStats={stats} />
     </>
   );
 }

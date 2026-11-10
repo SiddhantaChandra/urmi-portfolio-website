@@ -8,8 +8,8 @@ import AudienceInsights from "./insights/AudienceInsights";
 import InstagramPerformance from "./insights/InstagramPerformance";
 import ReelsShowcase from "./reels/ReelsShowcase";
 
-export default function Portfolio() {
-  const [instagramStats, setInstagramStats] = useState(undefined);
+export default function Portfolio({ initialStats = null }) {
+  const [instagramStats, setInstagramStats] = useState(initialStats);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -21,9 +21,10 @@ export default function Portfolio() {
           cache: "no-store",
         });
         const stats = response.ok ? await response.json() : null;
-        if (!controller.signal.aborted) setInstagramStats(stats);
+        if (!controller.signal.aborted)
+          setInstagramStats((current) => stats ?? current ?? null);
       } catch {
-        if (!controller.signal.aborted) setInstagramStats(null);
+        // Keep the server snapshot visible if a background refresh fails.
       }
     }
 

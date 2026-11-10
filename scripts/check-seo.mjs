@@ -50,6 +50,18 @@ check("Robots metadata matches the intended deployment", () => {
   assert.equal(meta("twitter:card"), "summary_large_image");
   assert.equal(meta("og:type"), "website");
 });
+const statsResponse = await fetch(new URL("/api/instagram-stats", base));
+const stats = statsResponse.ok ? await statsResponse.json() : null;
+check("Saved audience statistics are rendered without JavaScript", () => {
+  const heroStats = html.match(
+    /<dl class="instagram-stats-values[\s\S]*?<\/dl>/,
+  )?.[0];
+  assert.ok(heroStats);
+  if (Number.isFinite(stats?.followers) && Number.isFinite(stats?.views)) {
+    assert.ok(!heroStats.includes("Unavailable"));
+    assert.equal([...heroStats.matchAll(/<dd title="[\d,]+"/g)].length, 2);
+  }
+});
 const canonical = [...html.matchAll(/<link\b[^>]*>/g)]
   .map(([tag]) => tag)
   .find((tag) => attr(tag, "rel") === "canonical");
