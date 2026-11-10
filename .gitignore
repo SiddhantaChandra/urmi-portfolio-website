@@ -38,7 +38,11 @@ GEMINI.md
 .github/prompts/
 /.taste-skill/
 /tasklist*.md
-/reports/seo/
+/reports/
+
+# Local asset-generation and audit utilities
+/scripts/*
+!/scripts/check-seo.mjs
 
 # next.js
 /.next/
