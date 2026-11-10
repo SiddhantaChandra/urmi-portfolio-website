@@ -983,12 +983,18 @@
 }
 @media (max-width: 540px) {
   .reels-wall {
-    height: 120vh;
-    height: 120dvh;
+    height: 100vh;
+    height: 100dvh;
   }
   .wall-head {
     display: block;
     margin-bottom: 20px;
+  }
+  .wall-head #wall-title {
+    font-size: clamp(32px, 10vw, 52px);
+  }
+  .wall-former-role {
+    font-size: 0.8em;
   }
   .reels-wall .wall-story-note {
     margin-top: 16px;
