@@ -39,10 +39,5 @@ const atlas = await sharp({
   .toFile("public/images/sakura-branch-atlas.webp");
 console.log(`Petal atlas: ${atlas.size} bytes`);
 
-// Keep originals intact. Run from the repository root to regenerate delivery assets.
-const grain = await sharp("public/images/static.gif")
-  .png({ palette: true, colours: 4, compressionLevel: 9 })
-  .toFile("public/images/paper-noise.png");
-console.log(`Paper grain: ${grain.size} bytes`);
-
+// The grain overlay uses the original animated static.gif directly.
 await import("./compose-sakura.mjs");

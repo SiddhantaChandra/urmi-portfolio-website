@@ -139,7 +139,7 @@ body {
 .noise {
   position: fixed;
   inset: 0;
-  background-image: url("/images/paper-noise.png");
+  background-image: url("/images/static.gif");
   background-size: 480px;
   background-repeat: repeat;
   opacity: 0.03;
