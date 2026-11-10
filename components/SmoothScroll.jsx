@@ -9,7 +9,7 @@ const options = {
   lerp: 0.25,
   smoothWheel: true,
   syncTouch: false,
-  respectReducedMotion: true,
+  respectReducedMotion: false,
 };
 
 export default function SmoothScroll({ children }) {

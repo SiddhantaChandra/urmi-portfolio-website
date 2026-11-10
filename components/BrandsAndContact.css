@@ -393,18 +393,18 @@
 .bc-mark-fanzai {
   width: 180px;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .bc-in-view .bc-bloom-grid {
-    animation: bc-grid-arrive 800ms var(--bc-ease) both;
-  }
-  @supports (animation-timeline: view()) {
-    .bc-blossom {
-      animation: bc-branch-pass linear both;
-      animation-timeline: view();
-      animation-range: entry 0% exit 100%;
-    }
+
+.bc-in-view .bc-bloom-grid {
+  animation: bc-grid-arrive 800ms var(--bc-ease) both;
+}
+@supports (animation-timeline: view()) {
+  .bc-blossom {
+    animation: bc-branch-pass linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
   }
 }
+
 @keyframes bc-grid-arrive {
   from {
     transform: translateY(22px);
@@ -543,17 +543,5 @@
   }
   .bc-bloom-contact > .bc-form {
     padding: 24px 18px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bc-collaborations *,
-  .bc-collaborations *::before,
-  .bc-collaborations *::after {
-    /* biome-ignore lint/complexity/noImportantStyles: Accessibility override for every animated state. */
-    animation: none !important;
-    /* biome-ignore lint/complexity/noImportantStyles: Accessibility override for native smooth scroll. */
-    scroll-behavior: auto !important;
-    /* biome-ignore lint/complexity/noImportantStyles: Accessibility override for interaction transitions. */
-    transition: none !important;
   }
 }

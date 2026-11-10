@@ -333,14 +333,6 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sakura-petal,
-  .sakura-click-petal {
-    display: none;
-    animation: none;
-  }
-}
-
 @keyframes sakura-drift {
   0% {
     opacity: 0;

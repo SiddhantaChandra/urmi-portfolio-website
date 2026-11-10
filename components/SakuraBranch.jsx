@@ -37,7 +37,6 @@ export default function SakuraBranch() {
   const [ambientReady, setAmbientReady] = useState(false);
 
   const shakeBranch = () => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     shakeRef.current?.cancel();
     shakeRef.current = branchRef.current.animate(
       [0, -2.6, 2.1, -1.5, 0.9, -0.4, 0].map((angle) => ({

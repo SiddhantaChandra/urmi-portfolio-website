@@ -184,7 +184,7 @@
   width: 16px;
   height: 16px;
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) {
   .reel-cover-copy {
     transition: transform 450ms var(--reels-ease);
   }
@@ -350,7 +350,7 @@
 .reels-wave .reel-published {
   transition: transform 300ms var(--reels-ease);
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) {
   .reels-wave .reel-published:is(:hover, :focus-visible) {
     transform: translateY(-6px);
   }
@@ -674,24 +674,24 @@
   transform-origin: center top;
   transform: scaleY(0);
 }
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .reels-entry {
-      view-timeline: --reels-entry block;
-      /* Reserve the curve depth and balance the space below the gallery. */
-      padding-block: max(
-        clamp(55px, 7vw, 96px),
-        calc(var(--reels-curve-height) + 24px)
-      );
-    }
-    .reels-entry > .reels-entry-curve {
-      /* The cream dips into the red: the inverse of Instagram's outward edge. */
-      animation: reels-entry-curve-settle linear both;
-      animation-timeline: --reels-entry;
-      animation-range: entry 35% entry 100%;
-    }
+
+@supports (animation-timeline: view()) {
+  .reels-entry {
+    view-timeline: --reels-entry block;
+    /* Reserve the curve depth and balance the space below the gallery. */
+    padding-block: max(
+      clamp(55px, 7vw, 96px),
+      calc(var(--reels-curve-height) + 24px)
+    );
+  }
+  .reels-entry > .reels-entry-curve {
+    /* The cream dips into the red: the inverse of Instagram's outward edge. */
+    animation: reels-entry-curve-settle linear both;
+    animation-timeline: --reels-entry;
+    animation-range: entry 35% entry 100%;
   }
 }
+
 @keyframes reels-entry-curve-settle {
   from {
     transform: scaleY(1);
@@ -821,58 +821,58 @@
   min-width: 0;
   scroll-snap-align: start;
 }
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .wall-piece {
-      --wall-arrival-x: 0px;
-      --wall-arrival-y: 24px;
-      --wall-arrival-tilt: 0deg;
-      --wall-arrival-start: 6%;
-      --wall-arrival-end: 68%;
-    }
-    .wall-card-entry {
-      animation: wall-card-arrive linear both;
-      /* Follow page entry, even inside the horizontal scrolling container. */
-      animation-timeline: --wall-entry;
-      /* Spread the arrival over most of a viewport, not just the card's entry. */
-      animation-range: entry var(--wall-arrival-start) cover
-        var(--wall-arrival-end);
-    }
-    .wall-piece:nth-of-type(3n + 1) {
-      --wall-arrival-x: -24px;
-      --wall-arrival-y: 32px;
-      --wall-arrival-tilt: -3deg;
+
+@supports (animation-timeline: view()) {
+  .wall-piece {
+    --wall-arrival-x: 0px;
+    --wall-arrival-y: 24px;
+    --wall-arrival-tilt: 0deg;
+    --wall-arrival-start: 6%;
+    --wall-arrival-end: 68%;
+  }
+  .wall-card-entry {
+    animation: wall-card-arrive linear both;
+    /* Follow page entry, even inside the horizontal scrolling container. */
+    animation-timeline: --wall-entry;
+    /* Spread the arrival over most of a viewport, not just the card's entry. */
+    animation-range: entry var(--wall-arrival-start) cover
+      var(--wall-arrival-end);
+  }
+  .wall-piece:nth-of-type(3n + 1) {
+    --wall-arrival-x: -24px;
+    --wall-arrival-y: 32px;
+    --wall-arrival-tilt: -3deg;
+    --wall-arrival-start: 0%;
+    --wall-arrival-end: 65%;
+  }
+  .wall-piece:nth-of-type(3n) {
+    --wall-arrival-x: 24px;
+    --wall-arrival-y: 24px;
+    --wall-arrival-tilt: 3deg;
+    --wall-arrival-start: 12%;
+    --wall-arrival-end: 71%;
+  }
+  /* Phones retain the slow scroll span with shorter, alternating travel. */
+  @media (max-width: 540px) {
+    .wall-piece:nth-of-type(n) {
+      --wall-arrival-x: -12px;
+      --wall-arrival-y: 20px;
+      --wall-arrival-tilt: -2deg;
       --wall-arrival-start: 0%;
-      --wall-arrival-end: 65%;
+      --wall-arrival-end: 62%;
     }
-    .wall-piece:nth-of-type(3n) {
-      --wall-arrival-x: 24px;
-      --wall-arrival-y: 24px;
-      --wall-arrival-tilt: 3deg;
-      --wall-arrival-start: 12%;
-      --wall-arrival-end: 71%;
-    }
-    /* Phones retain the slow scroll span with shorter, alternating travel. */
-    @media (max-width: 540px) {
-      .wall-piece:nth-of-type(n) {
-        --wall-arrival-x: -12px;
-        --wall-arrival-y: 20px;
-        --wall-arrival-tilt: -2deg;
-        --wall-arrival-start: 0%;
-        --wall-arrival-end: 62%;
-      }
-      .wall-piece:nth-of-type(even) {
-        --wall-arrival-x: 12px;
-        --wall-arrival-tilt: 2deg;
-        --wall-arrival-start: 8%;
-        --wall-arrival-end: 66%;
-      }
-    }
-    .wall-piece:focus-within .wall-card-entry {
-      animation: none;
+    .wall-piece:nth-of-type(even) {
+      --wall-arrival-x: 12px;
+      --wall-arrival-tilt: 2deg;
+      --wall-arrival-start: 8%;
+      --wall-arrival-end: 66%;
     }
   }
+  .wall-piece:focus-within .wall-card-entry {
+    animation: none;
+  }
 }
+
 @keyframes wall-card-arrive {
   from {
     transform: translate(var(--wall-arrival-x), var(--wall-arrival-y))
@@ -1037,10 +1037,5 @@
   }
   .wall-article-copy {
     padding-block: 12px 8px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wall-scroll-button {
-    transition: none;
   }
 }

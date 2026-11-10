@@ -7,7 +7,6 @@ export default function useReelMotion(ref) {
     const root = ref.current;
     if (!root || !window.IntersectionObserver || !Element.prototype.animate)
       return;
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const animations = new Set();
     function play(node, frames, delay = 0, duration = 800) {
       if (!node.getClientRects().length) return;
@@ -38,7 +37,6 @@ export default function useReelMotion(ref) {
           if (!isIntersecting) continue;
           observer.unobserve(target);
           target.dataset.entered = "true";
-          if (preference.matches) continue;
           if (target.dataset.reveal === "wall") {
             rise(target.querySelector("[data-enter='heading']"));
           } else {
@@ -53,14 +51,8 @@ export default function useReelMotion(ref) {
     )) {
       observer.observe(node);
     }
-    function finishMotion() {
-      if (preference.matches)
-        for (const animation of animations) animation.finish();
-    }
-    preference.addEventListener("change", finishMotion);
     return () => {
       observer.disconnect();
-      preference.removeEventListener("change", finishMotion);
       for (const animation of animations) animation.cancel();
     };
   }, [ref]);

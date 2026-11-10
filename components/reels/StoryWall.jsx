@@ -62,9 +62,7 @@ export default function StoryWall() {
     destination.current = target;
     track.scrollTo({
       left: target,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "instant"
-        : "smooth",
+      behavior: "smooth",
     });
   }
 

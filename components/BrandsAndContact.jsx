@@ -321,11 +321,7 @@ export default function BrandsAndContact() {
   const root = useRef(null);
 
   useEffect(() => {
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      !window.IntersectionObserver
-    )
-      return;
+    if (!window.IntersectionObserver) return;
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -344,18 +340,7 @@ export default function BrandsAndContact() {
   }, []);
 
   return (
-    <div
-      ref={root}
-      className="bc-collaborations"
-      data-lenis-prevent
-      onClickCapture={(event) => {
-        if (
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-          event.target.closest("a[href^='#']")
-        )
-          event.stopPropagation();
-      }}
-    >
+    <div ref={root} className="bc-collaborations" data-lenis-prevent>
       <Bloom />
     </div>
   );

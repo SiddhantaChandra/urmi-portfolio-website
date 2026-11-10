@@ -6,7 +6,6 @@ export default function useWaveMotion(ref, contentKey) {
   useEffect(() => {
     const root = ref.current;
     if (!root || !contentKey) return;
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let rows = [];
 
@@ -18,7 +17,6 @@ export default function useWaveMotion(ref, contentKey) {
 
     function draw() {
       frame = 0;
-      if (preference.matches) return;
       const rect = root.getBoundingClientRect();
       for (const { items, startY, top, radiusY } of rows) {
         const progress = Math.max(
@@ -40,7 +38,7 @@ export default function useWaveMotion(ref, contentKey) {
     }
 
     function schedule() {
-      if (!frame && !preference.matches) frame = requestAnimationFrame(draw);
+      if (!frame) frame = requestAnimationFrame(draw);
     }
 
     function measure() {
@@ -48,7 +46,6 @@ export default function useWaveMotion(ref, contentKey) {
       frame = 0;
       reset();
       rows = [];
-      if (preference.matches) return;
       // Every row enters level and settles into its arch, at every screen size.
       for (const selector of [".wave-top", ".wave-bottom"]) {
         const items = [...root.querySelectorAll(`${selector} .wave-item`)]
@@ -75,14 +72,12 @@ export default function useWaveMotion(ref, contentKey) {
     resize.observe(root);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", measure);
-    preference.addEventListener("change", measure);
     measure();
     return () => {
       cancelAnimationFrame(frame);
       resize.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", measure);
-      preference.removeEventListener("change", measure);
       reset();
     };
   }, [ref, contentKey]);
