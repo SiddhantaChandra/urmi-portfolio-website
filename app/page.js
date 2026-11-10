@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Audience from "../components/Audience";
-import CollaborationModal from "../components/CollaborationModal";
+import BrandsAndContact, {
+  PortfolioFooter,
+} from "../components/BrandsAndContact";
 import Hero from "../components/Hero";
 import AudienceInsights from "../components/insights/AudienceInsights";
 import InstagramPerformance from "../components/insights/InstagramPerformance";
 import ReelsShowcase from "../components/reels/ReelsShowcase";
 
 export default function Home() {
-  const [isCollaborationOpen, setIsCollaborationOpen] = useState(false);
   const [instagramStats, setInstagramStats] = useState(undefined);
 
   useEffect(() => {
@@ -33,24 +34,21 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full bg-[#f8f5ee] text-[#1c1917]">
-      <Hero
-        onOpenCollaboration={() => setIsCollaborationOpen(true)}
-        stats={instagramStats}
-      />
-      <Audience>
-        <AudienceInsights stats={instagramStats} />
-      </Audience>
-      <InstagramPerformance stats={instagramStats} />
-      <ReelsShowcase
-        showcase={instagramStats?.reels?.showcase}
-        loading={instagramStats === undefined}
-      />
+    <>
+      <main className="relative w-full bg-[#f8f5ee] text-[#1c1917]">
+        <Hero stats={instagramStats} />
+        <Audience>
+          <AudienceInsights stats={instagramStats} />
+        </Audience>
+        <InstagramPerformance stats={instagramStats} />
+        <ReelsShowcase
+          showcase={instagramStats?.reels?.showcase}
+          loading={instagramStats === undefined}
+        />
 
-      <CollaborationModal
-        isOpen={isCollaborationOpen}
-        onClose={() => setIsCollaborationOpen(false)}
-      />
-    </main>
+        <BrandsAndContact />
+      </main>
+      <PortfolioFooter />
+    </>
   );
 }

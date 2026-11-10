@@ -3,6 +3,7 @@
 
 :root {
   --portfolio-red: #ad283d;
+  --portfolio-red-hover: color-mix(in srgb, var(--portfolio-red) 80%, black);
   --portfolio-paper: #f4f0e6;
   --font-editorial-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", -apple-system, sans-serif;
@@ -44,7 +45,7 @@ body {
   display: block;
   margin-top: -0.125rem;
   height: 0.75rem;
-  background-color: #a42e40;
+  background-color: var(--portfolio-red);
   /* Keep the stroke's proportions and align its visible ink with the text. */
   mask:
     url("/images/brush_stroke_transparent.svg") -1.5px center / auto 100%
@@ -82,28 +83,41 @@ body {
 }
 
 .instagram-stats-values {
-  position: absolute;
-  inset: 22% 15% 21% 25%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: 0;
+  display: flex;
+  column-gap: 10cqw;
   align-items: center;
   font-style: italic;
 }
 
+.instagram-stats > img {
+  margin-top: -7cqw;
+}
+
 .instagram-stats-values::after {
   content: "";
-  position: absolute;
-  left: 50%;
-  top: 8%;
-  height: 82%;
+  order: 1;
+  align-self: stretch;
+  margin-block: 1cqw;
   border-left: 1px solid #3d3830;
   transform: skewX(-22deg);
+}
+
+.instagram-stat:first-child {
+  align-items: flex-end;
+}
+
+.instagram-stat:last-child {
+  order: 2;
 }
 
 .instagram-stat {
   display: flex;
   flex-direction: column-reverse;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6cqw;
   white-space: nowrap;
 }
@@ -114,7 +128,7 @@ body {
 }
 
 .instagram-stat dd {
-  color: #a42e40;
+  color: var(--portfolio-red);
   font-family: var(--font-sans);
   font-size: 8cqw;
   font-style: normal;
@@ -227,7 +241,7 @@ body {
 }
 
 .hero-sakura-art:focus-visible .sakura-branch-shake {
-  outline: 2px solid #a42e40;
+  outline: 2px solid var(--portfolio-red);
   outline-offset: 6px;
 }
 
@@ -374,6 +388,6 @@ body {
   background: rgba(0, 0, 0, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(220, 100, 130, 0.4);
+  background: color-mix(in srgb, var(--portfolio-red) 40%, transparent);
   border-radius: 3px;
 }

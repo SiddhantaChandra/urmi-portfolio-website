@@ -3,11 +3,15 @@
 .vermilion-theme {
   --vi-paper: #f8f5ee;
   --vi-ink: #292a25;
-  --vi-red: #a42e40;
-  --vi-soft: #dca89c;
+  --vi-red: var(--portfolio-red);
+  --vi-soft: color-mix(
+    in srgb,
+    var(--portfolio-red) 40%,
+    var(--portfolio-paper)
+  );
   --vi-muted: #6c6158;
   --vi-field: #ece7dc;
-  --vi-accent: #a42e40;
+  --vi-accent: var(--portfolio-red);
   color: var(--vi-ink);
   background: var(--vi-paper);
   position: relative;
@@ -34,7 +38,7 @@
 }
 .vermilion-theme button:focus-visible,
 .vermilion-theme a:focus-visible {
-  outline: 2px solid var(--vi-accent, #a42e40);
+  outline: 2px solid var(--vi-accent, var(--portfolio-red));
   outline-offset: 5px;
 }
 .vermilion-theme svg {
@@ -408,7 +412,11 @@
   --vi-paper: var(--portfolio-paper);
   --vi-ink: #341e20;
   --vi-accent: var(--portfolio-red);
-  --vi-soft: #dba6a1;
+  --vi-soft: color-mix(
+    in srgb,
+    var(--portfolio-red) 40%,
+    var(--portfolio-paper)
+  );
   --vi-field: #e9e1d3;
   --vi-muted: #715456;
 }
@@ -482,7 +490,11 @@
   background: var(--vi-paper);
 }
 .vi-split-strip span + span {
-  background: #d87885;
+  background: color-mix(
+    in srgb,
+    var(--portfolio-red) 60%,
+    var(--portfolio-paper)
+  );
 }
 .vi-age-ribbon .vi-age-bars {
   display: grid;
@@ -510,7 +522,11 @@
 .vi-age-ribbon .vi-age-fill {
   height: 100%;
   width: var(--value);
-  background: #d87885;
+  background: color-mix(
+    in srgb,
+    var(--portfolio-red) 60%,
+    var(--portfolio-paper)
+  );
   transform-origin: left;
 }
 .vi-age-ribbon .vi-age-item:nth-child(2) .vi-age-fill {
@@ -609,10 +625,14 @@
 }
 .vi-countries-editorial .vi-country-mark {
   height: 8px;
-  background: #922437;
+  background: var(--portfolio-red-hover);
 }
 .vi-countries-editorial .vi-country-mark i {
-  background: #dc858f;
+  background: color-mix(
+    in srgb,
+    var(--portfolio-red) 55%,
+    var(--portfolio-paper)
+  );
 }
 .vi-countries-editorial .vi-country[aria-pressed="true"] .vi-country-mark i {
   background: var(--vi-paper);

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import instagramStatsArtwork from "../public/images/instagram stats.webp";
 import About from "./About";
 import SakuraBranch from "./SakuraBranch";
 
@@ -32,7 +33,7 @@ function InstagramStat({ label, count }) {
   );
 }
 
-export default function Hero({ onOpenCollaboration, stats }) {
+export default function Hero({ stats }) {
   return (
     <section
       aria-labelledby="hero-title"
@@ -46,58 +47,60 @@ export default function Hero({ onOpenCollaboration, stats }) {
           物語の奥深さを、言葉と映像で紡ぐ。
         </p>
 
-        <div className="row-start-2 flex items-start gap-4 md:col-start-2 md:row-start-1 md:self-end">
+        <div className="row-start-2 flex items-baseline gap-2 md:col-start-2 md:row-start-1 md:self-end">
           <h1
             id="hero-title"
-            className="font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] leading-[0.95] tracking-[-0.03em]"
+            className="mr-2 font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] leading-[0.95] tracking-[-0.03em]"
           >
             Urmi
           </h1>
-          <span
-            aria-hidden="true"
-            className="mt-1 grid size-8 shrink-0 place-items-center border border-[#a42e40] font-kanji text-sm text-[#a42e40] sm:mt-2"
-          >
-            望
-          </span>
+          <div className="contents">
+            <span
+              aria-hidden="true"
+              className="mt-1 grid size-9 shrink-0 self-start place-items-center border border-[var(--portfolio-red)] font-kanji text-lg text-[var(--portfolio-red)] sm:mt-2"
+            >
+              海
+            </span>
+            <span className="whitespace-nowrap font-serif-editorial text-sm leading-none text-[#1c1917] sm:text-lg">
+              : うみ (waves)
+            </span>
+          </div>
         </div>
 
         <p className="row-start-3 max-w-[34ch] font-serif-editorial text-xl leading-snug text-[#3d3830] sm:text-2xl lg:text-[1.75rem] md:col-start-2 md:row-start-2">
-          Hey! I&apos;m Urmi, the creator behind{" "}
+          Hey! I’m the creator behind{" "}
           <a
             href="https://www.instagram.com/uwummie"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#a42e40] underline decoration-[#a42e40]/50 underline-offset-4 hover:decoration-[#a42e40] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a42e40]"
+            className="text-[var(--portfolio-red)] underline decoration-[var(--portfolio-red)]/50 underline-offset-4 hover:decoration-[var(--portfolio-red)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--portfolio-red)]"
           >
             @uwummie
           </a>
-          , where I explore anime through thoughtful storytelling and engaging
-          content.
+          , my little corner on the internet dedicated to celebrating anime and
+          manga through meaningful storytelling and a genuine love for the medium
         </p>
 
         <div className="relative z-10 row-start-4 self-stretch md:col-start-2 md:row-start-3">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-            <button
-              type="button"
-              onClick={onOpenCollaboration}
-              className="min-h-11 cursor-pointer bg-[#a42e40] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#842434] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a42e40]"
+            <a
+              href="#contact"
+              className="min-h-11 cursor-pointer bg-[var(--portfolio-red)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--portfolio-red-hover)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--portfolio-red)]"
             >
               Work with me
-            </button>
+            </a>
           </div>
           <figure className="instagram-stats" aria-label="Instagram statistics">
-            <Image
-              src="/images/instagram stats.webp"
-              alt=""
-              width={800}
-              height={176}
-              sizes="(min-width: 1024px) 400px, (min-width: 768px) 44vw, (min-width: 448px) 400px, calc(100vw - 3rem)"
-              className="block h-auto w-full"
-            />
             <dl className="instagram-stats-values font-serif-editorial">
               <InstagramStat label="Followers" count={stats?.followers} />
               <InstagramStat label="30-day views" count={stats?.views} />
             </dl>
+            <Image
+              src={instagramStatsArtwork}
+              alt=""
+              sizes="(min-width: 1024px) 400px, (min-width: 768px) 44vw, (min-width: 448px) 400px, calc(100vw - 3rem)"
+              className="block h-auto w-full"
+            />
           </figure>
         </div>
         <div className="row-start-1 mb-36 w-full max-w-[22rem] md:mb-0 md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">

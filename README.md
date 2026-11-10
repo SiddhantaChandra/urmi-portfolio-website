@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Contact form
+
+The contact form supports private Supabase enquiry storage and email notifications
+to uwummie@gmail.com. See [contact setup](supabase/contact-setup.md) for the
+migration, server credentials, Resend sender setup, and failure behavior.
+
 ## Getting Started
 
 First, run the development server:

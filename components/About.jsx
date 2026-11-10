@@ -40,7 +40,7 @@ export default function About() {
               {/* Inner red lacquer hairline bezel */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 border border-[#a42e40]/30 z-20"
+                className="pointer-events-none absolute inset-0 border border-[var(--portfolio-red)]/30 z-20"
               />
 
               <div className="relative h-44 w-full overflow-hidden border-b-[3px] border-[#181513]/85 bg-[#f4ecdf]">

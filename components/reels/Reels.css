@@ -22,10 +22,14 @@
 .reels-showcase {
   --reels-paper: #f8f5ee;
   --reels-ink: #292a25;
-  --reels-red: #a42e40;
+  --reels-red: var(--portfolio-red);
   --reels-muted: #6c6158;
   --reels-white: #fffdf7;
-  --reels-pink: #e6d6ce;
+  --reels-pink: color-mix(
+    in srgb,
+    var(--portfolio-red) 15%,
+    var(--portfolio-paper)
+  );
   --reels-line: #cfc9bd;
   --reels-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --font-editorial-serif: "Reels Serif", Georgia, serif;
@@ -673,8 +677,8 @@
   color: var(--reels-paper);
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
+  height: 120vh;
+  height: 120dvh;
   padding-block: clamp(24px, 5dvh, 56px);
   overflow: clip;
 }
@@ -695,8 +699,8 @@
   @supports (animation-timeline: view()) {
     .reels-entry {
       view-timeline: --reels-entry block;
-      /* Reserve the curve depth so it cannot cover the heading mid-scroll. */
-      padding-top: max(
+      /* Reserve the curve depth and balance the space below the gallery. */
+      padding-block: max(
         clamp(55px, 7vw, 96px),
         calc(var(--reels-curve-height) + 24px)
       );
@@ -978,6 +982,10 @@
   }
 }
 @media (max-width: 540px) {
+  .reels-wall {
+    height: 120vh;
+    height: 120dvh;
+  }
   .wall-head {
     display: block;
     margin-bottom: 20px;
