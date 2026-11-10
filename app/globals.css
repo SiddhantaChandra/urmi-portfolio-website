@@ -147,12 +147,6 @@ body {
   z-index: 2147483647;
 }
 
-@media (max-width: 640px), (pointer: coarse) {
-  .noise {
-    display: none;
-  }
-}
-
 .hero-portrait {
   border-radius: 58% 42% 48% 52% / 45% 53% 47% 55%;
 }
