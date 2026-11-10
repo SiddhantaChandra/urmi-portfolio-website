@@ -54,6 +54,10 @@ export default function Hero({ stats }) {
             className="mr-2 font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] leading-[0.95] tracking-[-0.03em]"
           >
             Urmi
+            <span className="sr-only">
+              {" "}
+              Chakraborty — Anime Content Creator &amp; Storyteller (@uwummie)
+            </span>
           </h1>
           <div className="contents">
             <span
