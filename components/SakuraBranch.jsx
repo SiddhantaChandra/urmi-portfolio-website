@@ -135,8 +135,10 @@ export default function SakuraBranch() {
   const shakeRef = useRef(null);
   const burstIdRef = useRef(0);
   const [bursts, setBursts] = useState([]);
+  const [ambientReady, setAmbientReady] = useState(false);
 
   const shakeBranch = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     shakeRef.current?.cancel();
     shakeRef.current = branchRef.current.animate(
       [0, -2.6, 2.1, -1.5, 0.9, -0.4, 0].map((angle) => ({
@@ -161,9 +163,22 @@ export default function SakuraBranch() {
         };
       }),
     };
-    // Bound rapid clicking without restarting the ambient petals or blossom entrance.
+    // Bound rapid clicking without restarting the ambient petals.
     setBursts((current) => [...current.slice(-2), burst]);
   };
+
+  useEffect(() => {
+    let timer;
+    const start = () => {
+      timer = window.setTimeout(() => setAmbientReady(true), 1500);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -234,13 +249,7 @@ export default function SakuraBranch() {
                 <g
                   key={`${x},${y}`}
                   transform={`translate(${x} ${y}) rotate(${angle})`}
-                  style={{ "--bloom-delay": `${Math.round(x * 0.36)}ms` }}
                 >
-                  {name !== "bud" && (
-                    <g className="sakura-bud">
-                      <Sprite id={id} name="bud" width={width * 0.36} />
-                    </g>
-                  )}
                   <g className="sakura-blossom">
                     <Sprite id={id} name={name} width={width} />
                   </g>
@@ -249,20 +258,21 @@ export default function SakuraBranch() {
             </g>
           </g>
 
-          {petals.map(([x, y, name, width, duration, delay, drift]) => (
-            <g key={x} transform={`translate(${x} ${y})`}>
-              <g
-                className="sakura-petal"
-                style={{
-                  "--petal-duration": `${duration}s`,
-                  "--petal-delay": `${delay}s`,
-                  "--petal-drift": `${drift}px`,
-                }}
-              >
-                <Sprite id={id} name={name} width={width} />
+          {ambientReady &&
+            petals.map(([x, y, name, width, duration, delay, drift]) => (
+              <g key={x} transform={`translate(${x} ${y})`}>
+                <g
+                  className="sakura-petal"
+                  style={{
+                    "--petal-duration": `${duration}s`,
+                    "--petal-delay": `${delay}s`,
+                    "--petal-drift": `${drift}px`,
+                  }}
+                >
+                  <Sprite id={id} name={name} width={width} />
+                </g>
               </g>
-            </g>
-          ))}
+            ))}
           {bursts.map((burst) => (
             <g key={burst.id} className="sakura-click-burst">
               {burst.petals.map((petal, index) => (

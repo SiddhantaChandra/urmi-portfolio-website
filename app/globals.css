@@ -217,6 +217,8 @@ body {
 }
 
 .hero-sakura-art {
+  /* Paint containment would clip the branch and falling petals outside the portrait. */
+  contain: layout style;
   position: absolute;
   top: calc(100% - var(--sakura-width) * 0.24 - 0.75rem);
   right: calc(-0.5rem - var(--portrait-right-gap) - var(--sakura-crop));
@@ -287,19 +289,12 @@ body {
   }
 }
 
-.sakura-bud,
 .sakura-petal {
   opacity: 0;
 }
 
-/* Keep the authored motion consistent across device motion preferences. */
-.sakura-bud {
-  animation: sakura-bud 440ms ease-out var(--bloom-delay) both;
-}
-
 .sakura-blossom {
-  animation: sakura-bloom 620ms cubic-bezier(0.16, 1, 0.3, 1)
-    calc(var(--bloom-delay) + 210ms) both;
+  opacity: 1;
 }
 
 .sakura-petal {
@@ -307,8 +302,7 @@ body {
     infinite;
 }
 
-.hero-sakura[data-paused]
-  :is(.sakura-bud, .sakura-blossom, .sakura-petal, .sakura-click-petal) {
+.hero-sakura[data-paused] :is(.sakura-petal, .sakura-click-petal) {
   animation-play-state: paused;
 }
 
@@ -336,31 +330,11 @@ body {
   }
 }
 
-@keyframes sakura-bud {
-  0% {
-    opacity: 0;
-    transform: scale(0.35);
-  }
-
-  45% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-}
-
-@keyframes sakura-bloom {
-  from {
-    opacity: 0;
-    transform: scale(0.42);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
+@media (prefers-reduced-motion: reduce) {
+  .sakura-petal,
+  .sakura-click-petal {
+    display: none;
+    animation: none;
   }
 }
 
