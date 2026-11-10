@@ -2,8 +2,9 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { preload } from "react-dom";
+import sakuraAtlas from "../public/images/sakura-branch-atlas.avif";
 
-const sakuraAtlasUrl = "/images/sakura-branch-atlas.avif";
+const sakuraAtlasUrl = sakuraAtlas.src;
 
 const sprites = {
   branch: [0, 0, 1354, 656],

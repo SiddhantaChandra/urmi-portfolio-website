@@ -6,7 +6,9 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/images/sakura-branch-atlas.avif",
+        // Imported images receive content hashes and immutable caching automatically.
+        // Public URLs can change between releases, so keep them revalidatable.
+        source: "/images/:path*",
         headers: [
           {
             key: "Cache-Control",
