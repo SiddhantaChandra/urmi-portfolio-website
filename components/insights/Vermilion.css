@@ -377,11 +377,11 @@
   letter-spacing: normal;
   white-space: nowrap;
 }
-.vi-more-metrics {
+.vermilion-theme .vi-more-metrics {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 24px;
-  margin-top: 58px !important;
+  margin-top: 58px;
   padding-top: 38px;
 }
 .vi-more-metrics .vi-metric dd {
@@ -735,14 +735,14 @@
 }
 .vi-press-summary dl.vi-total-metrics {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 28px !important;
+  margin-top: 28px;
 }
 .vi-reels {
   margin-top: 58px;
 }
 .vi-press-summary dl.vi-reel-metrics {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 28px !important;
+  margin-top: 28px;
 }
 .vi-reel-metrics dd {
   margin-top: auto;
@@ -859,14 +859,14 @@
   }
   .vi-press-summary dl.vi-more-metrics {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin-top: 24px !important;
+    margin-top: 24px;
     padding: 20px 24px;
   }
   .vi-press-summary .vi-reels {
     margin-top: 28px;
   }
   .vi-press-summary dl.vi-reel-metrics {
-    margin-top: 16px !important;
+    margin-top: 16px;
   }
   .vi-press-summary .vi-summary-foot {
     margin-top: 32px;
@@ -937,10 +937,10 @@
   .vi-period button {
     font-size: 13px;
   }
-  .vi-more-metrics {
+  .vermilion-theme .vi-more-metrics {
     grid-template-columns: repeat(3, 1fr);
     gap: 28px 24px;
-    margin-top: 40px !important;
+    margin-top: 40px;
   }
   .vi-reels {
     margin-top: 40px;
@@ -1055,7 +1055,7 @@
   .vi-landscape figcaption > span {
     font-size: 9px;
   }
-  .vi-more-metrics {
+  .vermilion-theme .vi-more-metrics {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px 18px;
   }
@@ -1165,7 +1165,7 @@
   .vi-press-summary dl.vi-more-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px 18px;
-    margin-top: 16px !important;
+    margin-top: 16px;
     padding: 18px;
   }
   .vi-press-summary .vi-more-metrics .vi-metric dd {
@@ -1175,7 +1175,7 @@
     margin-top: 24px;
   }
   .vi-press-summary dl.vi-reel-metrics {
-    margin-top: 12px !important;
+    margin-top: 12px;
   }
   .vi-press-summary .vi-summary-foot {
     flex-direction: column;
@@ -1187,8 +1187,8 @@
     text-align: left;
   }
 }
-.vi-data-note {
-  margin-top: 32px !important;
+.vermilion-theme .vi-data-note {
+  margin-top: 32px;
   font-size: 12px;
   line-height: 1.7;
   color: inherit;
