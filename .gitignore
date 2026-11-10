@@ -32,7 +32,7 @@ GEMINI.md
 .continue/
 .opencode/
 .aider*
-/docs/
+/docs/*
 .github/copilot-instructions.md
 .github/instructions/
 .github/prompts/
