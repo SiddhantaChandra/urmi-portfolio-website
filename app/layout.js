@@ -93,6 +93,11 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${editorial.variable} ${sans.variable} ${japanese.variable} h-full antialiased`}
     >
+      <head>
+        {indexable && measurementId && (
+          <link rel="preconnect" href="https://www.googletagmanager.com" />
+        )}
+      </head>
       <body className="min-h-full flex flex-col bg-[#f8f5ee] text-[#1c1917] relative">
         <div className="noise" aria-hidden="true" />
         <SmoothScroll>{children}</SmoothScroll>
