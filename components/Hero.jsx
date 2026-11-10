@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import instagramStatsArtwork from "../public/images/instagram stats.webp";
+import instagramStatsArtwork from "../public/images/instagram-stats.svg";
 import portrait from "../public/images/profile.webp";
 import About from "./About";
 import SakuraBranch from "./SakuraBranch";

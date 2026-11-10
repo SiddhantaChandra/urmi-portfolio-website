@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="50" viewBox="0 0 400 50" fill="none">
+  <defs>
+    <g id="wave" stroke="#a09680" stroke-width="3">
+      <path d="M-39 0a39 39 0 0 1 78 0" fill="#f8f5ee"/>
+      <path d="M-32 0a32 32 0 0 1 64 0M-25 0a25 25 0 0 1 50 0M-18 0a18 18 0 0 1 36 0M-11 0a11 11 0 0 1 22 0M-4 0a4 4 0 0 1 8 0"/>
+    </g>
+  </defs>
+  <path d="M0 45h290" stroke="#a09680" stroke-width="3"/>
+  <use href="#wave" transform="translate(337 40)"/>
+  <use href="#wave" transform="translate(305 64)"/>
+  <use href="#wave" transform="translate(372 64)"/>
+</svg>
