@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## SEO
 
-See [SEO setup and measurement](docs/seo.md) and the active [SEO task list](tasklist-seo.md).
+See [SEO setup and measurement](docs/seo.md).
 The canonical domain is `https://www.urmichakraborty.com`. Preview builds are intentionally noindex; optional verification/analytics settings are in [seo.env.example](seo.env.example).
 
 ## Contact form

@@ -40,7 +40,7 @@ npx --yes lighthouse@13.6.0 http://localhost:3187 --preset=desktop --output=json
 node scripts/summarize-seo.mjs
 ```
 
-The baseline is saved as `before-mobile.report.json` and `before-desktop.report.json`. Large local Lighthouse artifacts/screenshots are ignored under `.taste-skill/`; portable summaries in `reports/seo` are versionable. These local results do not include public hosting latency, real audience device distributions or an enabled analytics tag. Rerun on the deployed site after configuring analytics.
+The baseline is saved as `before-mobile.report.json` and `before-desktop.report.json`. Local Lighthouse artifacts/screenshots under `.taste-skill/` and generated summaries under `reports/seo/` are ignored by Git. These local results do not include public hosting latency, real audience device distributions or an enabled analytics tag. Rerun on the deployed site after configuring analytics.
 
 Asset optimization can be reproduced with `node scripts/optimize-seo-assets.mjs` using Sharp installed with Next.js. It preserves originals and the sakura atlas's dimensions/transparency, encodes the atlas as AVIF and freezes the low-opacity grain's first frame as a palette PNG. The interactive branch/petal animation remains in place. The font binaries and their licences were already in the repository; the page now uses one shared self-hosted font definition rather than duplicate downloads.
 

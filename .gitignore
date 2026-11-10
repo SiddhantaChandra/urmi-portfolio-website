@@ -12,7 +12,32 @@
 
 # testing
 /coverage
+
+# AI assistants, instructions, and local work artifacts
+AGENTS.md
+AGENTS.override.md
+CLAUDE.md
+GEMINI.md
+.agents/
+.agent/
+.codex/
+.claude/
+.cursor/
+.cursorrules
+.cursorignore
+.windsurf/
+.windsurfrules
+.clinerules
+.roo/
+.continue/
+.opencode/
+.aider*
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
 /.taste-skill/
+/tasklist*.md
+/reports/seo/
 
 # next.js
 /.next/

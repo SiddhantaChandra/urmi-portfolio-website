@@ -6,7 +6,7 @@ The home page renders Stories in motion (the `Waves` component), then Featured W
 - Stories in motion (the `Waves` component) displays five recent and five popular reels in opposing arches on desktop, around its centered title and Instagram link. Tablets from 641–800px show four from each collection in opposing arches; phones through 640px show the first three from each collection above and below the title, with larger covers. At every size, each row enters level and settles vertically into its arch as it scrolls into view, using the same timing and easing. Cards stay upright with no orbiting or scaling, while the heading and Instagram link stay fixed. The movement reverses when scrolling back; reduced motion shows the completed layout immediately.
 - Featured Works links directly to each published article, opening The Telegraph Online in a new tab. Waves links directly to each published reel, opening Instagram in a new tab. Both use locally hosted fonts and lazy Next Image loading. Reduced motion shows completed layouts and skips movement.
 
-`articles.js` contains the verified article headlines, publication dates, links, image descriptions, and original image URLs. Lead images from the linked articles are hosted locally in `public/images/articles/` as 800px-wide WebP files (about 283 KiB combined, 66% smaller than the originals). Next Image supplies responsive variants. The publisher is credited on every card; original image rights remain with their respective owners. The article cards use no sample copy or reel preview dialog. `reels.js` and the mock artwork below are legacy sample assets and are not used by StoryWall.
+`articles.js` contains the verified article headlines, publication dates, links, image descriptions, and original image URLs. Lead images from the linked articles are hosted locally in `public/images/articles/` as 800px-wide WebP files (about 283 KiB combined, 66% smaller than the originals). Next Image supplies responsive variants. The publisher is credited on every card; original image rights remain with their respective owners. The article cards use no sample copy or reel preview dialog.
 
 Stories in motion (Waves) reads `stats.reels.showcase` from the existing cached `/api/instagram-stats` response. The API supplies the five newest distinct published reels, sorted by publication timestamp. Matching long captions (80 or more characters, ignoring hashtag changes and normalizing whitespace) are grouped before choosing five: a feed-shared version wins, otherwise the newer publication wins. Short or missing captions never merge distinct reels. Meta does not expose a readable trial-status flag, and `is_shared_to_feed=false` also applies to normal Reels-only posts, so that field alone is never used to exclude a reel. This removes duplicate trial/normal pairs without dropping legitimate Reels-only publications.
 
@@ -14,17 +14,6 @@ The API supplies the five reels with the highest lifetime Instagram `views`, wit
 
 The disposable `/delete` studies have been removed. Production components have no dependency on that directory.
 
-## Artwork
-
-Mock cover stills come from the [Studio Ghibli image gallery](https://www.ghibli.jp/info/013344/). They were resized to local WebP assets. Sources:
-
-- `https://www.ghibli.jp/gallery/chihiro010.jpg`
-- `https://www.ghibli.jp/gallery/mononoke020.jpg`
-- `https://www.ghibli.jp/gallery/howl030.jpg`
-- `https://www.ghibli.jp/gallery/ponyo010.jpg`
-- `https://www.ghibli.jp/gallery/karigurashi020.jpg`
-- `https://www.ghibli.jp/gallery/mimi030.jpg`
-- `https://www.ghibli.jp/gallery/majo010.jpg`
-- `https://www.ghibli.jp/gallery/totoro020.jpg`
+## Fonts
 
 The local Cormorant Garamond and Plus Jakarta Sans files match the portfolio typography. Their SIL Open Font License files are included in `assets/`.
