@@ -57,6 +57,15 @@ export const metadata = {
     title: creator.title,
     description: creator.description,
     ...(siteUrl && { url: `${siteUrl}/` }),
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "Urmi Chakraborty · Anime & manga storytelling · @uwummie",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -64,7 +73,7 @@ export const metadata = {
     description: creator.description,
     images: [
       {
-        url: "/opengraph-image",
+        url: "/og-image.jpg",
         alt: "Urmi Chakraborty · Anime & manga storytelling · @uwummie",
       },
     ],

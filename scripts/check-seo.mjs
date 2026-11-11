@@ -132,11 +132,27 @@ const imageResponse = await fetch(
   new URL(imageUrl.pathname + imageUrl.search, base),
 );
 const imageBytes = Buffer.from(await imageResponse.arrayBuffer());
-check("Social preview is a real 1200×630 PNG with alt text", () => {
+check("Social preview is a real 1200×630 JPEG with alt text", () => {
   assert.equal(imageResponse.status, 200);
-  assert.match(imageResponse.headers.get("content-type"), /image\/png/);
-  assert.equal(imageBytes.readUInt32BE(16), 1200);
-  assert.equal(imageBytes.readUInt32BE(20), 630);
+  assert.match(imageResponse.headers.get("content-type"), /image\/jpeg/);
+  assert.equal(imageBytes.readUInt16BE(0), 0xffd8);
+  let dimensions;
+  for (let offset = 2; offset < imageBytes.length; ) {
+    assert.equal(imageBytes[offset], 0xff);
+    const marker = imageBytes[offset + 1];
+    if ([0xc0, 0xc1, 0xc2].includes(marker)) {
+      dimensions = {
+        height: imageBytes.readUInt16BE(offset + 5),
+        width: imageBytes.readUInt16BE(offset + 7),
+      };
+      break;
+    }
+    if (marker === 0xda || marker === 0xd9) break;
+    offset += 2 + imageBytes.readUInt16BE(offset + 2);
+  }
+  assert.deepEqual(dimensions, { width: 1200, height: 630 });
+  assert.equal(imageUrl.pathname, "/og-image.jpg");
+  assert.equal(meta("twitter:image"), imageUrl.href);
   assert.match(meta("og:image:alt"), /Urmi Chakraborty/);
 });
 const api = await fetch(new URL("/api/contact", base), { method: "HEAD" });
