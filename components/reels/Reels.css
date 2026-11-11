@@ -24,10 +24,6 @@
 .reels-showcase *::after {
   box-sizing: border-box;
 }
-.reels-showcase ::selection {
-  background: var(--reels-red);
-  color: var(--reels-white);
-}
 .reels-showcase button {
   font: inherit;
   cursor: pointer;
@@ -203,10 +199,6 @@
   background: var(--portfolio-paper);
   padding-top: 60px;
   padding-bottom: 70px;
-}
-.reels-wall ::selection {
-  background: var(--portfolio-paper);
-  color: var(--portfolio-red);
 }
 .wave-orbit {
   --orbit-card-width: clamp(110px, 14.2cqw, 164px);
@@ -428,6 +420,10 @@
   place-items: center;
   border-radius: 50%;
 }
+.reel-dialog-close:is(:hover, :focus-visible) {
+  background: var(--portfolio-red-hover);
+  color: var(--portfolio-on-red);
+}
 @media (min-width: 1600px) {
   .reels-wave {
     padding-top: 85px;
@@ -648,6 +644,8 @@
 }
 
 .reels-wall {
+  --selection-background: var(--portfolio-on-red);
+  --selection-color: var(--portfolio-red);
   --wall-ground: var(--portfolio-red);
   --wall-heading-ink: var(--portfolio-paper);
   --reels-paper: var(--portfolio-paper);
@@ -769,7 +767,13 @@
   color: var(--reels-paper);
   transition:
     transform 200ms var(--reels-ease),
-    opacity 200ms;
+    opacity 200ms,
+    background-color 200ms,
+    color 200ms;
+}
+.wall-scroll-button:not(:disabled):is(:hover, :focus-visible) {
+  background: var(--portfolio-red-hover);
+  color: var(--portfolio-on-red);
 }
 .wall-scroll-button:disabled {
   cursor: default;
@@ -889,6 +893,8 @@
   padding-top: 12px;
 }
 .wall-mount {
+  --selection-background: var(--portfolio-red);
+  --selection-color: var(--portfolio-on-red);
   display: block;
   padding: 9px;
   background: var(--reels-paper);

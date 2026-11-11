@@ -24,10 +24,6 @@
 .vermilion-theme *::after {
   box-sizing: border-box;
 }
-.vermilion-theme ::selection {
-  background: var(--vi-accent);
-  color: var(--vi-paper);
-}
 .vermilion-theme button,
 .vermilion-theme a {
   -webkit-tap-highlight-color: transparent;
@@ -299,8 +295,9 @@
   background: var(--vi-ink);
   color: var(--vi-paper);
 }
-.vi-period button:hover:not([aria-pressed="true"]) {
-  background: var(--vi-paper);
+.vi-period button:is(:hover, :focus-visible) {
+  background: var(--portfolio-red-hover);
+  color: var(--portfolio-on-red);
 }
 .vi-press-reach > span {
   display: block;
@@ -421,6 +418,8 @@
   --vi-muted: #715456;
 }
 .vi-press-audience {
+  --selection-background: var(--portfolio-on-red);
+  --selection-color: var(--portfolio-red);
   background: var(--vi-accent);
   color: var(--vi-paper);
   padding-bottom: 84px;

@@ -2,11 +2,30 @@
 
 :root {
   --portfolio-red: #ad283d;
-  --portfolio-red-hover: color-mix(in srgb, var(--portfolio-red) 80%, black);
+  --portfolio-red-hover: #861c30;
+  --portfolio-on-red: #fffdf7;
   --portfolio-paper: #f4f0e6;
+  --selection-background: var(--portfolio-red);
+  --selection-color: var(--portfolio-on-red);
   --font-editorial-serif: var(--font-cormorant), Georgia, serif;
   --font-sans: var(--font-jakarta), -apple-system, sans-serif;
   --font-kanji: var(--font-noto-serif-jp), "Yu Mincho", serif;
+}
+
+::selection {
+  background-color: var(--selection-background);
+  color: var(--selection-color);
+  text-shadow: none;
+}
+
+img,
+picture {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img::selection {
+  background-color: transparent;
 }
 
 body {
@@ -103,10 +122,6 @@ body {
   margin-block: 1cqw;
   border-left: 1px solid #3d3830;
   transform: skewX(-22deg);
-}
-
-.instagram-stat:first-child {
-  align-items: flex-end;
 }
 
 .instagram-stat:last-child {
