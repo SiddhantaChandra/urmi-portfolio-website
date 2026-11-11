@@ -4,22 +4,23 @@ const topics = [
   {
     id: "gems",
     image: "/images/hanafuda/1.webp",
-    title: "Underrated Gems",
-    description: "Recommendations and reviews of overlooked anime and manga.",
+    title: "Stories Worth Discovering",
+    description:
+      "Recommending and reviewing anime and manga you wish you’d found sooner.",
   },
   {
     id: "essays",
     image: "/images/hanafuda/2.webp",
-    title: "Video Essays",
+    title: "Between the Frames",
     description:
-      "Exploring grief, philosophy, and memory in Japanese animation.",
+      "Thoughtful takes on stories, the inspirations behind them and the little details that make them special.",
   },
   {
     id: "storytelling",
     image: "/images/hanafuda/3.webp",
-    title: "Brand Storytelling",
+    title: "The Collaborative Side",
     description:
-      "Crafting native integrations that respect viewers and celebrate pop culture.",
+      "Working with brands to create stories that connect with anime fans and celebrate pop culture.",
   },
 ];
 

@@ -206,7 +206,7 @@ export default function AudienceInsights({ stats }) {
       aria-labelledby="audience-insights-title"
     >
       <header className="vi-section-head">
-        <h2 id="audience-insights-title">Audience Insights</h2>
+        <h2 id="audience-insights-title">Insights</h2>
         <span className="vi-seal" aria-hidden="true" lang="ja">
           文化
         </span>

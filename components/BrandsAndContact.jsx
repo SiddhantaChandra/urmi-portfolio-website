@@ -281,7 +281,7 @@ function Bloom() {
         <div className="bc-bloom-title">
           <h2 id="brands-title">Beyond the byline</h2>
           <p>
-            Anime and pop culture storytelling, with brand partners including
+            Bringing anime and pop culture stories to life with brands, including
             Crunchyroll, Fanzai and Funikido.
           </p>
         </div>
@@ -310,9 +310,9 @@ function Bloom() {
             could be <em>ours.</em>
           </h2>
           <p>
-            Let’s talk anime and manga brand collaborations, sponsored
-            storytelling or editorial projects. Share your brief, format and
-            timeline below.
+            Have a project in mind? Whether you're a brand looking to collaborate,
+            a publication interested in an editorial project or a fellow creator
+            with an idea, let's create something meaningful. Share your brief here.
           </p>
           <Image
             src={contactTorii}

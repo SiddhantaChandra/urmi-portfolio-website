@@ -31,7 +31,7 @@ export default function Audience({ children }) {
             </span>
           </h2>
           <p className="audience-description font-serif-editorial">
-            A curiosity for the stories within
+            For the stories that linger
           </p>
         </div>
       </header>

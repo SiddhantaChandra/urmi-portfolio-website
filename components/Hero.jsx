@@ -69,7 +69,7 @@ export default function Hero({ stats }) {
             id="hero-title"
             className="mr-2 font-serif-editorial text-[clamp(3.75rem,8vw,6rem)] font-semibold leading-[0.95] tracking-[-0.03em]"
           >
-            Urmi
+            Umi
             <span className="sr-only">
               {" "}
               Chakraborty — Anime Content Creator &amp; Storyteller (@uwummie)
@@ -83,7 +83,7 @@ export default function Hero({ stats }) {
               海
             </span>
             <span className="whitespace-nowrap font-serif-editorial text-sm font-medium leading-none text-[#1c1917] sm:text-lg">
-              : うみ (waves)
+              : うみ (<strong>ocean</strong>)
             </span>
           </div>
         </div>
@@ -98,7 +98,8 @@ export default function Hero({ stats }) {
           >
             @uwummie
           </a>
-          . I share video essays and thoughtful recommendations.
+          , a little corner on the internet where I share thoughtful
+          recommendations and video essays.
         </p>
 
         <div className="relative z-10 row-start-4 self-stretch md:col-start-2 md:row-start-3">

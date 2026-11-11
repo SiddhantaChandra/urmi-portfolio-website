@@ -422,7 +422,23 @@
   --selection-color: var(--portfolio-red);
   background: var(--vi-accent);
   color: var(--vi-paper);
-  padding-bottom: 84px;
+}
+/* Match the storyteller section's responsive vertical insets. */
+.vi-demographics.vi-press-audience {
+  padding-block: clamp(24px, 5dvh, 56px);
+}
+@supports (animation-timeline: view()) {
+  .vi-demographics.vi-press-audience {
+    padding-block: max(
+      clamp(55px, 7vw, 96px),
+      calc(clamp(32px, 9vw, 128px) + 24px)
+    );
+  }
+}
+@media (max-height: 600px) {
+  .vi-demographics.vi-press-audience {
+    padding-block: 16px;
+  }
 }
 .vi-press-audience .vi-section-head {
   max-width: none;
