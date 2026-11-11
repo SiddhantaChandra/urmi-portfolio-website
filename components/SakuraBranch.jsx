@@ -107,7 +107,7 @@ export default function SakuraBranch() {
   }, []);
 
   return (
-    <div ref={stageRef} className="hero-sakura z-10">
+    <div ref={stageRef} className="hero-sakura">
       <button
         ref={artRef}
         type="button"

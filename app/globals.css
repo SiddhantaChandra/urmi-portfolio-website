@@ -147,17 +147,14 @@ body {
   z-index: 2147483647;
 }
 
-.hero-portrait {
-  border-radius: 58% 42% 48% 52% / 45% 53% 47% 55%;
+.hero-portrait-frame {
+  isolation: isolate;
 }
 
-.hero-portrait::after {
-  /* Keep the visible photo interactive above the branch's transparent atlas area. */
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  border-radius: inherit;
+.hero-portrait {
+  /* Keep the entire clipped photo below every part of the sakura artwork. */
+  z-index: 0;
+  border-radius: 58% 42% 48% 52% / 45% 53% 47% 55%;
 }
 
 @media (hover: hover) {
@@ -205,6 +202,7 @@ body {
     var(--portrait-width)
   );
   position: absolute;
+  z-index: 1;
   inset: 0;
   pointer-events: none;
   user-select: none;
