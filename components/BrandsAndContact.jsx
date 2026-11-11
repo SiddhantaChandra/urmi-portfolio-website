@@ -242,14 +242,26 @@ export function PortfolioFooter() {
         <span>Anime, culture and a little wonder.</span>
       </Link>
       <div className="bc-footer-social">
-        <a
-          className="bc-social"
-          href="https://www.instagram.com/uwummie"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Instagram <Arrow />
-        </a>
+        <nav aria-label="Social profiles">
+          {[
+            ["Instagram", "https://www.instagram.com/uwummie"],
+            [
+              "LinkedIn",
+              "https://www.linkedin.com/in/urmi-chakraborty-809678183/",
+            ],
+            ["Muck Rack", "https://muckrack.com/urmi-chakraborty-1"],
+            ["YouTube", "https://www.youtube.com/@uwummie"],
+          ].map(([label, href]) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
         <span className="bc-footer-jp" lang="ja">
           物語はつづく。
         </span>
