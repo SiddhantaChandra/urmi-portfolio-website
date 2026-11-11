@@ -238,7 +238,7 @@ export function PortfolioFooter() {
   return (
     <footer className="bc-collaborations bc-footer">
       <Link className="bc-signature" href="/">
-        Urmi<Seal>望</Seal>
+        Umi<Seal>海</Seal>
         <span>Anime, culture and a little wonder.</span>
       </Link>
       <div className="bc-footer-social">
