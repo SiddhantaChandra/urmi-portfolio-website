@@ -158,7 +158,8 @@ body {
 }
 
 @media (hover: hover) {
-  .hero-portrait:hover {
+  .hero-portrait:hover,
+  .hero-portrait-frame[data-portrait-hovered] .hero-portrait {
     border-radius: 32% 68% 30% 70% / 58% 32% 68% 42%;
   }
 }
@@ -185,7 +186,8 @@ body {
     }
   }
 
-  .hero-portrait:hover {
+  .hero-portrait:hover,
+  .hero-portrait-frame[data-portrait-hovered] .hero-portrait {
     transition-duration: 620ms;
   }
 }
@@ -204,13 +206,14 @@ body {
   position: absolute;
   z-index: 1;
   inset: 0;
+  /* Keep the artwork composited above Firefox's animated, rounded photo clip. */
+  transform: translateZ(0);
   pointer-events: none;
   user-select: none;
 }
 
 .hero-sakura-art {
-  /* Paint containment would clip the branch and falling petals outside the portrait. */
-  contain: layout style;
+  /* Leave overflow uncontained so Firefox repaints overlapping blossoms and petals. */
   position: absolute;
   top: calc(100% - var(--sakura-width) * 0.24 - 0.75rem);
   right: calc(-0.5rem - var(--portrait-right-gap) - var(--sakura-crop));

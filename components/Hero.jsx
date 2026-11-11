@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRef, useState } from "react";
 import instagramStatsArtwork from "../public/images/instagram-stats.svg";
 import portrait from "../public/images/profile.webp";
 import About from "./About";
@@ -35,6 +36,21 @@ function InstagramStat({ label, count }) {
 }
 
 export default function Hero({ stats }) {
+  const portraitRef = useRef(null);
+  const [portraitHovered, setPortraitHovered] = useState(false);
+
+  const updatePortraitHover = (event) => {
+    const portrait = portraitRef.current;
+    // Look through the branch's hit area without changing either layer's stacking.
+    setPortraitHovered(
+      event.pointerType !== "touch" &&
+        portrait !== null &&
+        document
+          .elementsFromPoint(event.clientX, event.clientY)
+          .some((element) => portrait.contains(element)),
+    );
+  };
+
   return (
     <section
       aria-labelledby="hero-title"
@@ -108,8 +124,17 @@ export default function Hero({ stats }) {
           </figure>
         </div>
         <div className="row-start-1 mb-36 w-full max-w-[22rem] md:mb-0 md:col-start-3 md:row-span-3 md:row-start-1 md:justify-self-end">
-          <div className="hero-portrait-frame relative">
-            <div className="hero-portrait relative aspect-[6/5] w-full max-w-[22rem] overflow-hidden bg-[#e9dfd0]">
+          <div
+            className="hero-portrait-frame relative"
+            data-portrait-hovered={portraitHovered || undefined}
+            onPointerMove={updatePortraitHover}
+            onPointerLeave={() => setPortraitHovered(false)}
+            onPointerCancel={() => setPortraitHovered(false)}
+          >
+            <div
+              ref={portraitRef}
+              className="hero-portrait relative aspect-[6/5] w-full max-w-[22rem] overflow-hidden bg-[#e9dfd0]"
+            >
               <Image
                 src={portrait}
                 alt="Urmi standing among greenery"
