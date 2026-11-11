@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { preload } from "react-dom";
 import { growth, petals, spriteAnchors, sprites } from "../lib/sakura-art.mjs";
-import sakuraBranch from "../public/images/sakura-branch.webp";
 import sakuraAtlas from "../public/images/sakura-branch-atlas.webp";
 
 const sakuraAtlasUrl = sakuraAtlas.src;
@@ -26,7 +24,7 @@ function Sprite({ id, name, width = sprites[name][2] }) {
 }
 
 export default function SakuraBranch() {
-  preload(sakuraBranch.src, { as: "image", fetchPriority: "high" });
+  preload(sakuraAtlasUrl, { as: "image", fetchPriority: "high" });
   const id = useId();
   const stageRef = useRef(null);
   const artRef = useRef(null);
@@ -35,6 +33,22 @@ export default function SakuraBranch() {
   const burstIdRef = useRef(0);
   const [bursts, setBursts] = useState([]);
   const [ambientReady, setAmbientReady] = useState(false);
+  const [bloomReady, setBloomReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const atlas = new window.Image();
+    atlas.src = sakuraAtlasUrl;
+    atlas
+      .decode()
+      .then(() => {
+        if (!cancelled) setBloomReady(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const shakeBranch = () => {
     shakeRef.current?.cancel();
@@ -107,7 +121,11 @@ export default function SakuraBranch() {
   }, []);
 
   return (
-    <div ref={stageRef} className="hero-sakura">
+    <div
+      ref={stageRef}
+      className="hero-sakura"
+      data-bloom-ready={bloomReady ? "" : undefined}
+    >
       <button
         ref={artRef}
         type="button"
@@ -117,18 +135,7 @@ export default function SakuraBranch() {
         title="Shake some petals loose"
       >
         <span ref={branchRef} className="sakura-branch-shake">
-          <Image
-            src={sakuraBranch.src}
-            width={1354}
-            height={690}
-            alt=""
-            unoptimized
-            loading="eager"
-            fetchPriority="high"
-          />
-        </span>
-        <svg viewBox="0 0 1354 690" aria-hidden="true" focusable="false">
-          {(ambientReady || bursts.length > 0) && (
+          <svg viewBox="0 0 1354 690" aria-hidden="true" focusable="false">
             <defs>
               <image
                 id={`${id}-atlas`}
@@ -136,21 +143,39 @@ export default function SakuraBranch() {
                 width="1354"
                 height="1254"
               />
-              {Object.entries(sprites)
-                .filter(([name]) => name.startsWith("petal"))
-                .map(([name, bounds]) => (
-                  <symbol
-                    key={name}
-                    id={`${id}-${name}`}
-                    viewBox={bounds.join(" ")}
-                    overflow="hidden"
-                  >
-                    <use href={`#${id}-atlas`} />
-                  </symbol>
-                ))}
+              {Object.entries(sprites).map(([name, bounds]) => (
+                <symbol
+                  key={name}
+                  id={`${id}-${name}`}
+                  viewBox={bounds.join(" ")}
+                  overflow="hidden"
+                >
+                  <use href={`#${id}-atlas`} />
+                </symbol>
+              ))}
             </defs>
-          )}
-
+            <g transform="translate(1354 0) scale(-1 1)">
+              <Sprite id={id} name="branch" />
+              {growth.map(([x, y, name, width, angle]) => (
+                <g
+                  key={`${x},${y}`}
+                  transform={`translate(${x} ${y}) rotate(${angle})`}
+                  style={{ "--bloom-delay": `${Math.round(x * 0.36)}ms` }}
+                >
+                  {name !== "bud" && (
+                    <g className="sakura-bud">
+                      <Sprite id={id} name="bud" width={width * 0.36} />
+                    </g>
+                  )}
+                  <g className="sakura-blossom">
+                    <Sprite id={id} name={name} width={width} />
+                  </g>
+                </g>
+              ))}
+            </g>
+          </svg>
+        </span>
+        <svg viewBox="0 0 1354 690" aria-hidden="true" focusable="false">
           {ambientReady &&
             petals.map(([x, y, name, width, duration, delay, drift]) => (
               <g key={x} transform={`translate(${x} ${y})`}>

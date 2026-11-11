@@ -257,10 +257,11 @@ body {
   cursor: pointer;
 }
 
-.sakura-branch-shake img {
+.sakura-branch-shake > svg {
   display: block;
   width: 100%;
   height: auto;
+  overflow: visible;
 }
 
 .hero-sakura-art:focus-visible {
@@ -309,6 +310,7 @@ body {
   }
 }
 
+.sakura-bud,
 .sakura-petal {
   opacity: 0;
 }
@@ -317,13 +319,48 @@ body {
   opacity: 1;
 }
 
+.hero-sakura[data-bloom-ready] .sakura-bud {
+  animation: sakura-bud 440ms ease-out var(--bloom-delay) both;
+}
+
+.hero-sakura[data-bloom-ready] .sakura-blossom {
+  animation: sakura-bloom 620ms cubic-bezier(0.16, 1, 0.3, 1)
+    calc(var(--bloom-delay) + 210ms) both;
+}
+
 .sakura-petal {
   animation: sakura-drift var(--petal-duration) linear var(--petal-delay)
     infinite;
 }
 
-.hero-sakura[data-paused] :is(.sakura-petal, .sakura-click-petal) {
+.hero-sakura[data-paused]
+  :is(.sakura-bud, .sakura-blossom, .sakura-petal, .sakura-click-petal) {
   animation-play-state: paused;
+}
+
+@keyframes sakura-bud {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes sakura-bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.42);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes sakura-petal-fall {
