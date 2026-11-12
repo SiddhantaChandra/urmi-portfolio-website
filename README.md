@@ -53,13 +53,9 @@ Create a `.env.local` file in the project root:
 # Public Supabase configuration
 NEXT_PUBLIC_SUPABASE_URL="https://<project-id>.supabase.co"
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="sb_publishable_..."
-
-# Contact pipeline & notifications (server-only)
 SUPABASE_SECRET_KEY="sb_secret_..."
 RESEND_API_KEY="re_..."
 CONTACT_FROM_EMAIL="Urmi Portfolio <hello@urmichakraborty.com>"
-
-# SEO & Canonical URL (defaults to production origin if omitted)
 SITE_URL="https://www.urmichakraborty.com"
 ```
 
